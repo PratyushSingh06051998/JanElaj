@@ -7,7 +7,7 @@ var csv = require('fast-csv');
 
 app.use(bodyParser());
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 80;
 
 var con = mysql.createPool({
   host: "localhost",
@@ -263,5 +263,5 @@ function InsertFinalValue(req,id){
 
 
 app.listen(port,function(err1){
-  console.log("Listening on the port 3000");
+  console.log("Listening on the port 80");
 });
