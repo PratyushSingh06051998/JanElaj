@@ -245,6 +245,7 @@ function InsertFinalValue(req,res,id){
           connection.query(sql,[ID,NAME,DOB,GENDER,MOBILE,SPECIALITY_ID,EMAIL,REGISTRATION_NUMBER,REGISTRATION_COUNCIL,REGISTRATION_YEAR,EXPERIENCE], function(err, result) {
 
             if(err){
+              console.log(err);
               console.log("in 2");
               obj.status = "FAIL";
               res.send(JSON.stringify(obj));
