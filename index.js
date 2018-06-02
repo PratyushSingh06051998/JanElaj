@@ -163,7 +163,7 @@ function InsertFinalValue(req,id){
   }
 
   var ID=id;
-  var PLD_ROLE = req.body.pldrole.trim();
+  var PLD_ROLE = req.body.pldrole;
   var NAME =  req.body.name;
   var DOB =  req.body.dob;
   var GENDER =  req.body.gender;
