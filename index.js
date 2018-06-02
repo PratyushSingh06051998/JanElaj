@@ -207,9 +207,12 @@ function InsertFinalValue(req,res,id){
 
               if(result.affectedRows == 1){
 
-                connection.query(sql1,[PLD_ROLE,EMAIL,PASSWORD,ID,MOBILE],function(err1,result1){
+                // connection.query(sql1,[PLD_ROLE,EMAIL,PASSWORD,ID,MOBILE],function(err1,result1){
+                connection.query(sql1,["DOC","afvs","afvs","11","123345"],function(err1,result1){
+
 
                   if(err1){
+                    console.log("in 4");
                     connection.rollback(function(){
                       throw err;
                     })
@@ -221,6 +224,7 @@ function InsertFinalValue(req,res,id){
 
                       connection.commit(function(err){
                         if(err){
+                          console.log("in 6");
                           connection.rollback(function(){
                             throw err;
                           })
@@ -232,6 +236,7 @@ function InsertFinalValue(req,res,id){
                         }
                       })
                     }else{
+                      console.log("in 5");
                       connection.rollback(function(){
                         throw err;
                       })
@@ -245,6 +250,7 @@ function InsertFinalValue(req,res,id){
 
 
               }else{
+                console.log("in 3");
                 connection.rollback(function(){
                   throw err;
                 })
