@@ -155,7 +155,7 @@ app.post("/registeruser",function(req,res){
 });
 
 
-function InsertFinalValue(req,,res,id){
+function InsertFinalValue(req,res,id){
 
 
   var obj = {
