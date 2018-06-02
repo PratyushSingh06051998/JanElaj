@@ -168,7 +168,7 @@ function InsertFinalValue(req,res,id){
   var EMAIL =  req.body.email;
   var PASSWORD =  req.body.password;
   var MOBILE =  req.body.mobile;
-  var SPECIALITY_ID =  passeInt(req.body.specialityid);
+  var SPECIALITY_ID =  parseInt(req.body.specialityid);
   var REGISTRATION_NUMBER =  req.body.registernumber;
   var REGISTRATION_COUNCIL =  req.body.registercouncil;
   var REGISTRATION_YEAR =  req.body.registeryear;
