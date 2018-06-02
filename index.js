@@ -209,9 +209,9 @@ function InsertFinalValue(req,res,id){
           res.send(JSON.stringify(obj));
         }else{
 
-          // connection.query(sql,[ID,NAME,DOB,GENDER,MOBILE,SPECIALITY_ID,EMAIL,REGISTRATION_NUMBER,REGISTRATION_COUNCIL,REGISTRATION_YEAR,EXPERIENCE], function(err, result) {
+          connection.query(sql,[ID,NAME,DOB,GENDER,MOBILE,SPECIALITY_ID,EMAIL,REGISTRATION_NUMBER,REGISTRATION_COUNCIL,REGISTRATION_YEAR,EXPERIENCE,"987"], function(err, result) {
 
-            connection.query(sql,[ID,NAME,DOB,GENDER,"123345",123,"afvs","5346","645","252",43,"987"], function(err, result) {
+            // connection.query(sql,[ID,NAME,DOB,GENDER,"123345",123,"afvs","5346","645","252",43,"987"], function(err, result) {
             if(err){
               console.log("in 2");
               connection.rollback(function(){
@@ -223,8 +223,8 @@ function InsertFinalValue(req,res,id){
 
               if(result.affectedRows == 1){
 
-                // connection.query(sql1,[PLD_ROLE,EMAIL,PASSWORD,ID,MOBILE],function(err1,result1){
-                connection.query(sql1,["DOC","afvs","afvs","11","123345"],function(err1,result1){
+                connection.query(sql1,[PLD_ROLE,EMAIL,PASSWORD,ID,MOBILE],function(err1,result1){
+                // connection.query(sql1,["DOC","afvs","afvs","11","123345"],function(err1,result1){
 
 
                   if(err1){
