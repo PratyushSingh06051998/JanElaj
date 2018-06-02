@@ -16,6 +16,10 @@ var con = mysql.createPool({
   database: "janelaajdev"
 });
 
+app.get("/q",function(req,res){
+  res.send("hi from server");
+})
+
 
 app.post("/numberverify",function(req,res){
 
