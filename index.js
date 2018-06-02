@@ -13,37 +13,37 @@ var port = process.env.PORT || 3000;
 //
 
 
-var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
-
-var Mydata = [];
-
-var csvStream = csv
-    .parse()
-    .on("data", function(data){
-
-      var value=0;
-
-      if(data[0] == 'DOC'){
-        value = parseInt(data[1]);
-        value++;
-        data[1]=value.toString();
-      }
-      Mydata.push(data);
-      console.log(value);
-
-    })
-    .on("end", function(){
-         console.log("done");
-         var ws = fs.createWriteStream("janelaajsetup.csv");
-         csv
-            .write(Mydata, {headers: true})
-            .pipe(ws);
-
-         console.log(Mydata);
-
-    });
-
-stream.pipe(csvStream);
+// var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
+//
+// var Mydata = [];
+//
+// var csvStream = csv
+//     .parse()
+//     .on("data", function(data){
+//
+//       var value=0;
+//
+//       if(data[0] == 'DOC'){
+//         value = parseInt(data[1]);
+//         value++;
+//         data[1]=value.toString();
+//       }
+//       Mydata.push(data);
+//       console.log(value);
+//
+//     })
+//     .on("end", function(){
+//          console.log("done");
+//          var ws = fs.createWriteStream("janelaajsetup.csv");
+//          csv
+//             .write(Mydata, {headers: true})
+//             .pipe(ws);
+//
+//          console.log(Mydata);
+//
+//     });
+//
+// stream.pipe(csvStream);
 
 //
 
