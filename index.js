@@ -81,10 +81,11 @@ app.post("/numberverify",function(req,res){
 
 app.post("/registeruser",function(req,res){
 
+  var Object = req.body;
 
   var ID="";
-  var PLD_ROLE = req.body.pldrole;
-  var REGISTRATION_NUMBER =  req.body.registernumber;
+  var PLD_ROLE = Object.pldrole;
+  var REGISTRATION_NUMBER =  Object.registernumber;
   console.log(PLD_ROLE);
   console.log(REGISTRATION_NUMBER);
 
@@ -189,19 +190,22 @@ function InsertFinalValue(req,res,id){
     id : ""
   }
 
+  var Object = req.body;
+
+
   var ID=id;
-  var PLD_ROLE = req.body.pldrole;
-  var NAME =  req.body.name;
-  var DOB =  req.body.dob;
-  var GENDER =  req.body.gender;
-  var EMAIL =  req.body.email;
-  var PASSWORD =  req.body.password;
-  var MOBILE =  req.body.mobile;
-  var SPECIALITY_ID =  parseInt(req.body.specialityid);
-  var REGISTRATION_NUMBER =  req.body.registernumber;
-  var REGISTRATION_COUNCIL =  req.body.registercouncil;
-  var REGISTRATION_YEAR =  req.body.registeryear;
-  var EXPERIENCE =  parseInt(req.body.experience);
+  var PLD_ROLE = Object.pldrole;
+  var NAME =  Object.name;
+  var DOB =  Object.dob;
+  var GENDER =  Object.gender;
+  var EMAIL =  Object.email;
+  var PASSWORD =  Object.password;
+  var MOBILE =  Object.mobile;
+  var SPECIALITY_ID =  parseInt(Object.specialityid);
+  var REGISTRATION_NUMBER =  Object.registernumber;
+  var REGISTRATION_COUNCIL =  Object.registercouncil;
+  var REGISTRATION_YEAR =  Object.registeryear;
+  var EXPERIENCE =  parseInt(Object.experience);
   console.log(ID);
   console.log(PLD_ROLE);
   console.log(NAME);
