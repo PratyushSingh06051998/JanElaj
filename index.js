@@ -21,7 +21,7 @@ app.post("/numberverify",function(req,res){
 
 
   var MOBILE =  req.body.mobile;
-  var PLD_ROLE = req.body.pldrole:
+  var PLD_ROLE = req.body.pldrole;
 
   var obj = {
     status : "SUCCESS"
