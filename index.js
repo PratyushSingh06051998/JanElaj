@@ -75,10 +75,11 @@ app.post("/numberverify",function(req,res){
 
   con.getConnection(function(err, connection) {
 
-    if(err){
-      obj.status = "FAIL";
-      res.send(JSON.stringify(obj));
-    }else{
+    // if(err){
+    //   obj.status = "FAIL";
+    //   res.send(JSON.stringify(obj));
+    //   //write  a log file
+    // }else{
 
 
         if(err){
@@ -107,7 +108,7 @@ app.post("/numberverify",function(req,res){
         }
 
 
-    }
+    // }
   });
 
 
@@ -213,6 +214,7 @@ app.post("/registeruser",function(req,res){
 });
 
 
+
 function InsertFinalValue(req,res,id){
 
 
@@ -248,7 +250,7 @@ function InsertFinalValue(req,res,id){
   console.log(EXPERIENCE);
 
 
-  var sql = "INSERT INTO doctor_master (dm_doctor_id, dm_doctor_name, dm_dob, dm_gender, dm_doctor_contact_mobile, dm_doctor_speciality_id, dm_doctor_email, dm_medical_registration_number, dm_registration_council, dm_registration_year, dm_doctor_experience, dm_aadhar_number) VALUES((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?))";
+  var sql = "INSERT INTO doctor_master (dm_doctor_id, dm_doctor_name, dm_dob, dm_gender, dm_doctor_contact_mobile, dm_doctor_speciality_id, dm_doctor_email, dm_medical_registration_number, dm_registration_council, dm_registration_year, dm_doctor_experience) VALUES((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?))";
   var sql1 = "INSERT INTO partner_login_details_master (pld_role, pld_username, pld_password, pld_partner_id, pld_mobile) VALUES ((?),(?),(?),(?),(?))";
 
 
@@ -267,7 +269,7 @@ function InsertFinalValue(req,res,id){
           res.send(JSON.stringify(obj));
         }else{
 
-          connection.query(sql,[ID,NAME,DOB,GENDER,MOBILE,SPECIALITY_ID,EMAIL,REGISTRATION_NUMBER,REGISTRATION_COUNCIL,REGISTRATION_YEAR,EXPERIENCE,"987"], function(err, result) {
+          connection.query(sql,[ID,NAME,DOB,GENDER,MOBILE,SPECIALITY_ID,EMAIL,REGISTRATION_NUMBER,REGISTRATION_COUNCIL,REGISTRATION_YEAR,EXPERIENCE], function(err, result) {
 
             if(err){
               console.log("in 2");
@@ -280,45 +282,51 @@ function InsertFinalValue(req,res,id){
 
               if(result.affectedRows == 1){
 
-                connection.query(sql1,[PLD_ROLE,EMAIL,PASSWORD,ID,MOBILE],function(err1,result1){
+                try{
+
+                  connection.query(sql1,[PLD_ROLE,EMAIL,PASSWORD,ID,MOBILE],function(err1,result1){
 
 
-                  if(err1){
-                    console.log("in 4");
-                    connection.rollback(function(){
-                      throw err;
-                    })
-                    obj.status = "FAIL";
-                    res.send(JSON.stringify(obj));
-                  }else{
-
-                    if(result1.affectedRows == 1){
-
-                      connection.commit(function(err){
-                        if(err){
-                          console.log("in 6");
-                          connection.rollback(function(){
-                            throw err;
-                          })
-                          obj.status = "FAIL";
-                          res.send(JSON.stringify(obj));
-                        }else{
-                          obj.status = "SUCCESS";
-                          res.send(JSON.stringify(obj));
-                        }
-                      })
-                    }else{
-                      console.log("in 5");
+                    if(err1){
+                      console.log("in 4");
                       connection.rollback(function(){
                         throw err;
                       })
                       obj.status = "FAIL";
                       res.send(JSON.stringify(obj));
+                    }else{
+
+                      if(result1.affectedRows == 1){
+
+                        connection.commit(function(err){
+                          if(err){
+                            console.log("in 6");
+                            connection.rollback(function(){
+                              throw err;
+                            })
+                            obj.status = "FAIL";
+                            res.send(JSON.stringify(obj));
+                          }else{
+                            obj.status = "SUCCESS";
+                            res.send(JSON.stringify(obj));
+                          }
+                        })
+                      }else{
+                        console.log("in 5");
+                        connection.rollback(function(){
+                          throw err;
+                        })
+                        obj.status = "FAIL";
+                        res.send(JSON.stringify(obj));
+                      }
+
                     }
 
-                  }
+                  });
 
-                });
+                }catch(e){
+                  console.log(" I AM IN THE CATCHHHH "+e);
+                }
 
 
               }else{
