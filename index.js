@@ -10,45 +10,6 @@ app.use(bodyParser());
 var port = process.env.PORT || 3000;
 
 
-//
-
-
-// var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
-//
-// var Mydata = [];
-//
-// var csvStream = csv
-//     .parse()
-//     .on("data", function(data){
-//
-//       var value=0;
-//
-//       if(data[0] == 'DOC'){
-//         value = parseInt(data[1]);
-//         value++;
-//         data[1]=value.toString();
-//       }
-//       Mydata.push(data);
-//       console.log(value);
-//
-//     })
-//     .on("end", function(){
-//          console.log("done");
-//          var ws = fs.createWriteStream("janelaajsetup.csv");
-//          csv
-//             .write(Mydata, {headers: true})
-//             .pipe(ws);
-//
-//          console.log(Mydata);
-//
-//     });
-//
-// stream.pipe(csvStream);
-
-//
-
-
-
 var con = mysql.createPool({
   host: "localhost",
   user: "root",
@@ -85,6 +46,7 @@ app.post("/numberverify",function(req,res){
         if(err){
           obj.status = "FAIL";
           res.send(JSON.stringify(obj));
+          return err;
         }else{
 
           connection.query(sql,[PLD_ROLE,MOBILE], function(err, result) {
@@ -92,6 +54,7 @@ app.post("/numberverify",function(req,res){
             if(err){
               obj.status = "FAIL";
               res.send(JSON.stringify(obj));
+              return err;
             }else{
 
               if(result[0].namesCount == 0){
@@ -148,6 +111,7 @@ app.post("/registeruser",function(req,res){
     if(err){
       obj.status = "FAIL";
       res.send(JSON.stringify(obj));
+      return err;
     }else{
 
       connection.query(sql,[REGISTRATION_NUMBER,'Y'], function(err, result) {
@@ -155,6 +119,7 @@ app.post("/registeruser",function(req,res){
         if(err){
           obj.status = "FAIL";
           res.send(JSON.stringify(obj));
+          return err;
         }else{
 
           if(result[0].namesCount == 0){
@@ -259,6 +224,7 @@ function InsertFinalValue(req,res,id){
     if(err){
       obj.status = "FAIL";
       res.send(JSON.stringify(obj));
+      return err;
     }else{
 
       connection.beginTransaction(function(err){
@@ -267,17 +233,18 @@ function InsertFinalValue(req,res,id){
           console.log("in 1");
           obj.status = "FAIL";
           res.send(JSON.stringify(obj));
+          return err;
         }else{
 
           connection.query(sql,[ID,NAME,DOB,GENDER,MOBILE,SPECIALITY_ID,EMAIL,REGISTRATION_NUMBER,REGISTRATION_COUNCIL,REGISTRATION_YEAR,EXPERIENCE], function(err, result) {
 
             if(err){
               console.log("in 2");
-              connection.rollback(function(){
-                throw err;
-              })
               obj.status = "FAIL";
               res.send(JSON.stringify(obj));
+              connection.rollback(function(){
+                return err;
+              })
             }else{
 
               if(result.affectedRows == 1){
@@ -289,11 +256,11 @@ function InsertFinalValue(req,res,id){
 
                     if(err1){
                       console.log("in 4");
+                      obj.status = "FAIL";
+                      res.send(JSON.stringify(obj));
                       connection.rollback(function(){
                         return err1;
                       })
-                      obj.status = "FAIL";
-                      res.send(JSON.stringify(obj));
                     }else{
 
                       if(result1.affectedRows == 1){
@@ -302,7 +269,7 @@ function InsertFinalValue(req,res,id){
                           if(err){
                             console.log("in 6");
                             connection.rollback(function(){
-                              throw err;
+                              return err;
                             })
                             obj.status = "FAIL";
                             res.send(JSON.stringify(obj));
