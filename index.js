@@ -13,7 +13,7 @@ var port = process.env.PORT || 3000;
 //
 
 
-var stream = fs.createReadStream("janelaajsetup.csv");
+var stream = fs.createReadStream(__dirname + '/../../janelaajsetup.csv');
 
 var Mydata = [];
 
@@ -47,7 +47,6 @@ stream.pipe(csvStream);
 
 //
 
-console.log(__dirname);
 
 
 var con = mysql.createPool({
