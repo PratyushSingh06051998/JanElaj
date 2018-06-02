@@ -81,6 +81,8 @@ app.post("/registeruser",function(req,res){
   var ID="";
   var PLD_ROLE = req.body.pldrole;
   var REGISTRATION_NUMBER =  req.body.registernumber;
+  console.log(PLD_ROLE);
+  console.log(REGISTRATION_NUMBER);
 
   // var NAME =  req.body.name;
   // var DOB =  req.body.dob;
