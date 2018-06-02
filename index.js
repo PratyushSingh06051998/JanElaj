@@ -13,7 +13,7 @@ var port = process.env.PORT || 3000;
 //
 
 
-var stream = fs.createReadStream(__dirname + '/../../janelaajsetup.csv');
+var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
 
 var Mydata = [];
 
