@@ -132,7 +132,7 @@ app.post("/registeruser",function(req,res){
                 .on("end", function(){
                      var ws = fs.createWriteStream("janelaajsetup.csv");
                      csv.write(Mydata, {headers: true}).pipe(ws);
-                     InsertFinalValue(req,ID);
+                     InsertFinalValue(req,res,ID);
 
                 });
             stream.pipe(csvStream);
@@ -155,7 +155,7 @@ app.post("/registeruser",function(req,res){
 });
 
 
-function InsertFinalValue(req,id){
+function InsertFinalValue(req,,res,id){
 
 
   var obj = {
