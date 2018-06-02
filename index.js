@@ -136,8 +136,6 @@ app.post("/registeruser",function(req,res){
 
                 });
             stream.pipe(csvStream);
-
-            res.send(JSON.stringify(obj));
           }else{
             obj.status = "FAIL";
             res.send(JSON.stringify(obj));
