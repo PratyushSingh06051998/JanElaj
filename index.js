@@ -151,7 +151,7 @@ app.post("/registeruser",function(req,res){
 });
 
 
-function InsertFinalValue(var req,var id){
+function InsertFinalValue(req,id){
 
   var ID=id;
   var PLD_ROLE = req.body.pldrole.trim();
