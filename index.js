@@ -160,7 +160,7 @@ app.post("/registeruser",function(req,res){
 
             console.log("in 111");
 
-            var stream = fs.createReadStream("janelaajsetup.csv");
+            var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
             var Mydata = [];
             var csvStream = csv.parse().on("data", function(data){
 
@@ -185,7 +185,7 @@ app.post("/registeruser",function(req,res){
                   Mydata.push(data);
                 })
                 .on("end", function(){
-                     var ws = fs.createWriteStream("janelaajsetup.csv");
+                     var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
                      csv.write(Mydata, {headers: true}).pipe(ws);
                      InsertFinalValue(req,res,ID);
                      console.log("final Id "+ ID);
