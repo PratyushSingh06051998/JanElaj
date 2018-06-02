@@ -157,6 +157,11 @@ app.post("/registeruser",function(req,res){
 
 function InsertFinalValue(req,id){
 
+
+  var obj1 = {
+    status : "SUCCESS"
+  }
+
   var ID=id;
   var PLD_ROLE = req.body.pldrole.trim();
   var NAME =  req.body.name;
