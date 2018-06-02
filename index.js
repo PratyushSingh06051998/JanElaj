@@ -118,14 +118,27 @@ app.post("/registeruser",function(req,res){
 
           if(result[0].namesCount == 0){
 
+            console.log("in 111");
+
             var stream = fs.createReadStream("janelaajsetup.csv");
             var Mydata = [];
             var csvStream = csv.parse().on("data", function(data){
 
                   var value=0;
+
+                  console.log("in loop "+PLD_ROLE);
+
+                  console.log("in loop "+data[0]);
+
+
                   if(data[0] == PLD_ROLE){
+
+                    console.log("in mein if mein");
+
                     value = parseInt(data[1]);
+                    console.log(":: in if value "+value);
                     ID = PLD_ROLE+""+data[1];
+                    console.log(":: in if ID "+ID);
                     value++;
                     data[1]=value.toString();
                   }
@@ -135,10 +148,15 @@ app.post("/registeruser",function(req,res){
                      var ws = fs.createWriteStream("janelaajsetup.csv");
                      csv.write(Mydata, {headers: true}).pipe(ws);
                      InsertFinalValue(req,res,ID);
+                     console.log("final Id "+ ID);
+                     console.log(Mydata);
 
                 });
             stream.pipe(csvStream);
           }else{
+
+            console.log("in 222");
+
             obj.status = "FAIL";
             res.send(JSON.stringify(obj));
           }
@@ -211,7 +229,6 @@ function InsertFinalValue(req,res,id){
 
           connection.query(sql,[ID,NAME,DOB,GENDER,MOBILE,SPECIALITY_ID,EMAIL,REGISTRATION_NUMBER,REGISTRATION_COUNCIL,REGISTRATION_YEAR,EXPERIENCE,"987"], function(err, result) {
 
-            // connection.query(sql,[ID,NAME,DOB,GENDER,"123345",123,"afvs","5346","645","252",43,"987"], function(err, result) {
             if(err){
               console.log("in 2");
               connection.rollback(function(){
@@ -224,7 +241,6 @@ function InsertFinalValue(req,res,id){
               if(result.affectedRows == 1){
 
                 connection.query(sql1,[PLD_ROLE,EMAIL,PASSWORD,ID,MOBILE],function(err1,result1){
-                // connection.query(sql1,["DOC","afvs","afvs","11","123345"],function(err1,result1){
 
 
                   if(err1){
