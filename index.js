@@ -290,7 +290,7 @@ function InsertFinalValue(req,res,id){
                     if(err1){
                       console.log("in 4");
                       connection.rollback(function(){
-                        throw err;
+                        throw err1;
                       })
                       obj.status = "FAIL";
                       res.send(JSON.stringify(obj));
@@ -324,8 +324,8 @@ function InsertFinalValue(req,res,id){
 
                   });
 
-                }catch(e){
-                  console.log(" I AM IN THE CATCHHHH "+e);
+                }catch(err){
+                  console.log(" I AM IN THE CATCHHHH "+err);
                 }
 
 
