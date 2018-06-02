@@ -100,7 +100,8 @@ app.post("/registeruser",function(req,res){
   // var EXPERIENCE =  parseInt(req.body.experience);
 
   var obj = {
-    status : "SUCCESS"
+    status : "SUCCESS",
+    id : ""
   }
 
   var sql = 'SELECT COUNT(*) AS namesCount FROM doctor_master WHERE dm_medical_registration_number = ? AND  dm_ready_live_flag = ?';
@@ -184,7 +185,8 @@ function InsertFinalValue(req,res,id){
 
 
   var obj = {
-    status : "SUCCESS"
+    status : "SUCCESS",
+    id : ""
   }
 
   var ID=id;
@@ -275,6 +277,7 @@ function InsertFinalValue(req,res,id){
                             res.send(JSON.stringify(obj));
                           }else{
                             obj.status = "SUCCESS";
+                            obj.id = ID;
                             res.send(JSON.stringify(obj));
                           }
                         })
