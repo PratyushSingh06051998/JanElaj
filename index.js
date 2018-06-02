@@ -24,9 +24,10 @@ app.get("/q",function(req,res){
 
 app.post("/numberverify",function(req,res){
 
+  var Object = req.body;
 
-  var MOBILE =  req.body.mobile;
-  var PLD_ROLE = req.body.pldrole;
+  var MOBILE =  Object.mobile;
+  var PLD_ROLE = Object.pldrole;
 
   var obj = {
     status : "SUCCESS"
