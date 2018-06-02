@@ -193,8 +193,9 @@ function InsertFinalValue(req,res,id){
           res.send(JSON.stringify(obj));
         }else{
 
-          connection.query(sql,[ID,NAME,DOB,GENDER,MOBILE,SPECIALITY_ID,EMAIL,REGISTRATION_NUMBER,REGISTRATION_COUNCIL,REGISTRATION_YEAR,EXPERIENCE], function(err, result) {
+          // connection.query(sql,[ID,NAME,DOB,GENDER,MOBILE,SPECIALITY_ID,EMAIL,REGISTRATION_NUMBER,REGISTRATION_COUNCIL,REGISTRATION_YEAR,EXPERIENCE], function(err, result) {
 
+            connection.query(sql,["11","pratysh","2017-06-15","M","123345",123,"afvs","5346","645","252",43], function(err, result) {
             if(err){
               console.log("in 2");
               connection.rollback(function(){
