@@ -93,7 +93,7 @@ app.post("/registeruser",function(req,res){
   // var REGISTRATION_YEAR =  req.body.registeryear;
   // var EXPERIENCE =  parseInt(req.body.experience);
 
-  var obj1 = {
+  var obj = {
     status : "SUCCESS"
   }
 
@@ -158,7 +158,7 @@ app.post("/registeruser",function(req,res){
 function InsertFinalValue(req,id){
 
 
-  var obj1 = {
+  var obj = {
     status : "SUCCESS"
   }
 
