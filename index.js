@@ -181,7 +181,115 @@ app.post("/registeruser",function(req,res){
 
 });
 
+app.post("/signin",function(req,res){
 
+
+  var obj = {
+    status : "SUCCESS"
+  }
+
+  var Object = req.body;
+
+  var Email = Object.email;
+  var Password = Object.password;
+
+  var sql = 'SELECT COUNT(*) AS verify FROM partner_login_details_master WHERE pld_username = ? AND  pld_password = ?';
+
+  con.getConnection(function(err,connection){
+
+    connection.query(sql,[Email,Password],function(err,result){
+
+      if(err){
+        obj.status = "FAIL";
+        res.send(JSON.stringify(obj));
+        return err;
+      }else{
+        if(result[0].verify == 0){
+          obj.status = "FAIL";
+          res.send(JSON.stringify(obj));
+        }else{
+          obj.status = "SUCCESS";
+          res.send(JSON.stringify(obj));
+        }
+      }
+
+      connection.release();
+
+    })
+
+  })
+
+});
+
+app.post("/addlocation",function(req,res){
+
+  var Object = req.body;
+
+  var LocationId =  Object.locationid;
+  var Name = Object.name;
+  var AddressLine1 = Object.adrline1;
+  var AddressLine2 = Object.adrline2;
+  var City = Object.city;
+  var District = Object.district;
+  var State = Object.state;
+  var Pin = Object.pin;
+  var Did = Object.docid;
+  var LocId="";
+  var DlmId="";
+
+
+  var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
+  var Mydata = [];
+  var csvStream = csv.parse().on("data", function(data){
+
+        var valueloc=0;
+        var valuedlm=0;
+
+
+        console.log("in loop "+data[0]);
+
+
+        if(data[0] == "LOC"){
+
+          console.log("in mein if mein");
+
+          valueloc = parseInt(data[1]);
+          console.log(":: in if value "+value);
+          LocId = "LOC"+""+data[1];
+          console.log(":: in if ID "+LocId);
+          valueloc++;
+          data[1]=valueloc.toString();
+        }
+
+        if(data[0] == "DLM"){
+
+          console.log("in mein if mein");
+
+          valuedlm = parseInt(data[1]);
+          console.log(":: in if value "+value);
+          DlmId = "DLM"+""+data[1];
+          console.log(":: in if ID "+DlmId);
+          valuedlm++;
+          data[1]=valuedlm.toString();
+        }
+        Mydata.push(data);
+      })
+      .on("end", function(){
+           var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
+           csv.write(Mydata, {headers: true}).pipe(ws);
+           console.log(Mydata);
+
+      });
+  stream.pipe(csvStream);
+
+
+  var obj = {
+    status : "SUCCESS"
+  }
+
+  var sql = 'SELECT COUNT(*) AS namesCount FROM partner_login_details_master WHERE pld_role = ? AND  pld_mobile = ?';
+
+})
 
 function InsertFinalValue(req,res,id){
 
