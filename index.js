@@ -192,7 +192,7 @@ app.post("/signin",function(req,res){
   var Email = Object.email;
   var Password = Object.password;
 
-  var sql = 'SELECT COUNT(*) AS verify FROM partner_login_details_master WHERE pld_username = ? AND  pld_password = ?';
+  var sql = 'SELECT pld_password FROM partner_login_details_master WHERE pld_username = ?';
 
   con.getConnection(function(err,connection){
 
@@ -203,12 +203,17 @@ app.post("/signin",function(req,res){
         res.send(JSON.stringify(obj));
         return err;
       }else{
-        if(result[0].verify == 0){
-          obj.status = "FAIL";
+        if(result[0].length==0){
+          obj.status = "NOT_REGISTERED";
           res.send(JSON.stringify(obj));
         }else{
-          obj.status = "SUCCESS";
-          res.send(JSON.stringify(obj));
+          if(result[0].pld_password == Password){
+            obj.status = "SUCCESS";
+            res.send(JSON.stringify(obj));
+          }else{
+            obj.status = "WRONG_PASSWORD";
+            res.send(JSON.stringify(obj));
+          }
         }
       }
 
