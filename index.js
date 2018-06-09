@@ -247,7 +247,7 @@ app.post("/signin",function(req,res){
 
               }else{
 
-                if(exist == 0){
+                if(result[0].exist == 0){
 
                   obj.status = "SUCCESS";
                   obj.checkpoint = 1;//Go to add location screen
