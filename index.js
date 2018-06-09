@@ -30,14 +30,14 @@ app.get("/qqq",function(req,res){
     if(err){
       console.log("in error 1");
       console.log("error is :"+err);
-      console.log("error code is : "+error.code);
+      console.log("error code is : "+err.code);
       return err;
     }else{
       connection.query(sql,function(err,result){
         if(err){
           console.log("in error 2");
           console.log("error is :"+err);
-          console.log("error code is : "+error.code);
+          console.log("error code is : "+err.code);
           return err;
         }else{
           console.log("ye to ho gyaaa");
