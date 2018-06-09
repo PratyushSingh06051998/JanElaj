@@ -467,6 +467,22 @@ function InsertFinalValue(req,res,id){
 
 app.listen(port,function(err1){
 
+  var sql = "select sysdate() from dual";
+  con.getConnection(function(err,conn){
+
+    conn.query(sql,function(err,ress){
+      if(err){
+        console.log(err);
+      }else{
+        console.log(ress[0]);
+        console.log(ress[0].sysdate());
+
+
+      }
+    })
+
+  })
+
   var sql = "select sysdate()";
   con.getConnection(function(err,conn){
 
@@ -475,6 +491,23 @@ app.listen(port,function(err1){
         console.log(err);
       }else{
         console.log(ress[0]);
+        console.log(ress[0].sysdate());
+      }
+    })
+
+  })
+
+  var sql = "select sysdate() AS y";
+  con.getConnection(function(err,conn){
+
+    conn.query(sql,function(err,ress){
+      if(err){
+        console.log(err);
+      }else{
+        console.log(ress[0]);
+        console.log(ress[0].y);
+        console.log(ress[0].sysdate());
+
       }
     })
 
