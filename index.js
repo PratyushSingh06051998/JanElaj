@@ -20,34 +20,34 @@ var con = mysql.createPool({
 app.get("/q",function(req,res){
   res.send("hi from server");
 })
-
-app.get("/qqq",function(req,res){
-
-  con.getConnection(function(err,connection){
-
-    var sql = "create table doctor_location_master(ClientID SMALLINT(15) NOT NULL DEFAULT 0)";
-
-    if(err){
-      console.log("in error 1");
-      console.log("error is :"+err);
-      console.log("error code is : "+err.code);
-      return err;
-    }else{
-      connection.query(sql,function(err,result){
-        if(err){
-          console.log("in error 2");
-          console.log("error is :"+err);
-          console.log("error code is : "+err.code);
-          return err;
-        }else{
-          console.log("ye to ho gyaaa");
-        }
-      })
-    }
-
-  })
-
-})
+//
+// app.get("/qqq",function(req,res){
+//
+//   con.getConnection(function(err,connection){
+//
+//     var sql = "create table doctor_location_master(ClientID SMALLINT(15) NOT NULL DEFAULT 0)";
+//
+//     if(err){
+//       console.log("in error 1");
+//       console.log("error is :"+err);
+//       console.log("error code is : "+err.code);
+//       return err;
+//     }else{
+//       connection.query(sql,function(err,result){
+//         if(err){
+//           console.log("in error 2");
+//           console.log("error is :"+err);
+//           console.log("error code is : "+err.code);
+//           return err;
+//         }else{
+//           console.log("ye to ho gyaaa");
+//         }
+//       })
+//     }
+//
+//   })
+//
+// })
 
 app.post("/numberverify",function(req,res){
 
@@ -67,8 +67,8 @@ app.post("/numberverify",function(req,res){
 
       if(err){
         console.log("ERROR IN NUMBER VRTIFY IN BUILDING CONNECTION FOR PLD_ROLE = "+PLD_ROLE+" AND FOR PLD_MOBILE = "+MOBILE);
-        console.log("ERROR CODE "+err.code);
-        obj.status = "FAIL";
+        console.log("ERROR CODE :"+err.code);
+        obj.status = "CONNECTION ERROR";
         res.send(JSON.stringify(obj));
         return err;
       }else{
@@ -76,7 +76,9 @@ app.post("/numberverify",function(req,res){
         connection.query(sql,[PLD_ROLE,MOBILE], function(err, result) {
 
           if(err){
-            obj.status = "FAIL";
+            console.log("ERROR IN NUMBER VRTIFY IN RUNNING QUERY FOR PLD_ROLE = "+PLD_ROLE+" AND FOR PLD_MOBILE = "+MOBILE);
+            console.log("ERROR CODE "+err.code);
+            obj.status = "CONNECTION ERROR";
             res.send(JSON.stringify(obj));
             return err;
           }else{
@@ -215,6 +217,8 @@ app.post("/signin",function(req,res){
   var Email = Object.email;
   var Password = Object.password;
   var DocId="";
+  console.log(Email);
+  console.log(Password);
 
   var sql = 'SELECT pld_password, pld_partner_id FROM partner_login_details_master WHERE pld_username = ?';
   var sql2 = 'SELECT COUNT(*) AS exist FROM doctor_location_master WHERE dlm_dm_doctor_id = ?';
@@ -276,6 +280,7 @@ app.post("/signin",function(req,res){
 
 });
 
+//Leave it fr now
 app.post("/hvisitaddlocation",function(req,res){
 
   var Object = req.body;
@@ -430,6 +435,7 @@ app.post("/hvisitaddlocation",function(req,res){
 
 
 })
+//Leave it fr now
 
 app.post("/clinicaddlocation",function(req,res){
 
@@ -584,8 +590,55 @@ app.post("/clinicaddlocation",function(req,res){
 
 })
 
+app.get("/fetchlocation",function(req,res){
+
+  var Object = req.body;
+
+  var DocId = Object.docid;
+
+  var Aray = [];
+
+  var obj = {
+    lname:"",
+    lflagservice:"",
+    ladrline1:"",
+    dlmid:""
+  }
+
+  var sql = "SELECT lm_name, lm_flag_home_service_ref, lm_address_line1, dlm_id FROM location_master AS LM INNER JOIN doctor_location_master AS DLM ON LM.lm_location_id = DLM.dlm_lm_location_id WHERE DLM.dlm_id = ?";
+
+  con.getConnection(function(err,connection){
+
+    if(err){
+      console.log("ERROR IN BUILDING CONNECTION IN FETCHLOCATION FOR DocId = "+DocId);
+      console.log("ERROR CODE :"+err.code);
+      obj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(obj));
+    }else{
+      connection.query(sql,[DocId],function(err,result){
+        if(err){
+          console.log("ERROR IN RUNNING QUERY IN FETCHLOCATION FOR DocId = "+DocId);
+          console.log("ERROR CODE :"+err.code);
+          obj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(obj));
+        }else{
+          for(var i=0;i<result.length;i++){
+
+            obj.lname = result[i].lm_name;
+            obj.lflagservice = result[i].lm_flag_home_service_ref;
+            obj.ladrline1 = result[i].lm_address_line1;
+            obj.dlmid = result[i].dlm_id;
+            Aray.push(obj);
+
+          }
+        }
+      })
+    }
+
+  })
 
 
+})
 
 function InsertFinalValue(req,res,id){
 
@@ -750,6 +803,32 @@ function InsertFinalValue(req,res,id){
 
 
 }
+
+app.get("/sss",function(req,res){
+
+  var Aray = [];
+
+  var obj = {
+    lname:"",
+    lflagservice:"",
+    ladrline1:"",
+    dlmid:""
+  }
+
+  for(var i=0;i<9;i++){
+
+      obj.lname = i.toString()+"result[i].lm_name";
+      obj.lflagservice = i.toString()+"result[i].lm_flag_home_service_ref";
+      obj.ladrline1 = i.toString()+"result[i].lm_address_line1";
+      obj.dlmid = i.toString()+"result[i].dlm_id";
+      Aray.push
+  }
+
+
+
+
+})
+
 
 app.listen(port,function(err1){
   console.log("Listening on the port 3000");
