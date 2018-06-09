@@ -21,6 +21,33 @@ app.get("/q",function(req,res){
   res.send("hi from server");
 })
 
+app.get("/qqq",function(req,res){
+
+  con.getConnection(function(err,connection){
+
+    var sql = "create table doctor_location_master(PRIMARY KEY(ClientID))";
+
+    if(err){
+      console.log("in error 1");
+      console.log("error is :"+err);
+      console.log("error code is : "+error.code);
+      return err;
+    }else{
+      connection.query(sql,function(err,result){
+        if(err){
+          console.log("in error 2");
+          console.log("error is :"+err);
+          console.log("error code is : "+error.code);
+          return err;
+        }else{
+          console.log("ye to ho gyaaa");
+        }
+      })
+    }
+
+  })
+
+})
 
 app.post("/numberverify",function(req,res){
 
@@ -37,42 +64,37 @@ app.post("/numberverify",function(req,res){
 
   con.getConnection(function(err, connection) {
 
-    // if(err){
-    //   obj.status = "FAIL";
-    //   res.send(JSON.stringify(obj));
-    //   //write  a log file
-    // }else{
 
+      if(err){
+        console.log("ERROR IN NUMBER VRTIFY IN BUILDING CONNECTION FOR PLD_ROLE = "+PLD_ROLE+" AND FOR PLD_MOBILE = "+MOBILE);
+        console.log("ERROR CODE "+err.code);
+        obj.status = "FAIL";
+        res.send(JSON.stringify(obj));
+        return err;
+      }else{
 
-        if(err){
-          obj.status = "FAIL";
-          res.send(JSON.stringify(obj));
-          return err;
-        }else{
+        connection.query(sql,[PLD_ROLE,MOBILE], function(err, result) {
 
-          connection.query(sql,[PLD_ROLE,MOBILE], function(err, result) {
+          if(err){
+            obj.status = "FAIL";
+            res.send(JSON.stringify(obj));
+            return err;
+          }else{
 
-            if(err){
+            if(result[0].namesCount == 0){
+              res.send(JSON.stringify(obj));
+            }else{
               obj.status = "FAIL";
               res.send(JSON.stringify(obj));
-              return err;
-            }else{
-
-              if(result[0].namesCount == 0){
-                res.send(JSON.stringify(obj));
-              }else{
-                obj.status = "FAIL";
-                res.send(JSON.stringify(obj));
-              }
             }
+          }
 
-              connection.release();
-          });
+            connection.release();
+        });
 
-        }
+      }
 
 
-    // }
   });
 
 
@@ -184,34 +206,62 @@ app.post("/signin",function(req,res){
 
 
   var obj = {
-    status : "SUCCESS"
+    status : "SUCCESS",
+    checkpoint : 0
   }
 
   var Object = req.body;
 
   var Email = Object.email;
   var Password = Object.password;
+  var DocId="";
 
-  var sql = 'SELECT pld_password FROM partner_login_details_master WHERE pld_username = ?';
+  var sql = 'SELECT pld_password, pld_partner_id FROM partner_login_details_master WHERE pld_username = ?';
+  var sql2 = 'SELECT COUNT(*) AS exist FROM doctor_location_master WHERE dlm_dm_doctor_id = ?';
 
   con.getConnection(function(err,connection){
 
     connection.query(sql,[Email,Password],function(err,result){
 
       if(err){
-        obj.status = "FAIL";
+        obj.status = "";
         res.send(JSON.stringify(obj));
         return err;
       }else{
         if(result.length==0){
-          obj.status = "NOT_REGISTERED";
+          obj.status = "YOU ARE NOT REGISTERED/ INVALID USERNAME";
           res.send(JSON.stringify(obj));
         }else{
           if(result[0].pld_password == Password){
-            obj.status = "SUCCESS";
-            res.send(JSON.stringify(obj));
+
+            DocId = result[0].pld_partner_id;
+
+            connection.query(sql2,[DocId],function(err,resul){
+
+              if(err){
+
+              }else{
+
+                if(exist == 0){
+
+                  obj.status = "SUCCESS";
+                  obj.checkpoint = 1;//Go to add location screen
+                  res.send(JSON.stringify(obj));
+
+                }else{
+
+                  obj.status = "SUCCESS";
+                  obj.checkpoint = 2;// go to manage location screen
+                  res.send(JSON.stringify(obj));
+
+                }
+
+              }
+
+            })
+
           }else{
-            obj.status = "WRONG_PASSWORD";
+            obj.status = "YOU PASSWORD IS INCORRECT";
             res.send(JSON.stringify(obj));
           }
         }
@@ -228,7 +278,155 @@ app.post("/signin",function(req,res){
 
 app.post("/hvisitaddlocation",function(req,res){
 
+  var Object = req.body;
 
+  var Name = Object.name;
+  var AddressLine1 = Object.adrline1;
+  var AddressLine2 = Object.adrline2;
+  var City = Object.city;
+  var District = Object.district;
+  var State = Object.state;
+  var Pin = Object.pin;
+  var Did = Object.docid;
+  var LocId="";
+  var DlmId="";
+  var KmRange = Object.kmrange;
+
+
+  var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
+  var Mydata = [];
+  var csvStream = csv.parse().on("data", function(data){
+
+        var valueloc=0;
+        var valuedlm=0;
+
+
+        console.log("in loop "+data[0]);
+
+
+        if(data[0] == "LOC"){
+
+          console.log("in mein if mein");
+
+          valueloc = parseInt(data[1]);
+          console.log(":: in if value "+value);
+          LocId = "LOC"+""+data[1];
+          console.log(":: in if ID "+LocId);
+          valueloc++;
+          data[1]=valueloc.toString();
+        }
+
+        if(data[0] == "DLM"){
+
+          console.log("in mein if mein");
+
+          valuedlm = parseInt(data[1]);
+          console.log(":: in if value "+value);
+          DlmId = "DLM"+""+data[1];
+          console.log(":: in if ID "+DlmId);
+          valuedlm++;
+          data[1]=valuedlm.toString();
+        }
+        Mydata.push(data);
+      })
+      .on("end", function(){
+           var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
+           csv.write(Mydata, {headers: true}).pipe(ws);
+           console.log(Mydata);
+
+      });
+  stream.pipe(csvStream);
+
+
+  var obj = {
+    status : "SUCCESS"
+  }
+
+
+  var sql1 = 'INSERT INTO location_master (lm_location_id, lm_name, lm_address_line1, lm_address_line2, lm_city, lm_district, lm_state, lm_pincode, lm_range_km, lm_flag_home_service_ref) VALUES ((?),(?),(?),(?),(?),(?),(?),(?),(?),(?))';
+  var sql2 = 'INSERT INTO doctor_location_master (dlm_dm_doctor_id, dlm_lm_location_id, dlm_id, lm_flag_home_service_ref) VALUES ((?),(?),(?),(?))';
+
+  con.getConnection(function(err,connection){
+
+    if(err){
+      obj.status = "FAIL";
+      res.send(JSON.stringify(obj));
+      return err;
+    }else{
+
+      connection.beginTransaction(function(err){
+
+        if(err){
+          obj.status = "FAIL";
+          res.send(JSON.stringify(obj));
+          return err;
+        }else{
+
+          connection.query(sql1,[LocId,Name,AddressLine1,AddressLine2,City,District,State,Pin,KmRange,'Y'],function(err,result){
+
+            if(err){
+              obj.status = "FAIL";
+              res.send(JSON.stringify(obj));
+              connection.rollback(function(){
+                return err;
+              })
+            }else{
+
+              if(result.affectedRows == 1){
+
+                connection.query(sql2,[Did,LocId,DlmId,'Y'],function(err2,result2){
+
+                  if(err2){
+                    obj.status = "FAIL";
+                    res.send(JSON.stringify(obj));
+                    connection.rollback(function(){
+                      return err2;
+                    })
+                  }else{
+
+                    if(result2.affectedRows == 1){
+                      connection.commit(function(err){
+                        if(err){
+                          console.log("in 6");
+                          connection.rollback(function(){
+                            return err;
+                          })
+                          obj.status = "FAIL";
+                          res.send(JSON.stringify(obj));
+                        }else{
+                          obj.status = "SUCCESS";
+                          res.send(JSON.stringify(obj));
+                        }
+                      })
+                    }else{
+                      connection.rollback(function(){
+                      })
+                      obj.status = "FAIL";
+                      res.send(JSON.stringify(obj));
+                    }
+
+                  }
+
+                })
+
+              }else{
+                connection.rollback(function(){
+                })
+                obj.status = "FAIL";
+                res.send(JSON.stringify(obj));
+              }
+
+            }
+
+          })
+
+        }
+
+      })
+
+    }
+
+  })
 
 
 })
@@ -237,7 +435,6 @@ app.post("/clinicaddlocation",function(req,res){
 
   var Object = req.body;
 
-  var LocationId =  Object.locationid;
   var Name = Object.name;
   var AddressLine1 = Object.adrline1;
   var AddressLine2 = Object.adrline2;
@@ -299,8 +496,91 @@ app.post("/clinicaddlocation",function(req,res){
     status : "SUCCESS"
   }
 
+
   var sql1 = 'INSERT INTO location_master (lm_location_id, lm_name, lm_address_line1, lm_address_line2, lm_city, lm_district, lm_state, lm_pincode) VALUES ((?),(?),(?),(?),(?),(?),(?),(?))';
-  var sql2 = 'INSERT INTO partner_login_details_master (pld_role, pld_username, pld_password, pld_partner_id, pld_mobile) VALUES ((?),(?),(?),(?),(?))';
+  var sql2 = 'INSERT INTO doctor_location_master (dlm_dm_doctor_id, dlm_lm_location_id, dlm_id) VALUES ((?),(?),(?))';
+
+  con.getConnection(function(err,connection){
+
+    if(err){
+      obj.status = "FAIL";
+      res.send(JSON.stringify(obj));
+      return err;
+    }else{
+
+      connection.beginTransaction(function(err){
+
+        if(err){
+          obj.status = "FAIL";
+          res.send(JSON.stringify(obj));
+          return err;
+        }else{
+
+          connection.query(sql1,[LocId,Name,AddressLine1,AddressLine2,City,District,State,Pin],function(err,result){
+
+            if(err){
+              obj.status = "FAIL";
+              res.send(JSON.stringify(obj));
+              connection.rollback(function(){
+                return err;
+              })
+            }else{
+
+              if(result.affectedRows == 1){
+
+                connection.query(sql2,[Did,LocId,DlmId],function(err2,result2){
+
+                  if(err2){
+                    obj.status = "FAIL";
+                    res.send(JSON.stringify(obj));
+                    connection.rollback(function(){
+                      return err2;
+                    })
+                  }else{
+
+                    if(result2.affectedRows == 1){
+                      connection.commit(function(err){
+                        if(err){
+                          console.log("in 6");
+                          connection.rollback(function(){
+                            return err;
+                          })
+                          obj.status = "FAIL";
+                          res.send(JSON.stringify(obj));
+                        }else{
+                          obj.status = "SUCCESS";
+                          res.send(JSON.stringify(obj));
+                        }
+                      })
+                    }else{
+                      connection.rollback(function(){
+                      })
+                      obj.status = "FAIL";
+                      res.send(JSON.stringify(obj));
+                    }
+
+                  }
+
+                })
+
+              }else{
+                connection.rollback(function(){
+                })
+                obj.status = "FAIL";
+                res.send(JSON.stringify(obj));
+              }
+
+            }
+
+          })
+
+        }
+
+      })
+
+    }
+
+  })
 
 })
 
@@ -379,6 +659,7 @@ function InsertFinalValue(req,res,id){
                 return err2;
               })
             }else{
+
               REGISTERDATE = result2[0].dt;
 
               connection.query(sql,[ID,NAME,DOB,GENDER,MOBILE,SPECIALITY_ID,EMAIL,REGISTRATION_NUMBER,REGISTRATION_COUNCIL,REGISTRATION_YEAR,EXPERIENCE,REGISTERDATE], function(err, result) {
@@ -428,7 +709,7 @@ function InsertFinalValue(req,res,id){
                           }else{
                             console.log("in 5");
                             connection.rollback(function(){
-                              throw err;
+                              // throw err;
                             })
                             obj.status = "FAIL";
                             res.send(JSON.stringify(obj));
@@ -446,7 +727,7 @@ function InsertFinalValue(req,res,id){
                   }else{
                     console.log("in 3");
                     connection.rollback(function(){
-                      throw err;
+                      // throw err;
                     })
                     obj.status = "FAIL";
                     res.send(JSON.stringify(obj));
