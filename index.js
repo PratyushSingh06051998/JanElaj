@@ -465,8 +465,20 @@ function InsertFinalValue(req,res,id){
 
 }
 
-
-
 app.listen(port,function(err1){
+
+  var sql = "select sysdate()";
+  con.getConnection(function(err,conn){
+
+    conn.query(sql,function(err,ress){
+      if(err){
+        console.log(err);
+      }else{
+        console.log(ress[0]);
+      }
+    })
+
+  })
+
   console.log("Listening on the port 3000");
 });
