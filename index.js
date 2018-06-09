@@ -55,6 +55,7 @@ app.post("/numberverify",function(req,res){
 
   var MOBILE =  Object.mobile;
   var PLD_ROLE = Object.pldrole;
+  console.log(MOBILE);
 
   var obj = {
     status : "SUCCESS"
