@@ -25,7 +25,7 @@ app.get("/qqq",function(req,res){
 
   con.getConnection(function(err,connection){
 
-    var sql = "create table doctor_location_master(PRIMARY KEY(ClientID))";
+    var sql = "create table doctor_location_master(ClientID SMALLINT(15) NOT NULL DEFAULT 0)";
 
     if(err){
       console.log("in error 1");
