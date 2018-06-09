@@ -483,10 +483,10 @@ app.listen(port,function(err1){
 
   })
 
-  var sql = "select sysdate()";
+  var sql2 = "select sysdate()";
   con.getConnection(function(err,conn){
 
-    conn.query(sql,function(err,ress){
+    conn.query(sql2,function(err,ress){
       if(err){
         console.log(err);
       }else{
@@ -498,10 +498,10 @@ app.listen(port,function(err1){
 
   })
 
-  var sql = "select sysdate() AS y";
+  var sql3 = "select sysdate() AS y";
   con.getConnection(function(err,conn){
 
-    conn.query(sql,function(err,ress){
+    conn.query(sql3,function(err,ress){
       if(err){
         console.log(err);
       }else{
