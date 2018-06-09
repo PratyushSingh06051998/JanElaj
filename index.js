@@ -344,7 +344,7 @@ function InsertFinalValue(req,res,id){
 
   var sql = "INSERT INTO doctor_master (dm_doctor_id, dm_doctor_name, dm_dob, dm_gender, dm_doctor_contact_mobile, dm_doctor_speciality_id, dm_doctor_email, dm_medical_registration_number, dm_registration_council, dm_registration_year, dm_doctor_experience, dm_reg_date) VALUES((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?))";
   var sql1 = "INSERT INTO partner_login_details_master (pld_role, pld_username, pld_password, pld_partner_id, pld_mobile) VALUES ((?),(?),(?),(?),(?))";
-  var sql2 = "SELECT SYSDATE()";
+  var sql2 = "SELECT SYSDATE() AS dt";
 
 
   con.getConnection(function(err, connection) {
@@ -374,7 +374,7 @@ function InsertFinalValue(req,res,id){
                 return err2;
               })
             }else{
-              REGISTERDATE = result2[0];
+              REGISTERDATE = result2[0].dt;
 
               connection.query(sql,[ID,NAME,DOB,GENDER,MOBILE,SPECIALITY_ID,EMAIL,REGISTRATION_NUMBER,REGISTRATION_COUNCIL,REGISTRATION_YEAR,EXPERIENCE,REGISTERDATE], function(err, result) {
 
@@ -466,54 +466,5 @@ function InsertFinalValue(req,res,id){
 }
 
 app.listen(port,function(err1){
-
-  var sql = "select sysdate() from dual";
-  con.getConnection(function(err,conn){
-
-    conn.query(sql,function(err,ress){
-      if(err){
-        console.log(err);
-      }else{
-        console.log(ress[0]);
-        console.log(ress[0].sysdate);
-        console.log("1");
-
-      }
-    })
-
-  })
-
-  var sql2 = "select sysdate()";
-  con.getConnection(function(err,conn){
-
-    conn.query(sql2,function(err,ress){
-      if(err){
-        console.log(err);
-      }else{
-        console.log(ress[0]);
-        console.log(ress[0].sysdate);
-        console.log("2");
-      }
-    })
-
-  })
-
-  var sql3 = "select sysdate() AS y";
-  con.getConnection(function(err,conn){
-
-    conn.query(sql3,function(err,ress){
-      if(err){
-        console.log(err);
-      }else{
-        console.log(ress[0]);
-        console.log(ress[0].y);
-        console.log(ress[0].sysdate);
-        console.log("3");
-
-      }
-    })
-
-  })
-
   console.log("Listening on the port 3000");
 });
