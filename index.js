@@ -203,7 +203,7 @@ app.post("/signin",function(req,res){
         res.send(JSON.stringify(obj));
         return err;
       }else{
-        if(result[0].length==0){
+        if(result.length==0){
           obj.status = "NOT_REGISTERED";
           res.send(JSON.stringify(obj));
         }else{
