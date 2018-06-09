@@ -475,8 +475,8 @@ app.listen(port,function(err1){
         console.log(err);
       }else{
         console.log(ress[0]);
-        console.log(ress[0].sysdate());
-
+        console.log(ress[0].sysdate);
+        console.log("1");
 
       }
     })
@@ -491,7 +491,8 @@ app.listen(port,function(err1){
         console.log(err);
       }else{
         console.log(ress[0]);
-        console.log(ress[0].sysdate());
+        console.log(ress[0].sysdate);
+        console.log("2");
       }
     })
 
@@ -506,7 +507,8 @@ app.listen(port,function(err1){
       }else{
         console.log(ress[0]);
         console.log(ress[0].y);
-        console.log(ress[0].sysdate());
+        console.log(ress[0].sysdate);
+        console.log("3");
 
       }
     })
