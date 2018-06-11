@@ -265,9 +265,9 @@ app.post("/signin",function(req,res){
                 }else{
 
                   console.log(DocId);
-                  console.log(result[0]);
+                  console.log(resul[0].exist);
 
-                  if(result[0].exist == 0){
+                  if(resul[0].exist == 0){
                     console.log("in checkpoint 1");
                     obj.status = "SUCCESS";
                     obj.checkpoint = 1;//Go to add location screen
