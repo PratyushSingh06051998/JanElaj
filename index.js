@@ -495,7 +495,7 @@ app.post("/clinicaddlocation",function(req,res){
           console.log("in mein if mein");
 
           valueloc = parseInt(data[1]);
-          console.log(":: in if value "+value);
+          console.log(":: in if value "+valueloc);
           LocId = "LOC"+""+data[1];
           console.log(":: in if ID "+LocId);
           valueloc++;
@@ -507,7 +507,7 @@ app.post("/clinicaddlocation",function(req,res){
           console.log("in mein if mein");
 
           valuedlm = parseInt(data[1]);
-          console.log(":: in if value "+value);
+          console.log(":: in if value "+valuedlm);
           DlmId = "DLM"+""+data[1];
           console.log(":: in if ID "+DlmId);
           valuedlm++;
