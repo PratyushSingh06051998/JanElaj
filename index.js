@@ -472,6 +472,7 @@ app.post("/clinicaddlocation",function(req,res){
   var State = Object.state;
   var Pin = Object.pin;
   var Did = Object.docid;
+  var Options = Object.option;
   var LocId="";
   var DlmId="";
 
@@ -525,9 +526,10 @@ app.post("/clinicaddlocation",function(req,res){
     status : "SUCCESS"
   }
 
+//have to make change hererererererer
 
   var sql1 = 'INSERT INTO location_master (lm_location_id, lm_name, lm_address_line1, lm_address_line2, lm_city, lm_district, lm_state, lm_pincode) VALUES ((?),(?),(?),(?),(?),(?),(?),(?))';
-  var sql2 = 'INSERT INTO doctor_location_master (dlm_dm_doctor_id, dlm_lm_location_id, dlm_id) VALUES ((?),(?),(?))';
+  var sql2 = 'INSERT INTO doctor_location_master (dlm_dm_doctor_id, dlm_lm_location_id, dlm_id, dlm_doctor_options) VALUES ((?),(?),(?),(?))';
 
   con.getConnection(function(err,connection){
 
@@ -557,7 +559,7 @@ app.post("/clinicaddlocation",function(req,res){
 
               if(result.affectedRows == 1){
 
-                connection.query(sql2,[Did,LocId,DlmId],function(err2,result2){
+                connection.query(sql2,[Did,LocId,DlmId,Options],function(err2,result2){
 
                   if(err2){
                     obj.status = "FAIL";
@@ -645,7 +647,7 @@ app.get("/fetchlocation",function(req,res){
     }else{
       connection.query(sql,[DocId],function(err,result){
         if(err){
-          console.log("ERROR IN RUNNING QUERY IN FETCHLOCATION FOR DocId = "+DocId);
+          console.log("ERROR IN RUNNING SQL IN FETCHLOCATION FOR DocId = "+DocId);
           console.log("ERROR CODE :"+err.code);
           obj.status = "CONNECTION ERROR";
           res.send(JSON.stringify(obj));
@@ -713,7 +715,7 @@ function InsertFinalValue(req,res,id){
   console.log(EXPERIENCE);
 
 
-  var sql = "INSERT INTO doctor_master (dm_doctor_id, dm_doctor_name, dm_dob, dm_gender, dm_doctor_contact_mobile, dm_doctor_speciality_id, dm_doctor_email, dm_medical_registration_number, dm_registration_council, dm_registration_year, dm_doctor_experience, dm_reg_date) VALUES((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?))";
+  var sql = "INSERT INTO doctor_master (dm_doctor_id, dm_doctor_name, dm_dob, dm_gender, dm_doctor_contact_mobile, dm_doctor_speciality_id, dm_doctor_email, dm_medical_registration_number, dm_registration_council, dm_registration_year, dm_doctor_experience, dm_reg_date) VALUES((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),SYSDATE())";
   var sql1 = "INSERT INTO partner_login_details_master (pld_role, pld_username, pld_password, pld_partner_id, pld_mobile) VALUES ((?),(?),(?),(?),(?))";
   var sql2 = "SELECT SYSDATE() AS dt";
 
@@ -748,7 +750,7 @@ function InsertFinalValue(req,res,id){
 
               REGISTERDATE = result2[0].dt;
 
-              connection.query(sql,[ID,NAME,DOB,GENDER,MOBILE,SPECIALITY_ID,EMAIL,REGISTRATION_NUMBER,REGISTRATION_COUNCIL,REGISTRATION_YEAR,EXPERIENCE,REGISTERDATE], function(err, result) {
+              connection.query(sql,[ID,NAME,DOB,GENDER,MOBILE,SPECIALITY_ID,EMAIL,REGISTRATION_NUMBER,REGISTRATION_COUNCIL,REGISTRATION_YEAR,EXPERIENCE], function(err, result) {
 
                 if(err){
                   console.log(err);
