@@ -530,7 +530,7 @@ app.post("/clinicaddlocation",function(req,res){
 
   //have to make change hererererererer
 
-  var sql1 = 'INSERT INTO location_master (lm_location_id, lm_name, lm_address_line1, lm_address_line2, lm_city, lm_district, lm_state, lm_pincode) VALUES ((?),(?),(?),(?),(?),(?),(?),(?))';
+  var sql1 = 'INSERT INTO location_master (lm_location_id, lm_name, lm_address_line1, lm_address_line2, lm_city, lm_district, lm_state, lm_pincode, lm_flag_home_service_ref) VALUES ((?),(?),(?),(?),(?),(?),(?),(?),(?))';
   var sql2 = 'INSERT INTO doctor_location_master (dlm_dm_doctor_id, dlm_lm_location_id, dlm_id, dlm_doctor_options) VALUES ((?),(?),(?),(?))';
 
   con.getConnection(function(err,connection){
@@ -555,7 +555,7 @@ app.post("/clinicaddlocation",function(req,res){
           return err;
         }else{
 
-          connection.query(sql1,[LocId,Name,AddressLine1,AddressLine2,City,District,State,Pin],function(err,result){
+          connection.query(sql1,[LocId,Name,AddressLine1,AddressLine2,City,District,State,Pin,'N'],function(err,result){
 
             if(err){
               console.log("ERROR IN RUNNING SQL1 IN CLINICADDLOCATION DOCID = "+Did);
