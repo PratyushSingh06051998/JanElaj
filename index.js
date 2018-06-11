@@ -226,56 +226,77 @@ app.post("/signin",function(req,res){
 
   con.getConnection(function(err,connection){
 
-    connection.query(sql,[Email,Password],function(err,result){
+    if(err){
 
-      if(err){
-        obj.status = "";
-        res.send(JSON.stringify(obj));
-        return err;
-      }else{
-        if(result.length==0){
-          obj.status = "YOU ARE NOT REGISTERED/ INVALID USERNAME";
+      console.log("ERROR IN CONNECTING TO THE DATABASE IN SIGNIN FOR Email = "+Email);
+      console.log("ERROR : "+err.code);
+      obj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(obj));
+      return err;
+
+    }else{
+
+      connection.query(sql,[Email,Password],function(err,result){
+
+        if(err){
+          console.log("ERROR IN RUNNING SQL IN SIGNIN FOR Email = "+Email);
+          console.log("ERROR : "+err.code);
+          obj.status = "CONNECTION ERROR";
           res.send(JSON.stringify(obj));
+          return err;
         }else{
-          if(result[0].pld_password == Password){
+          if(result.length==0){
+            obj.status = "YOU ARE NOT REGISTERED/ INVALID USERNAME";
+            res.send(JSON.stringify(obj));
+          }else{
+            if(result[0].pld_password == Password){
 
-            DocId = result[0].pld_partner_id;
+              DocId = result[0].pld_partner_id;
 
-            connection.query(sql2,[DocId],function(err,resul){
+              console.log("i am here "+DocId);
+              connection.query(sql2,[DocId],function(err,resul){
 
-              if(err){
-
-              }else{
-
-                if(result[0].exist == 0){
-
-                  obj.status = "SUCCESS";
-                  obj.checkpoint = 1;//Go to add location screen
+                if(err){
+                  console.log("ERROR IN RUNNING SQL2 IN SIGNIN FOR Email = "+Email);
+                  console.log("ERROR : "+err.code);
+                  obj.status = "CONNECTION ERROR";
                   res.send(JSON.stringify(obj));
-
+                  return err;
                 }else{
 
-                  obj.status = "SUCCESS";
-                  obj.checkpoint = 2;// go to manage location screen
-                  res.send(JSON.stringify(obj));
+                  console.log(DocId);
+
+                  if(result[0].exist == 0){
+                    console.log("in checkpoint 1");
+                    obj.status = "SUCCESS";
+                    obj.checkpoint = 1;//Go to add location screen
+                    res.send(JSON.stringify(obj));
+
+                  }else{
+                    console.log("in checkpoint 2");
+                    obj.status = "SUCCESS";
+                    obj.checkpoint = 2;// go to manage location screen
+                    res.send(JSON.stringify(obj));
+
+                  }
 
                 }
 
-              }
+              })
 
-            })
-
-          }else{
-            obj.status = "YOU PASSWORD IS INCORRECT";
-            res.send(JSON.stringify(obj));
+            }else{
+              obj.status = "YOU PASSWORD IS INCORRECT";
+              res.send(JSON.stringify(obj));
+            }
           }
         }
-      }
 
-      connection.release();
+        connection.release();
 
 
-    })
+      })
+
+    }
 
   })
 
@@ -599,6 +620,11 @@ app.get("/fetchlocation",function(req,res){
 
   var Aray = [];
 
+  var MainObj = {
+    status:"",
+    locations : []
+  }
+
   var obj = {
     lname:"",
     lflagservice:"",
@@ -606,7 +632,7 @@ app.get("/fetchlocation",function(req,res){
     dlmid:""
   }
 
-  var sql = "SELECT lm_name, lm_flag_home_service_ref, lm_address_line1, dlm_id FROM location_master AS LM INNER JOIN doctor_location_master AS DLM ON LM.lm_location_id = DLM.dlm_lm_location_id WHERE DLM.dlm_id = ?";
+  var sql = "SELECT LM.lm_name, LM.lm_flag_home_service_ref, LM.lm_address_line1, DLM.dlm_id FROM location_master AS LM INNER JOIN doctor_location_master AS DLM ON LM.lm_location_id = DLM.dlm_lm_location_id WHERE DLM.dlm_id = ?";
 
   con.getConnection(function(err,connection){
 
@@ -623,15 +649,20 @@ app.get("/fetchlocation",function(req,res){
           obj.status = "CONNECTION ERROR";
           res.send(JSON.stringify(obj));
         }else{
+
+          MainObj.status = "SUCCESS";
           for(var i=0;i<result.length;i++){
 
             obj.lname = result[i].lm_name;
             obj.lflagservice = result[i].lm_flag_home_service_ref;
             obj.ladrline1 = result[i].lm_address_line1;
             obj.dlmid = result[i].dlm_id;
-            Aray.push(obj);
+            MainObj.locations.push(obj);
 
           }
+
+          res.send(JSON.stringify(MainObj));
+
         }
       })
     }
@@ -805,31 +836,36 @@ function InsertFinalValue(req,res,id){
 
 }
 
-app.get("/sss",function(req,res){
-
-  var Aray = [];
-
-  var obj = {
-    lname:"",
-    lflagservice:"",
-    ladrline1:"",
-    dlmid:""
-  }
-
-  for(var i=0;i<9;i++){
-
-      obj.lname = i.toString()+"result[i].lm_name";
-      obj.lflagservice = i.toString()+"result[i].lm_flag_home_service_ref";
-      obj.ladrline1 = i.toString()+"result[i].lm_address_line1";
-      obj.dlmid = i.toString()+"result[i].dlm_id";
-      Aray.push
-  }
-
-
-
-
-})
-
+// app.get("/sss",function(req,res){
+//
+//   var Aray = [];
+//
+//   var QQ = {
+//     aa : [],
+//     status:"SUCCESS"
+//   }
+//   var obj = {
+//     lname:"",
+//     lflagservice:"",
+//     ladrline1:"",
+//     dlmid:""
+//   }
+//
+//   for(var i=0;i<9;i++){
+//
+//       obj.lname = i.toString()+"result[i].lm_name";
+//       obj.lflagservice = i.toString()+"result[i].lm_flag_home_service_ref";
+//       obj.ladrline1 = i.toString()+"result[i].lm_address_line1";
+//       obj.dlmid = i.toString()+"result[i].dlm_id";
+//       QQ.aa.push(obj);
+//   }
+//
+//   res.send(JSON.stringify(QQ));
+//   // console.log(Aray);
+//
+//
+// })
+//
 
 app.listen(port,function(err1){
   console.log("Listening on the port 3000");
