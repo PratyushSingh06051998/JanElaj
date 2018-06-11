@@ -265,6 +265,7 @@ app.post("/signin",function(req,res){
                 }else{
 
                   console.log(DocId);
+                  console.log(result[0]);
 
                   if(result[0].exist == 0){
                     console.log("in checkpoint 1");
