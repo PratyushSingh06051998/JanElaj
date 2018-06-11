@@ -476,6 +476,8 @@ app.post("/clinicaddlocation",function(req,res){
   var LocId="";
   var DlmId="";
 
+  console.log(Name);
+  console.log(City);
 
   var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
   var Mydata = [];
@@ -526,7 +528,7 @@ app.post("/clinicaddlocation",function(req,res){
     status : "SUCCESS"
   }
 
-//have to make change hererererererer
+  //have to make change hererererererer
 
   var sql1 = 'INSERT INTO location_master (lm_location_id, lm_name, lm_address_line1, lm_address_line2, lm_city, lm_district, lm_state, lm_pincode) VALUES ((?),(?),(?),(?),(?),(?),(?),(?))';
   var sql2 = 'INSERT INTO doctor_location_master (dlm_dm_doctor_id, dlm_lm_location_id, dlm_id, dlm_doctor_options) VALUES ((?),(?),(?),(?))';
@@ -615,7 +617,7 @@ app.post("/clinicaddlocation",function(req,res){
 
 })
 
-app.get("/fetchlocation",function(req,res){
+app.get("/managelocation",function(req,res){
 
   var Object = req.body;
 
@@ -632,10 +634,13 @@ app.get("/fetchlocation",function(req,res){
     lname:"",
     lflagservice:"",
     ladrline1:"",
-    dlmid:""
+    dlmid:"",
+    lcity:"",
+    lid:"",
+    did:""
   }
 
-  var sql = "SELECT LM.lm_name, LM.lm_flag_home_service_ref, LM.lm_address_line1, DLM.dlm_id FROM location_master AS LM INNER JOIN doctor_location_master AS DLM ON LM.lm_location_id = DLM.dlm_lm_location_id WHERE DLM.dlm_id = ?";
+  var sql = "SELECT LM.lm_name, LM.lm_flag_home_service_ref, LM.lm_address_line1, LM.lm_location_id, LM.lm_city, DLM.dlm_id FROM location_master AS LM INNER JOIN doctor_location_master AS DLM ON LM.lm_location_id = DLM.dlm_lm_location_id WHERE DLM.dlm_dm_doctor_id = ?";
 
   con.getConnection(function(err,connection){
 
@@ -660,6 +665,9 @@ app.get("/fetchlocation",function(req,res){
             obj.lflagservice = result[i].lm_flag_home_service_ref;
             obj.ladrline1 = result[i].lm_address_line1;
             obj.dlmid = result[i].dlm_id;
+            obj.lcity = result[i].lm_city;
+            obj.lid = result[i].lm_location_id;
+            obj.did = DocId;
             MainObj.locations.push(obj);
 
           }
@@ -722,7 +730,8 @@ function InsertFinalValue(req,res,id){
   con.getConnection(function(err, connection) {
 
     if(err){
-      obj.status = "FAIL";
+      console.log("ERROR IN OPENING DATABASE IN INSERFINVALUE FUNCTION FOR ID ="+id);
+      obj.status = "COONECTION ERROR";
       res.send(JSON.stringify(obj));
       return err;
     }else{
