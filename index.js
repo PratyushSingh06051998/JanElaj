@@ -642,6 +642,8 @@ app.post("/managelocation",function(req,res){
 
   var DocId = Object.docid;
 
+  console.log("docid is "+DocId);
+
   var Aray = [];
 
   var MainObj = {
@@ -684,16 +686,6 @@ app.post("/managelocation",function(req,res){
               did:DocId
             }
 
-            // obj.lname = result[i].lm_name;
-            // obj.lflagservice = result[i].lm_flag_home_service_ref;
-            // obj.ladrline1 = result[i].lm_address_line1;
-            // obj.dlmid = result[i].dlm_id;
-            // obj.lcity = result[i].lm_city;
-            // obj.lid = result[i].lm_location_id;
-            // obj.did = DocId;
-            console.log(result[i].lm_city);
-            console.log(obj);
-            console.log(MainObj);
             MainObj.locations.push(obj);
 
           }
@@ -708,6 +700,15 @@ app.post("/managelocation",function(req,res){
 
   })
 
+
+})
+
+app.post("/timecheck",function(req,res){
+
+  var obj = {
+    status : "SUCCESS",
+    available : ""
+  }
 
 })
 
@@ -789,52 +790,48 @@ function InsertFinalValue(req,res,id){
 
                   if(result.affectedRows == 1){
 
-                    try{
-
-                      connection.query(sql1,[PLD_ROLE,EMAIL,PASSWORD,ID,MOBILE],function(err1,result1){
 
 
-                        if(err1){
-                          console.log("in 4");
-                          obj.status = "FAIL";
-                          res.send(JSON.stringify(obj));
-                          connection.rollback(function(){
-                            return err1;
+                    connection.query(sql1,[PLD_ROLE,EMAIL,PASSWORD,ID,MOBILE],function(err1,result1){
+
+
+                      if(err1){
+                        console.log("in 4");
+                        obj.status = "FAIL";
+                        res.send(JSON.stringify(obj));
+                        connection.rollback(function(){
+                          return err1;
+                        })
+                      }else{
+
+                        if(result1.affectedRows == 1){
+
+                          connection.commit(function(err){
+                            if(err){
+                              console.log("in 6");
+                              connection.rollback(function(){
+                                return err;
+                              })
+                              obj.status = "FAIL";
+                              res.send(JSON.stringify(obj));
+                            }else{
+                              obj.status = "SUCCESS";
+                              obj.id = ID;
+                              res.send(JSON.stringify(obj));
+                            }
                           })
                         }else{
-
-                          if(result1.affectedRows == 1){
-
-                            connection.commit(function(err){
-                              if(err){
-                                console.log("in 6");
-                                connection.rollback(function(){
-                                  return err;
-                                })
-                                obj.status = "FAIL";
-                                res.send(JSON.stringify(obj));
-                              }else{
-                                obj.status = "SUCCESS";
-                                obj.id = ID;
-                                res.send(JSON.stringify(obj));
-                              }
-                            })
-                          }else{
-                            console.log("in 5");
-                            connection.rollback(function(){
-                              // throw err;
-                            })
-                            obj.status = "FAIL";
-                            res.send(JSON.stringify(obj));
-                          }
-
+                          console.log("in 5");
+                          connection.rollback(function(){
+                            // throw err;
+                          })
+                          obj.status = "FAIL";
+                          res.send(JSON.stringify(obj));
                         }
 
-                      });
+                      }
 
-                    }catch(err){
-                      console.log(" I AM IN THE CATCHHHH "+err);
-                    }
+                    });
 
 
                   }else{
