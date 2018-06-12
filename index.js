@@ -460,6 +460,9 @@ app.post("/hvisitaddlocation",function(req,res){
 })
 //Leave it fr now
 
+
+
+
 app.post("/clinicaddlocation",function(req,res){
 
   var Object = req.body;
@@ -633,7 +636,7 @@ app.post("/clinicaddlocation",function(req,res){
 
 })
 
-app.get("/managelocation",function(req,res){
+app.post("/managelocation",function(req,res){
 
   var Object = req.body;
 
@@ -663,6 +666,7 @@ app.get("/managelocation",function(req,res){
     if(err){
       console.log("ERROR IN BUILDING CONNECTION IN FETCHLOCATION FOR DocId = "+DocId);
       console.log("ERROR CODE :"+err.code);
+      console.log("ERROR : "+err);
       obj.status = "CONNECTION ERROR";
       res.send(JSON.stringify(obj));
     }else{
@@ -670,6 +674,7 @@ app.get("/managelocation",function(req,res){
         if(err){
           console.log("ERROR IN RUNNING SQL IN FETCHLOCATION FOR DocId = "+DocId);
           console.log("ERROR CODE :"+err.code);
+          console.log("ERROR : "+err);
           obj.status = "CONNECTION ERROR";
           res.send(JSON.stringify(obj));
         }else{
