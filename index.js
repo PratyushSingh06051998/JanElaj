@@ -649,15 +649,7 @@ app.post("/managelocation",function(req,res){
     locations : []
   }
 
-  var obj = {
-    lname:"",
-    lflagservice:"",
-    ladrline1:"",
-    dlmid:"",
-    lcity:"",
-    lid:"",
-    did:""
-  }
+
 
   var sql = "SELECT LM.lm_name, LM.lm_flag_home_service_ref, LM.lm_address_line1, LM.lm_location_id, LM.lm_city, DLM.dlm_id FROM location_master AS LM INNER JOIN doctor_location_master AS DLM ON LM.lm_location_id = DLM.dlm_lm_location_id WHERE DLM.dlm_dm_doctor_id = ?";
 
@@ -667,28 +659,38 @@ app.post("/managelocation",function(req,res){
       console.log("ERROR IN BUILDING CONNECTION IN FETCHLOCATION FOR DocId = "+DocId);
       console.log("ERROR CODE :"+err.code);
       console.log("ERROR : "+err);
-      obj.status = "CONNECTION ERROR";
-      res.send(JSON.stringify(obj));
+      MainObj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(MainObj));
     }else{
       connection.query(sql,[DocId],function(err,result){
         if(err){
           console.log("ERROR IN RUNNING SQL IN FETCHLOCATION FOR DocId = "+DocId);
           console.log("ERROR CODE :"+err.code);
           console.log("ERROR : "+err);
-          obj.status = "CONNECTION ERROR";
-          res.send(JSON.stringify(obj));
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
         }else{
 
           MainObj.status = "SUCCESS";
           for(var i=0;i<result.length;i++){
 
-            obj.lname = result[i].lm_name;
-            obj.lflagservice = result[i].lm_flag_home_service_ref;
-            obj.ladrline1 = result[i].lm_address_line1;
-            obj.dlmid = result[i].dlm_id;
-            obj.lcity = result[i].lm_city;
-            obj.lid = result[i].lm_location_id;
-            obj.did = DocId;
+            var obj = {
+              lname:result[i].lm_name,
+              lflagservice:result[i].lm_flag_home_service_ref,
+              ladrline1:result[i].lm_address_line1,
+              dlmid:result[i].dlm_id,
+              lcity:result[i].lm_city,
+              lid:result[i].lm_location_id,
+              did:DocId
+            }
+
+            // obj.lname = result[i].lm_name;
+            // obj.lflagservice = result[i].lm_flag_home_service_ref;
+            // obj.ladrline1 = result[i].lm_address_line1;
+            // obj.dlmid = result[i].dlm_id;
+            // obj.lcity = result[i].lm_city;
+            // obj.lid = result[i].lm_location_id;
+            // obj.did = DocId;
             console.log(result[i].lm_city);
             console.log(obj);
             console.log(MainObj);
