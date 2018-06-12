@@ -696,6 +696,8 @@ app.post("/managelocation",function(req,res){
 
           }
 
+          console.log(MainObj);
+
           res.send(JSON.stringify(MainObj));
 
         }
