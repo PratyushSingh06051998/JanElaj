@@ -690,6 +690,8 @@ app.post("/managelocation",function(req,res){
             obj.lid = result[i].lm_location_id;
             obj.did = DocId;
             console.log(result[i].lm_city);
+            console.log("1 "+obj);
+            console.log("@"+MainObj);
             MainObj.locations.push(obj);
 
           }
