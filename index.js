@@ -653,7 +653,7 @@ app.post("/managelocation",function(req,res){
 
         }
 
-        connection.release();
+        // connection.release();
 
       })
     }
@@ -828,7 +828,7 @@ console.log("-1");
   })
 
 
-})
+});
 
 app.post("/timecheck",function(req,res){
 
