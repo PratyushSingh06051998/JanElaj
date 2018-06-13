@@ -665,7 +665,9 @@ app.post("/managelocation",function(req,res){
 
 app.post("/timeinsert",function(req,res){
 
+console.log("-1");
   var Object = req.body;
+  console.log('0');
   var MON = [];
   var TUE = [];
   var WED = [];
