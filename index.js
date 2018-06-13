@@ -743,7 +743,7 @@ app.post("/timeinsert",function(req,res){
 
           for(var i=0;i<7;i++){
 
-            Dldmid = = "DLDM"+""+valuedldm.toString();
+            Dldmid = "DLDM"+""+valuedldm.toString();
             console.log("in main forr loop  = "+Dldmid);
 
 
