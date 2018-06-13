@@ -665,7 +665,7 @@ app.post("/managelocation",function(req,res){
 
 app.post("/timeinsert",function(req,res){
 
-console.log("-1");
+  console.log("-1");
   var Object = req.body;
   console.log('0');
   var MON = [];
@@ -800,7 +800,7 @@ console.log("-1");
 
                         moncount++;
                         console.log("moncount = "+moncount);
-                        if(moncount == MON.length-1){
+                        if(moncount == MON.length){
                           cvaluedldm++;
                           console.log("mon inside if");
                           res.send(JSON.stringify(MainObj));
@@ -981,12 +981,14 @@ function InsertFinalValue(req,res,id){
                   }
                 }
 
-                  connection.release();
               });
 
 
 
         }
+
+        connection.release();
+
 
       });
 
