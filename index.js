@@ -821,13 +821,15 @@ console.log("-1");
                 }
               }
 
-              connection.release();
 
             })
 
           }
 
         }
+
+        connection.release();
+
 
       })
 
