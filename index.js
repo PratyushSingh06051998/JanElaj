@@ -678,6 +678,10 @@ console.log("-1");
   var Dldmid="";
   var valuedldm=0;
   var cvaluedldm=0;
+  var count=0;
+  var moncount=0;
+
+
 
   console.log("1");
 
@@ -764,7 +768,6 @@ console.log("-1");
                   return err;
                 })
               }else{
-                var count=0;
                 count++;
                 console.log("count value  = "+count);
                 if(count==6){
@@ -793,7 +796,6 @@ console.log("-1");
                         })
                       }else{
 
-                        var moncount=0;
                         moncount++;
                         console.log("moncount = "+moncount);
                         if(moncount == MON.length-1){
