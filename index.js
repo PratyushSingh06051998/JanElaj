@@ -653,7 +653,7 @@ app.post("/managelocation",function(req,res){
 
         }
 
-        // connection.release();
+        connection.release();
 
       })
     }
