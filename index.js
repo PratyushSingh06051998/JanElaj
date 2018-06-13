@@ -111,19 +111,7 @@ app.post("/registeruser",function(req,res){
   var ID="";
   var PLD_ROLE = Object.pldrole;
   var REGISTRATION_NUMBER =  Object.registernumber;
-  console.log(PLD_ROLE);
-  console.log(REGISTRATION_NUMBER);
-
-  // var NAME =  req.body.name;
-  // var DOB =  req.body.dob;
-  // var GENDER =  req.body.gender;
-  // var EMAIL =  req.body.email;
-  // var PASSWORD =  req.body.password;
-  // var MOBILE =  req.body.mobile;
-  // var SPECIALITY_ID =  req.body.specialityid;
-  // var REGISTRATION_COUNCIL =  req.body.registercouncil;
-  // var REGISTRATION_YEAR =  req.body.registeryear;
-  // var EXPERIENCE =  parseInt(req.body.experience);
+  console.log("has been hit in registeuser");
 
   var obj = {
     status : "SUCCESS",
@@ -151,27 +139,16 @@ app.post("/registeruser",function(req,res){
 
           if(result[0].namesCount == 0){
 
-            console.log("in 111");
-
             var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
             var Mydata = [];
             var csvStream = csv.parse().on("data", function(data){
 
                   var value=0;
 
-                  console.log("in loop "+PLD_ROLE);
-
-                  console.log("in loop "+data[0]);
-
-
                   if(data[0] == PLD_ROLE){
 
-                    console.log("in mein if mein");
-
                     value = parseInt(data[1]);
-                    console.log(":: in if value "+value);
                     ID = PLD_ROLE+""+data[1];
-                    console.log(":: in if ID "+ID);
                     value++;
                     data[1]=value.toString();
                   }
@@ -181,15 +158,9 @@ app.post("/registeruser",function(req,res){
                      var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
                      csv.write(Mydata, {headers: true}).pipe(ws);
                      InsertFinalValue(req,res,ID);
-                     console.log("final Id "+ ID);
-                     console.log(Mydata);
-
                 });
             stream.pipe(csvStream);
           }else{
-
-            console.log("in 222");
-
             obj.status = "FAIL";
             res.send(JSON.stringify(obj));
           }
@@ -460,9 +431,6 @@ app.post("/hvisitaddlocation",function(req,res){
 })
 //Leave it fr now
 
-
-
-
 app.post("/clinicaddlocation",function(req,res){
 
   var Object = req.body;
@@ -478,9 +446,8 @@ app.post("/clinicaddlocation",function(req,res){
   var Options = Object.option;
   var LocId="";
   var DlmId="";
+  console.log("Has been hit");
 
-  console.log(Name);
-  console.log(City);
 
   var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
   var Mydata = [];
@@ -489,30 +456,18 @@ app.post("/clinicaddlocation",function(req,res){
         var valueloc=0;
         var valuedlm=0;
 
-
-        console.log("in loop "+data[0]);
-
-
         if(data[0] == "LOC"){
 
-          console.log("in mein if mein");
-
           valueloc = parseInt(data[1]);
-          console.log(":: in if value "+valueloc);
           LocId = "LOC"+""+data[1];
-          console.log(":: in if ID "+LocId);
           valueloc++;
           data[1]=valueloc.toString();
         }
 
         if(data[0] == "DLM"){
 
-          console.log("in mein if mein");
-
           valuedlm = parseInt(data[1]);
-          console.log(":: in if value "+valuedlm);
           DlmId = "DLM"+""+data[1];
-          console.log(":: in if ID "+DlmId);
           valuedlm++;
           data[1]=valuedlm.toString();
         }
@@ -521,8 +476,6 @@ app.post("/clinicaddlocation",function(req,res){
       .on("end", function(){
            var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
            csv.write(Mydata, {headers: true}).pipe(ws);
-           console.log(Mydata);
-
       });
   stream.pipe(csvStream);
 
@@ -642,7 +595,7 @@ app.post("/managelocation",function(req,res){
 
   var DocId = Object.docid;
 
-  console.log("docid is "+DocId);
+  console.log("has been hit in manage location");
 
   var Aray = [];
 
@@ -690,8 +643,6 @@ app.post("/managelocation",function(req,res){
 
           }
 
-          console.log(MainObj);
-
           res.send(JSON.stringify(MainObj));
 
         }
@@ -737,19 +688,20 @@ function InsertFinalValue(req,res,id){
   var REGISTRATION_YEAR =  Object.registeryear;
   var EXPERIENCE =  parseInt(Object.experience);
   var REGISTERDATE="";
-  console.log(ID);
-  console.log(PLD_ROLE);
-  console.log(NAME);
-  console.log(DOB);
-  console.log(GENDER);
-  console.log(EMAIL);
-  console.log(PASSWORD);
-  console.log(MOBILE);
-  console.log(SPECIALITY_ID);
-  console.log(REGISTRATION_NUMBER);
-  console.log(REGISTRATION_COUNCIL);
-  console.log(REGISTRATION_YEAR);
-  console.log(EXPERIENCE);
+  // console.log(ID);
+  // console.log(PLD_ROLE);
+  // console.log(NAME);
+  // console.log(DOB);
+  // console.log(GENDER);
+  // console.log(EMAIL);
+  // console.log(PASSWORD);
+  // console.log(MOBILE);
+  // console.log(SPECIALITY_ID);
+  // console.log(REGISTRATION_NUMBER);
+  // console.log(REGISTRATION_COUNCIL);
+  // console.log(REGISTRATION_YEAR);
+  // console.log(EXPERIENCE);
+  console.log("has been hit in insertfinvalue");
 
 
   var sql = "INSERT INTO doctor_master (dm_doctor_id, dm_doctor_name, dm_dob, dm_gender, dm_doctor_contact_mobile, dm_doctor_speciality_id, dm_doctor_email, dm_medical_registration_number, dm_registration_council, dm_registration_year, dm_doctor_experience, dm_reg_date) VALUES((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),SYSDATE())";
@@ -789,8 +741,6 @@ function InsertFinalValue(req,res,id){
                 }else{
 
                   if(result.affectedRows == 1){
-
-
 
                     connection.query(sql1,[PLD_ROLE,EMAIL,PASSWORD,ID,MOBILE],function(err1,result1){
 
@@ -858,37 +808,6 @@ function InsertFinalValue(req,res,id){
 
 
 }
-
-// app.get("/sss",function(req,res){
-//
-//   var Aray = [];
-//
-//   var QQ = {
-//     aa : [],
-//     status:"SUCCESS"
-//   }
-//   var obj = {
-//     lname:"",
-//     lflagservice:"",
-//     ladrline1:"",
-//     dlmid:""
-//   }
-//
-//   for(var i=0;i<9;i++){
-//
-//       obj.lname = i.toString()+"result[i].lm_name";
-//       obj.lflagservice = i.toString()+"result[i].lm_flag_home_service_ref";
-//       obj.ladrline1 = i.toString()+"result[i].lm_address_line1";
-//       obj.dlmid = i.toString()+"result[i].dlm_id";
-//       QQ.aa.push(obj);
-//   }
-//
-//   res.send(JSON.stringify(QQ));
-//   // console.log(Aray);
-//
-//
-// })
-//
 
 app.listen(port,function(err1){
   console.log("Listening on the port 3000");
