@@ -767,6 +767,7 @@ console.log("-1");
                 connection.rollback(function(){
                   return err;
                 })
+                break;
               }else{
                 count++;
                 console.log("count value  = "+count);
@@ -794,6 +795,7 @@ console.log("-1");
                         connection.rollback(function(){
                           return err;
                         })
+                        break;
                       }else{
 
                         moncount++;
@@ -819,7 +821,7 @@ console.log("-1");
                 }
               }
 
-              // connection.release();
+              connection.release();
 
             })
 
