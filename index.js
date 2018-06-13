@@ -677,6 +677,8 @@ app.post("/timeinsert",function(req,res){
   var valuedldm=0;
   var cvaluedldm=0;
 
+  console.log("1");
+
   var DlmId = Object.dlmid;
 
   MON = Object.monday;
@@ -687,21 +689,22 @@ app.post("/timeinsert",function(req,res){
   SAT = Object.saturday;
   SUN = Object.sunday;
 
+  console.log(MON);
+
 
   var MainObj = {
     status:"SUCCESS"
   }
 
+  console.log("2");
   var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
   var Mydata = [];
   var csvStream = csv.parse().on("data", function(data){
 
-    // var valuedldm=0;
 
         if(data[0] == "DLDM"){
 
           valuedldm = parseInt(data[1]);
-          // Dldmid = "DLDM"+""+data[1];
           valuedldm = valuedldm + 7;
           data[1]=valuedldm.toString();
           valuedldm = valuedldm - 7;
@@ -718,7 +721,7 @@ app.post("/timeinsert",function(req,res){
   var sql1 = "INSERT INTO doctor_location_day_master (dldm_dlm_id, dldm_day_number, dldm_id) VALUES ((?),(?),(?))";
   var sql2 = "INSERT INTO doctor_location_time_master (dltm_dldm_id, dltm_time_from, dltm_time_to, dltm_discount_offer_flag) VALUES ((?),(?),(?),(?))";
 
-
+  console.log("3");
   con.getConnection(function(err,connection){
 
     if(err){
