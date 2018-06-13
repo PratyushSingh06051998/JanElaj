@@ -775,7 +775,7 @@ console.log("-1");
                   for(var moni=0;moni<MON.length;moni++){
 
                     var monid="DLDM"+""+cvaluedldm.toString();
-                    var montime = MON[moni].split("_");
+                    var montime = MON[moni].time.split("_");
                     console.log("moni = "+moni);
                     console.log("montime = "+montime[0]+" to "+montime[1]);
                     console.log("monid = "+monid);
