@@ -799,9 +799,14 @@ console.log("-1");
                         moncount++;
                         console.log("moncount = "+moncount);
                         if(moncount == MON.length-1){
-
+                          cvaluedldm++;
                           console.log("mon inside if");
                           res.send(JSON.stringify(MainObj));
+                          connection.commit(function(err){
+                            if (err) {
+                              return err
+                            }
+                          })
 
                         }
 
