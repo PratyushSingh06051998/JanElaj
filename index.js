@@ -417,6 +417,8 @@ app.post("/hvisitaddlocation",function(req,res){
 
             }
 
+            connection.release();
+
           })
 
         }
@@ -577,6 +579,8 @@ app.post("/clinicaddlocation",function(req,res){
 
             }
 
+            connection.release();
+
           })
 
         }
@@ -616,6 +620,7 @@ app.post("/managelocation",function(req,res){
       console.log("ERROR : "+err);
       MainObj.status = "CONNECTION ERROR";
       res.send(JSON.stringify(MainObj));
+      return err;
     }else{
       connection.query(sql,[DocId],function(err,result){
         if(err){
@@ -624,6 +629,7 @@ app.post("/managelocation",function(req,res){
           console.log("ERROR : "+err);
           MainObj.status = "CONNECTION ERROR";
           res.send(JSON.stringify(MainObj));
+          return err;
         }else{
 
           MainObj.status = "SUCCESS";
@@ -646,8 +652,173 @@ app.post("/managelocation",function(req,res){
           res.send(JSON.stringify(MainObj));
 
         }
+
+        connection.release();
+
       })
     }
+
+  })
+
+
+})
+
+app.post("/timeinsert",function(req,res){
+
+  var Object = req.body;
+  var MON = [];
+  var TUE = [];
+  var WED = [];
+  var THU = [];
+  var FRI = [];
+  var SAT = [];
+  var SUN = [];
+  var Dldmid="";
+  var valuedldm=0;
+  var cvaluedldm=0;
+
+  var DlmId = Object.dlmid;
+
+  MON = Object.monday;
+  TUE = Object.tuesday;
+  WED = Object.wednesday;
+  THU = Object.thursday;
+  FRI = Object.friday;
+  SAT = Object.saturday;
+  SUN = Object.sunday;
+
+
+  var MainObj = {
+    status:"SUCCESS"
+  }
+
+  var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
+  var Mydata = [];
+  var csvStream = csv.parse().on("data", function(data){
+
+    // var valuedldm=0;
+
+        if(data[0] == "DLDM"){
+
+          valuedldm = parseInt(data[1]);
+          // Dldmid = "DLDM"+""+data[1];
+          valuedldm = valuedldm + 7;
+          data[1]=valuedldm.toString();
+          valuedldm = valuedldm - 7;
+          cvaluedldm=valuedldm;
+        }
+        Mydata.push(data);
+      })
+      .on("end", function(){
+           var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
+           csv.write(Mydata, {headers: true}).pipe(ws);
+      });
+  stream.pipe(csvStream);
+
+  var sql1 = "INSERT INTO doctor_location_day_master (dldm_dlm_id, dldm_day_number, dldm_id) VALUES ((?),(?),(?))";
+  var sql2 = "INSERT INTO doctor_location_time_master (dltm_dldm_id, dltm_time_from, dltm_time_to, dltm_discount_offer_flag) VALUES ((?),(?),(?),(?))";
+
+
+  con.getConnection(function(err,connection){
+
+    if(err){
+      console.log("ERROR IN TIMEINSEERT IN CONNECTING TO DATABASE FOR DLDMID = "+DlmId);
+      console.log("ERROR : "+err);
+      console.log("ERROR CODE : "+err.code);
+      MainObj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(MainObj));
+      return err;
+    }else{
+
+      connection.beginTransaction(function(err){
+
+        if(err){
+          console.log("ERROR IN TIMEINSEERT IN RUNNING TRANSACTION FOR DLDMID = "+DlmId);
+          console.log("ERROR : "+err);
+          console.log("ERROR CODE : "+err.code);
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+          return err;
+        }else{
+
+          for(var i=0;i<7;i++){
+
+            Dldmid = = "DLDM"+""+valuedldm.toString();
+            console.log("in main forr loop  = "+Dldmid);
+
+
+            connection.query(sql1,[Dldmid,i,DlmId],function(err,result){
+
+              if(err){
+                console.log("ERROR IN RUNNING SQL1 FOR DLDMID = "+DlmId+" AND DLDMID ="+Dldmid);
+                console.log("ERROR : "+err);
+                console.log("ERROR CODE : "+err.code);
+                MainObj.status = "CONNECTION ERROR";
+                res.send(JSON.stringify(MainObj));
+                connection.rollback(function(){
+                  return err;
+                })
+              }else{
+                var count=0;
+                count++;
+                console.log("count value  = "+count);
+                if(count==6){
+
+                  //FOR MONDAY
+                  console.log("in main count");
+
+                  for(var moni=0;moni<MON.length;moni++){
+
+                    var monid="DLDM"+""+cvaluedldm.toString();
+                    var montime = MON[moni].split("_");
+                    console.log("moni = "+moni);
+                    console.log("montime = "+montime[0]+" to "+montime[1]);
+                    console.log("monid = "+monid);
+
+                    connection.query(sql2,[monid,montime[0],montime[1],"N"],function(err,result){
+
+                      if(err){
+                        console.log("ERROR IN RUNNING SQL2 IN MONDAY FOR DLDMID = "+DlmId+" AND DLDMID ="+monid);
+                        console.log("ERROR : "+err);
+                        console.log("ERROR CODE : "+err.code);
+                        MainObj.status = "CONNECTION ERROR";
+                        res.send(JSON.stringify(MainObj));
+                        connection.rollback(function(){
+                          return err;
+                        })
+                      }else{
+
+                        var moncount=0;
+                        moncount++;
+                        console.log("moncount = "+moncount);
+                        if(moncount == MON.length-1){
+
+                          console.log("mon inside if");
+                          res.send(JSON.stringify(MainObj));
+
+                        }
+
+                      }
+
+                    })
+
+                  }
+
+                }
+              }
+
+              connection.release();
+
+            })
+
+          }
+
+        }
+
+      })
+
+    }
+
 
   })
 
