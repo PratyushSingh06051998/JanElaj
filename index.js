@@ -680,6 +680,12 @@ app.post("/timeinsert",function(req,res){
   var cvaluedldm=0;
   var count=0;
   var moncount=0;
+  var tuecount=0;
+  var wedcount=0;
+  var thucount=0;
+  var fricount=0;
+  var satcount=0;
+  var suncount=0;
 
 
 
