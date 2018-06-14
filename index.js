@@ -839,7 +839,7 @@ app.post("/timeinsert",function(req,res){
 
                                   res.send(JSON.stringify(MainObj));
                                   connection.commit(function(err){
-                                    
+
                                   })
 
                                 }
@@ -849,6 +849,7 @@ app.post("/timeinsert",function(req,res){
                             })
 
                           }
+                        }
 
                       })
 
@@ -860,11 +861,13 @@ app.post("/timeinsert",function(req,res){
 
                     }
 
-                  }
+
 
                 })
 
               }
+
+            }
 
           })
 
