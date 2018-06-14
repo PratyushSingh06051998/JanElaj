@@ -753,7 +753,7 @@ app.post("/timeinsert",function(req,res){
           Dldmid = "DLDM"+""+valuedldm.toString();
           console.log("in main forr loop  = "+Dldmid);
 
-          connection.query(sql1,[Dldmid,"MONDAY",DlmId],function(err,result){
+          connection.query(sql1,[Dldmid,"MON",DlmId],function(err,result){
 
             if(err){
               console.log("ERROR IN RUNNING SQL1 FOR DLDMID = "+DlmId+" AND DLDMID ="+Dldmid);
@@ -797,7 +797,7 @@ app.post("/timeinsert",function(req,res){
                       Dldmid = "DLDM"+""+valuedldm.toString();
                       console.log("in main forr loop  = "+Dldmid);
 
-                      connection.query(sql1,[Dldmid,"TUESDAY",DlmId],function(err,result){
+                      connection.query(sql1,[Dldmid,"TUE",DlmId],function(err,result){
 
                         if(err){
                           console.log("ERROR IN RUNNING SQL1 FOR DLDMID = "+DlmId+" AND DLDMID ="+Dldmid);
@@ -875,78 +875,6 @@ app.post("/timeinsert",function(req,res){
 
 
         }
-
-        // for(var i=0;i<7;i++){
-        //
-        //   Dldmid = "DLDM"+""+valuedldm.toString();
-        //   console.log("in main forr loop  = "+Dldmid);
-        //
-        //
-        //   connection.query(sql1,[Dldmid,i,DlmId],function(err,result){
-        //
-        //     if(err){
-        //       console.log("ERROR IN RUNNING SQL1 FOR DLDMID = "+DlmId+" AND DLDMID ="+Dldmid);
-        //       console.log("ERROR : "+err);
-        //       console.log("ERROR CODE : "+err.code);
-        //       MainObj.status = "CONNECTION ERROR";
-        //       res.send(JSON.stringify(MainObj));
-        //       connection.rollback(function(){
-        //         return err;
-        //       })
-        //       return;
-        //     }else{
-        //
-        //       count++;
-        //       console.log("count value  = "+count);
-        //       if(count==6){
-        //
-        //         //FOR MONDAY
-        //         console.log("in main count");
-        //
-        //         for(var moni=0;moni<MON.length;moni++){
-        //
-        //           var monid="DLDM"+""+cvaluedldm.toString();
-        //           var montime = MON[moni].time.split("_");
-        //           console.log("moni = "+moni);
-        //           console.log("montime = "+montime[0]+" to "+montime[1]);
-        //           console.log("monid = "+monid);
-        //
-        //           connection.query(sql2,[monid,montime[0],montime[1],"N"],function(err,result){
-        //
-        //             if(err){
-        //               console.log("ERROR IN RUNNING SQL2 IN MONDAY FOR DLDMID = "+DlmId+" AND DLDMID ="+monid);
-        //               console.log("ERROR : "+err);
-        //               console.log("ERROR CODE : "+err.code);
-        //               MainObj.status = "CONNECTION ERROR";
-        //               res.send(JSON.stringify(MainObj));
-        //               connection.rollback(function(){
-        //                 return err;
-        //               })
-        //               return;
-        //             }else{
-        //
-        //               moncount++;
-        //               console.log("moncount = "+moncount);
-        //               if(moncount == MON.length){
-        //                 cvaluedldm++;
-        //
-        //
-        //
-        //               }
-        //
-        //             }
-        //
-        //           })
-        //
-        //         }
-        //
-        //       }
-        //     }
-        //
-        //
-        //   })
-        //
-        // }
 
         connection.release();
 
