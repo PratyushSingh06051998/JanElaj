@@ -843,8 +843,279 @@ app.post("/timeinsert",function(req,res){
                                 if(tuecount == TUE.length){
                                   valuedldm++;
 
-                                  res.send(JSON.stringify(MainObj));
-                                  connection.commit(function(err){
+                                  Dldmid = "DLDM"+""+valuedldm.toString();
+                                  console.log("in main forr loop  = "+Dldmid);
+
+                                  connection.query(sql1,[Dldmid,"WED",DlmId],function(err,result){
+
+                                    if(err){
+                                      console.log("ERROR IN RUNNING SQL1 FOR DLDMID = "+DlmId+" AND DLDMID ="+Dldmid);
+                                      console.log("ERROR : "+err);
+                                      console.log("ERROR CODE : "+err.code);
+                                      MainObj.status = "CONNECTION ERROR";
+                                      res.send(JSON.stringify(MainObj));
+                                      connection.rollback(function(){
+                                        return err;
+                                      })
+                                    }else{
+
+                                      for(var wedi=0;wedi<WED.length;wedi++){
+
+                                        var wedid="DLDM"+""+valuedldm.toString();
+                                        var wedtime = WED[wedi].time.split("_");
+                                        console.log("wedi = "+wedi);
+                                        console.log("wedtime = "+wedtime[0]+" to "+wedtime[1]);
+                                        console.log("wedid = "+wedid);
+
+                                        connection.query(sql2,[wedid,wedtime[0],wedtime[1],"N"],function(err,result){
+
+                                          if(err){
+                                            console.log("ERROR IN RUNNING SQL2 IN WEDNESDAY FOR DLDMID = "+DlmId+" AND DLDMID ="+wedid);
+                                            console.log("ERROR : "+err);
+                                            console.log("ERROR CODE : "+err.code);
+                                            MainObj.status = "CONNECTION ERROR";
+                                            res.send(JSON.stringify(MainObj));
+                                            connection.rollback(function(){
+                                              return err;
+                                            })
+                                            return;
+                                          }else{
+
+                                            wedcount++;
+                                            console.log("wedcount = "+wedcount);
+                                            if(wedcount == WED.length){
+                                              valuedldm++;
+
+                                              Dldmid = "DLDM"+""+valuedldm.toString();
+                                              console.log("in main forr loop  = "+Dldmid);
+
+                                              connection.query(sql1,[Dldmid,"THU",DlmId],function(err,result){
+
+                                                if(err){
+                                                  console.log("ERROR IN RUNNING SQL1 FOR DLDMID = "+DlmId+" AND DLDMID ="+Dldmid);
+                                                  console.log("ERROR : "+err);
+                                                  console.log("ERROR CODE : "+err.code);
+                                                  MainObj.status = "CONNECTION ERROR";
+                                                  res.send(JSON.stringify(MainObj));
+                                                  connection.rollback(function(){
+                                                    return err;
+                                                  })
+                                                }else{
+
+                                                  for(var thui=0;thui<THU.length;thui++){
+
+                                                    var thuid="DLDM"+""+valuedldm.toString();
+                                                    var thutime = THU[thui].time.split("_");
+                                                    console.log("thui = "+thui);
+                                                    console.log("thutime = "+thutime[0]+" to "+thutime[1]);
+                                                    console.log("thuid = "+thuid);
+
+                                                    connection.query(sql2,[thuid,thutime[0],thutime[1],"N"],function(err,result){
+
+                                                      if(err){
+                                                        console.log("ERROR IN RUNNING SQL2 IN THURSDAY FOR DLDMID = "+DlmId+" AND DLDMID ="+thuid);
+                                                        console.log("ERROR : "+err);
+                                                        console.log("ERROR CODE : "+err.code);
+                                                        MainObj.status = "CONNECTION ERROR";
+                                                        res.send(JSON.stringify(MainObj));
+                                                        connection.rollback(function(){
+                                                          return err;
+                                                        })
+                                                        return;
+                                                      }else{
+
+                                                        thucount++;
+                                                        console.log("thucount = "+thucount);
+                                                        if(thucount == THU.length){
+                                                          valuedldm++;
+
+                                                          Dldmid = "DLDM"+""+valuedldm.toString();
+                                                          console.log("in main forr loop  = "+Dldmid);
+
+                                                          connection.query(sql1,[Dldmid,"FRI",DlmId],function(err,result){
+
+                                                            if(err){
+                                                              console.log("ERROR IN RUNNING SQL1 FOR DLDMID = "+DlmId+" AND DLDMID ="+Dldmid);
+                                                              console.log("ERROR : "+err);
+                                                              console.log("ERROR CODE : "+err.code);
+                                                              MainObj.status = "CONNECTION ERROR";
+                                                              res.send(JSON.stringify(MainObj));
+                                                              connection.rollback(function(){
+                                                                return err;
+                                                              })
+                                                            }else{
+
+                                                              for(var frii=0;frii<FRI.length;frii++){
+
+                                                                var friid="DLDM"+""+valuedldm.toString();
+                                                                var fritime = FRI[frii].time.split("_");
+                                                                console.log("frii = "+frii);
+                                                                console.log("fritime = "+fritime[0]+" to "+fritime[1]);
+                                                                console.log("friid = "+friid);
+
+                                                                connection.query(sql2,[friid,fritime[0],fritime[1],"N"],function(err,result){
+
+                                                                  if(err){
+                                                                    console.log("ERROR IN RUNNING SQL2 IN FRIDAY FOR DLDMID = "+DlmId+" AND DLDMID ="+friid);
+                                                                    console.log("ERROR : "+err);
+                                                                    console.log("ERROR CODE : "+err.code);
+                                                                    MainObj.status = "CONNECTION ERROR";
+                                                                    res.send(JSON.stringify(MainObj));
+                                                                    connection.rollback(function(){
+                                                                      return err;
+                                                                    })
+                                                                    return;
+                                                                  }else{
+
+                                                                    fricount++;
+                                                                    console.log("fricount = "+fricount);
+                                                                    if(fricount == FRI.length){
+                                                                      valuedldm++;
+
+                                                                      Dldmid = "DLDM"+""+valuedldm.toString();
+                                                                      console.log("in main forr loop  = "+Dldmid);
+
+                                                                      connection.query(sql1,[Dldmid,"SAT",DlmId],function(err,result){
+
+                                                                        if(err){
+                                                                          console.log("ERROR IN RUNNING SQL1 FOR DLDMID = "+DlmId+" AND DLDMID ="+Dldmid);
+                                                                          console.log("ERROR : "+err);
+                                                                          console.log("ERROR CODE : "+err.code);
+                                                                          MainObj.status = "CONNECTION ERROR";
+                                                                          res.send(JSON.stringify(MainObj));
+                                                                          connection.rollback(function(){
+                                                                            return err;
+                                                                          })
+                                                                        }else{
+
+                                                                          for(var sati=0;sati<SAT.length;sati++){
+
+                                                                            var satid="DLDM"+""+valuedldm.toString();
+                                                                            var sattime = SAT[sati].time.split("_");
+                                                                            console.log("sati = "+sati);
+                                                                            console.log("sattime = "+sattime[0]+" to "+sattime[1]);
+                                                                            console.log("satid = "+satid);
+
+                                                                            connection.query(sql2,[satid,sattime[0],sattime[1],"N"],function(err,result){
+
+                                                                              if(err){
+                                                                                console.log("ERROR IN RUNNING SQL2 IN SATURDAY FOR DLDMID = "+DlmId+" AND DLDMID ="+satid);
+                                                                                console.log("ERROR : "+err);
+                                                                                console.log("ERROR CODE : "+err.code);
+                                                                                MainObj.status = "CONNECTION ERROR";
+                                                                                res.send(JSON.stringify(MainObj));
+                                                                                connection.rollback(function(){
+                                                                                  return err;
+                                                                                })
+                                                                                return;
+                                                                              }else{
+
+                                                                                satcount++;
+                                                                                console.log("satcount = "+satcount);
+                                                                                if(satcount == SAT.length){
+                                                                                  valuedldm++;
+
+                                                                                  Dldmid = "DLDM"+""+valuedldm.toString();
+                                                                                  console.log("in main forr loop  = "+Dldmid);
+
+                                                                                  connection.query(sql1,[Dldmid,"SUN",DlmId],function(err,result){
+
+                                                                                    if(err){
+                                                                                      console.log("ERROR IN RUNNING SQL1 FOR DLDMID = "+DlmId+" AND DLDMID ="+Dldmid);
+                                                                                      console.log("ERROR : "+err);
+                                                                                      console.log("ERROR CODE : "+err.code);
+                                                                                      MainObj.status = "CONNECTION ERROR";
+                                                                                      res.send(JSON.stringify(MainObj));
+                                                                                      connection.rollback(function(){
+                                                                                        return err;
+                                                                                      })
+                                                                                    }else{
+
+                                                                                      for(var suni=0;suni<SUN.length;suni++){
+
+                                                                                        var sunid="DLDM"+""+valuedldm.toString();
+                                                                                        var suntime = SUN[suni].time.split("_");
+                                                                                        console.log("suni = "+suni);
+                                                                                        console.log("suntime = "+suntime[0]+" to "+suntime[1]);
+                                                                                        console.log("sunid = "+sunid);
+
+                                                                                        connection.query(sql2,[sunid,suntime[0],suntime[1],"N"],function(err,result){
+
+                                                                                          if(err){
+                                                                                            console.log("ERROR IN RUNNING SQL2 IN SUNDAY FOR DLDMID = "+DlmId+" AND DLDMID ="+sunid);
+                                                                                            console.log("ERROR : "+err);
+                                                                                            console.log("ERROR CODE : "+err.code);
+                                                                                            MainObj.status = "CONNECTION ERROR";
+                                                                                            res.send(JSON.stringify(MainObj));
+                                                                                            connection.rollback(function(){
+                                                                                              return err;
+                                                                                            })
+                                                                                            return;
+                                                                                          }else{
+
+                                                                                            suncount++;
+                                                                                            console.log("suncount = "+suncount);
+                                                                                            if(suncount == SUN.length){
+                                                                                              valuedldm++;
+
+                                                                                              connection.commit(function(err){
+                                                                                                if (err) {
+
+                                                                                                }
+                                                                                              })
+
+                                                                                            }
+
+                                                                                          }
+
+                                                                                        })
+
+                                                                                      }
+                                                                                    }
+
+                                                                                  })
+
+                                                                                }
+
+                                                                              }
+
+                                                                            })
+
+                                                                          }
+                                                                        }
+
+                                                                      })
+
+                                                                    }
+
+                                                                  }
+
+                                                                })
+
+                                                              }
+                                                            }
+
+                                                          })
+
+                                                        }
+
+                                                      }
+
+                                                    })
+
+                                                  }
+                                                }
+
+                                              })
+
+                                            }
+
+                                          }
+
+                                        })
+
+                                      }
+                                    }
 
                                   })
 
