@@ -2690,6 +2690,24 @@ app.post("/timeinformation",function(req,res){
               console.log("value of i "+i);
               console.log("lenght of result "+result.length);
               console.log("valaue of dlmid "+result[i].dlm_id);
+              var INFO={
+                dlmdmid:result[i].dlm_id,
+                locid:result[i].dlm_lm_location_id,
+                mondayid:"",
+                monday:[],
+                tuesdayid:"",
+                tuesday:[],
+                wednesdayid:"",
+                wednesday:[],
+                thursdayid:"",
+                thursday:[],
+                fridayid:"",
+                friday:[],
+                saturdayid:"",
+                saturday:[],
+                sundayid:"",
+                sunday:[]
+              }
               connection.query(sql2,[result[i].dlm_id],function(err,resultt){
                 if(err){
                   console.log("ERROR IN RUNNING SQL2 FOR DOCID = "+DocId+" AND DLMDID = "+result[i].dlm_id);
@@ -2707,24 +2725,7 @@ app.post("/timeinformation",function(req,res){
                     res.send(JSON.stringify(MainObj));
                   }else{
 
-                    var INFO={
-                      dlmdmid:result[i].dlm_id,
-                      locid:result[i].dlm_lm_location_id,
-                      mondayid:"",
-                      monday:[],
-                      tuesdayid:"",
-                      tuesday:[],
-                      wednesdayid:"",
-                      wednesday:[],
-                      thursdayid:"",
-                      thursday:[],
-                      fridayid:"",
-                      friday:[],
-                      saturdayid:"",
-                      saturday:[],
-                      sundayid:"",
-                      sunday:[]
-                    }
+
 
                     for(var j=0;j<resultt.length;j++){
 
