@@ -2708,6 +2708,26 @@ app.post("/timeinformation",function(req,res){
                       console.log("lenght of resultt "+resultt.length);
                       console.log("valaue of dltmid "+resultt[j].dltm_id);
 
+                      var INFO={
+                        dlmdmid:"",
+                        locid:"",
+                        // locinfo:[]
+                        mondayid:"",
+                        monday:[],
+                        tuesdayid:"",
+                        tuesday:[],
+                        wednesdayid:"",
+                        wednesday:[],
+                        thursdayid:"",
+                        thursday:[],
+                        fridayid:"",
+                        friday:[],
+                        saturdayid:"",
+                        saturday:[],
+                        sundayid:"",
+                        sunday:[]
+                      }
+
                       var TIMEOBJ = {
                         from:resultt[j].dltm_time_from,
                         to:resultt[j].dltm_time_to,
