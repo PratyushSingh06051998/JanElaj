@@ -2655,7 +2655,7 @@ app.post("/timeinformation",function(req,res){
 
   var sql1 = "SELECT dlm_id, dlm_lm_location_id FROM doctor_location_master WHERE dlm_dm_doctor_id = ?"
 
-  var sql2 = 'SELECT DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLDM.dldm_dlm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_dlm_id = DLTM.dltm_dldm_id WHERE DLDM.dldm_id = ?';
+  var sql2 = 'SELECT DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLTM.dltm_dldm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_dlm_id = DLTM.dltm_dldm_id WHERE DLDM.dldm_id = ?';
 
   con.getConnection(function(err,connection){
     if(err){
@@ -2715,24 +2715,31 @@ app.post("/timeinformation",function(req,res){
                       }
 
                       if(resultt[j].dldm_day_number == "MON"){
+                        console.log("in monday id "+resultt[j].dltm_dldm_id);
                         INFO.mondayid = resultt[j].dltm_dldm_id;
                         INFO.monday.push(TIMEOBJ);
                       }else if(resultt[j].dldm_day_number == "TUE"){
+                        console.log("in tue id "+resultt[j].dltm_dldm_id);
                         INFO.tuesdayid = resultt[j].dltm_dldm_id;
                         INFO.tuesday.push(TIMEOBJ);
                       }else if(resultt[j].dldm_day_number == "WED"){
+                        console.log("in wed id "+resultt[j].dltm_dldm_id);
                         INFO.wednesdayid = resultt[j].dltm_dldm_id;
                         INFO.wednesday.push(TIMEOBJ);
                       }else if(resultt[j].dldm_day_number == "THU"){
+                        console.log("in thu id "+resultt[j].dltm_dldm_id);
                         INFO.thursdayid = resultt[j].dltm_dldm_id;
                         INFO.thursday.push(TIMEOBJ);
                       }else if(resultt[j].dldm_day_number == "FRI"){
+                        console.log("in fri id "+resultt[j].dltm_dldm_id);
                         INFO.fridayid = resultt[j].dltm_dldm_id;
                         INFO.friday.push(TIMEOBJ);
                       }else if(resultt[j].dldm_day_number == "SAT"){
+                        console.log("in sat id "+resultt[j].dltm_dldm_id);
                         INFO.saturdayid = resultt[j].dltm_dldm_id;
                         INFO.saturday.push(TIMEOBJ);
                       }else if(resultt[j].dldm_day_number == "SUN"){
+                        console.log("in sun id "+resultt[j].dltm_dldm_id);
                         INFO.sundayid = resultt[j].dltm_dldm_id;
                         INFO.sunday.push(TIMEOBJ);
                       }
