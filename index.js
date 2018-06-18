@@ -2702,31 +2702,32 @@ app.post("/timeinformation",function(req,res){
                     MainObj.status = "SUCCESS";
                     res.send(JSON.stringify(MainObj));
                   }else{
+
+                    var INFO={
+                      dlmdmid:"",
+                      locid:"",
+                      // locinfo:[]
+                      mondayid:"",
+                      monday:[],
+                      tuesdayid:"",
+                      tuesday:[],
+                      wednesdayid:"",
+                      wednesday:[],
+                      thursdayid:"",
+                      thursday:[],
+                      fridayid:"",
+                      friday:[],
+                      saturdayid:"",
+                      saturday:[],
+                      sundayid:"",
+                      sunday:[]
+                    }
+
                     for(var j=0;j<resultt.length;j++){
 
                       console.log("value of j "+j);
                       console.log("lenght of resultt "+resultt.length);
                       console.log("valaue of dltmid "+resultt[j].dltm_id);
-
-                      var INFO={
-                        dlmdmid:"",
-                        locid:"",
-                        // locinfo:[]
-                        mondayid:"",
-                        monday:[],
-                        tuesdayid:"",
-                        tuesday:[],
-                        wednesdayid:"",
-                        wednesday:[],
-                        thursdayid:"",
-                        thursday:[],
-                        fridayid:"",
-                        friday:[],
-                        saturdayid:"",
-                        saturday:[],
-                        sundayid:"",
-                        sunday:[]
-                      }
 
                       var TIMEOBJ = {
                         from:resultt[j].dltm_time_from,
