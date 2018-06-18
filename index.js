@@ -2706,7 +2706,7 @@ app.post("/timeinformation",function(req,res){
 
                       console.log("value of j "+j);
                       console.log("lenght of resultt "+resultt.length);
-                      console.log("valaue of dltmid "+resultt[i].dltm_id);
+                      console.log("valaue of dltmid "+resultt[j].dltm_id);
 
                       var TIMEOBJ = {
                         from:resultt[j].dltm_time_from,
