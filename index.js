@@ -148,6 +148,10 @@ app.post("/registeruser",function(req,res){
 
 });
 
+app.post("/checkpoint",function(req,res){
+
+})
+
 app.post("/signin",function(req,res){
 
 
@@ -2704,9 +2708,8 @@ app.post("/timeinformation",function(req,res){
                   }else{
 
                     var INFO={
-                      dlmdmid:"",
-                      locid:"",
-                      // locinfo:[]
+                      dlmdmid:result[i].dlm_id,
+                      locid:result[i].dlm_lm_location_id,
                       mondayid:"",
                       monday:[],
                       tuesdayid:"",
