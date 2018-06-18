@@ -2738,8 +2738,8 @@ app.post("/timeinformation",function(req,res){
                       }
 
                     }
-                    INFO.dlmdmid = resultt[j].dlm_dm_doctor_id;
-                    INFO.locid = resultt[j].dlm_lm_location_id;
+                    // INFO.dlmdmid = resultt[j].dlm_dm_doctor_id;
+                    // INFO.locid = resultt[j].dlm_lm_location_id;
                     MainObj.info.push(INFO);
                     console.log("value of count "+count);
                     count++;
