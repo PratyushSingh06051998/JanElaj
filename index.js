@@ -20,34 +20,6 @@ var con = mysql.createPool({
 app.get("/q",function(req,res){
   res.send("hi from server");
 })
-//
-// app.get("/qqq",function(req,res){
-//
-//   con.getConnection(function(err,connection){
-//
-//     var sql = "create table doctor_location_master(ClientID SMALLINT(15) NOT NULL DEFAULT 0)";
-//
-//     if(err){
-//       console.log("in error 1");
-//       console.log("error is :"+err);
-//       console.log("error code is : "+err.code);
-//       return err;
-//     }else{
-//       connection.query(sql,function(err,result){
-//         if(err){
-//           console.log("in error 2");
-//           console.log("error is :"+err);
-//           console.log("error code is : "+err.code);
-//           return err;
-//         }else{
-//           console.log("ye to ho gyaaa");
-//         }
-//       })
-//     }
-//
-//   })
-//
-// })
 
 app.post("/numberverify",function(req,res){
 
@@ -2713,6 +2685,7 @@ app.post("/timeinformation",function(req,res){
             for(var i=0;i<result.length;i++){
               console.log("value of i "+i);
               console.log("lenght of result "+result.length);
+              console.log("valaue of dlmdif "+result[i].dlm_dm_doctor_id);
               connection.query(sql2,[result[i].dlm_dm_doctor_id],function(err,resultt){
                 if(err){
                   console.log("ERROR IN RUNNING SQL2 FOR DLDMID = "+DlmId+" AND DLMDID = "+result[i].dlm_dm_doctor_id);
@@ -2725,6 +2698,10 @@ app.post("/timeinformation",function(req,res){
                 }else{
 
                   for(var j=0;j<resultt.length;j++){
+
+                    console.log("value of j "+j);
+                    console.log("lenght of resultt "+resultt.length);
+                    console.log("valaue of dltmid "+resultt[i].dltm_id);
 
                     var TIMEOBJ = {
                       from:resultt[j].dltm_time_from,
@@ -2758,10 +2735,12 @@ app.post("/timeinformation",function(req,res){
                   }
                   INFO.dlmdmid = result[i].dlm_dm_doctor_id;
                   INFO.locid = result[i].dlm_lm_location_id;
-
+                  MainObj.info.push(INFO);
+                  console.log("value of count "+count);
                   count++;
                   if(count == result.length){
-
+                    console.log("in if");
+                    res.send(JSON.stringify(MainObj));
                   }
                 }
               })
