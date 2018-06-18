@@ -2659,7 +2659,7 @@ app.post("/timeinformation",function(req,res){
 
   var sql1 = "SELECT dlm_id, dlm_lm_location_id FROM doctor_location_master WHERE dlm_dm_doctor_id = ?"
 
-  var sql2 = 'SELECT DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLTM.dltm_dldm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_dlm_id = DLTM.dltm_dldm_id WHERE DLDM.dldm_id = ?';
+  var sql2 = 'SELECT DLDM.dldm_id, DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLTM.dltm_dldm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_dlm_id = DLTM.dltm_dldm_id WHERE DLDM.dldm_id = ?';
 
   con.getConnection(function(err,connection){
     if(err){
@@ -2690,24 +2690,6 @@ app.post("/timeinformation",function(req,res){
               console.log("value of i "+i);
               console.log("lenght of result "+result.length);
               console.log("valaue of dlmid "+result[i].dlm_id);
-              var INFO={
-                dlmdmid:result[i].dlm_id,
-                locid:result[i].dlm_lm_location_id,
-                mondayid:"",
-                monday:[],
-                tuesdayid:"",
-                tuesday:[],
-                wednesdayid:"",
-                wednesday:[],
-                thursdayid:"",
-                thursday:[],
-                fridayid:"",
-                friday:[],
-                saturdayid:"",
-                saturday:[],
-                sundayid:"",
-                sunday:[]
-              }
               connection.query(sql2,[result[i].dlm_id],function(err,resultt){
                 if(err){
                   console.log("ERROR IN RUNNING SQL2 FOR DOCID = "+DocId+" AND DLMDID = "+result[i].dlm_id);
@@ -2725,7 +2707,23 @@ app.post("/timeinformation",function(req,res){
                     res.send(JSON.stringify(MainObj));
                   }else{
 
-
+                    var INFO={
+                      dlmid:"",
+                      mondayid:"",
+                      monday:[],
+                      tuesdayid:"",
+                      tuesday:[],
+                      wednesdayid:"",
+                      wednesday:[],
+                      thursdayid:"",
+                      thursday:[],
+                      fridayid:"",
+                      friday:[],
+                      saturdayid:"",
+                      saturday:[],
+                      sundayid:"",
+                      sunday:[]
+                    }
 
                     for(var j=0;j<resultt.length;j++){
 
@@ -2768,9 +2766,8 @@ app.post("/timeinformation",function(req,res){
                         INFO.sundayid = resultt[j].dltm_dldm_id;
                         INFO.sunday.push(TIMEOBJ);
                       }
-
+                      INFO.dlmid = resultt[j].dldm_id;
                     }
-                    // INFO.dlmdmid = resultt[j].dlm_dm_doctor_id;
                     // INFO.locid = resultt[j].dlm_lm_location_id;
                     MainObj.info.push(INFO);
                     console.log("value of count "+count);
