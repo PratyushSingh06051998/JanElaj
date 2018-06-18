@@ -2617,7 +2617,7 @@ app.post("/timeinformation",function(req,res){
   var Object = req.body;
 
   var count=0;
-  var DlmId = Object.dlmid;
+  var DocId = Object.docid;
 
   var MainObj = {
     status : "SUCCESS",
@@ -2653,23 +2653,23 @@ app.post("/timeinformation",function(req,res){
     timeid:""
   }
 
-  var sql1 = "SELECT dlm_dm_doctor_id, dlm_lm_location_id FROM doctor_location_master WHERE dlm_id = ?"
+  var sql1 = "SELECT dlm_id, dlm_lm_location_id FROM doctor_location_master WHERE dlm_dm_doctor_id = ?"
 
   var sql2 = 'SELECT DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLDM.dldm_dlm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_dlm_id = DLTM.dltm_dldm_id WHERE DLDM.dldm_id = ?';
 
   con.getConnection(function(err,connection){
     if(err){
-      console.log("ERROR IN TIMEINFORMATION IN CONNECTING TO DATABASE FOR DLDMID = "+DlmId);
+      console.log("ERROR IN TIMEINFORMATION IN CONNECTING TO DATABASE FOR DOCID = "+DocId);
       console.log("ERROR : "+err);
       console.log("ERROR CODE : "+err.code);
       MainObj.status = "CONNECTION ERROR";
       res.send(JSON.stringify(MainObj));
       return err;
     }else{
-      connection.query(sql1,[DlmId],function(err,result){
+      connection.query(sql1,[DocId],function(err,result){
 
         if(err){
-          console.log("ERROR IN RUNNING SQL1 FOR DLDMID = "+DlmId);
+          console.log("ERROR IN RUNNING SQL1 FOR DOCMID = "+DocId);
           console.log("ERROR : "+err);
           console.log("ERROR CODE : "+err.code);
           MainObj.status = "CONNECTION ERROR";
@@ -2685,10 +2685,10 @@ app.post("/timeinformation",function(req,res){
             for(var i=0;i<result.length;i++){
               console.log("value of i "+i);
               console.log("lenght of result "+result.length);
-              console.log("valaue of dlmdif "+result[i].dlm_dm_doctor_id);
-              connection.query(sql2,[result[i].dlm_dm_doctor_id],function(err,resultt){
+              console.log("valaue of dlmid "+result[i].dlm_id);
+              connection.query(sql2,[result[i].dlm_id],function(err,resultt){
                 if(err){
-                  console.log("ERROR IN RUNNING SQL2 FOR DLDMID = "+DlmId+" AND DLMDID = "+result[i].dlm_dm_doctor_id);
+                  console.log("ERROR IN RUNNING SQL2 FOR DOCID = "+DocId+" AND DLMDID = "+result[i].dlm_id);
                   console.log("ERROR : "+err);
                   console.log("ERROR CODE : "+err.code);
                   MainObj.status = "CONNECTION ERROR";
@@ -2697,51 +2697,59 @@ app.post("/timeinformation",function(req,res){
                   return;
                 }else{
 
-                  for(var j=0;j<resultt.length;j++){
 
-                    console.log("value of j "+j);
-                    console.log("lenght of resultt "+resultt.length);
-                    console.log("valaue of dltmid "+resultt[i].dltm_id);
-
-                    var TIMEOBJ = {
-                      from:resultt[j].dltm_time_from,
-                      to:resultt[j].dltm_time_to,
-                      timeid:resultt[j].dltm_id
-                    }
-
-                    if(resultt[j].dldm_day_number == "MON"){
-                      INFO.mondayid = resultt[j].dltm_dldm_id;
-                      INFO.monday.push(TIMEOBJ);
-                    }else if(resultt[j].dldm_day_number == "TUE"){
-                      INFO.tuesdayid = resultt[j].dltm_dldm_id;
-                      INFO.tuesday.push(TIMEOBJ);
-                    }else if(resultt[j].dldm_day_number == "WED"){
-                      INFO.wednesdayid = resultt[j].dltm_dldm_id;
-                      INFO.wednesday.push(TIMEOBJ);
-                    }else if(resultt[j].dldm_day_number == "THU"){
-                      INFO.thursdayid = resultt[j].dltm_dldm_id;
-                      INFO.thursday.push(TIMEOBJ);
-                    }else if(resultt[j].dldm_day_number == "FRI"){
-                      INFO.fridayid = resultt[j].dltm_dldm_id;
-                      INFO.friday.push(TIMEOBJ);
-                    }else if(resultt[j].dldm_day_number == "SAT"){
-                      INFO.saturdayid = resultt[j].dltm_dldm_id;
-                      INFO.saturday.push(TIMEOBJ);
-                    }else if(resultt[j].dldm_day_number == "SUN"){
-                      INFO.sundayid = resultt[j].dltm_dldm_id;
-                      INFO.sunday.push(TIMEOBJ);
-                    }
-
-                  }
-                  INFO.dlmdmid = result[i].dlm_dm_doctor_id;
-                  INFO.locid = result[i].dlm_lm_location_id;
-                  MainObj.info.push(INFO);
-                  console.log("value of count "+count);
-                  count++;
-                  if(count == result.length){
-                    console.log("in if");
+                  if(resultt.length == 0){
+                    MainObj.status = "SUCCESS";
                     res.send(JSON.stringify(MainObj));
+                  }else{
+                    for(var j=0;j<resultt.length;j++){
+
+                      console.log("value of j "+j);
+                      console.log("lenght of resultt "+resultt.length);
+                      console.log("valaue of dltmid "+resultt[i].dltm_id);
+
+                      var TIMEOBJ = {
+                        from:resultt[j].dltm_time_from,
+                        to:resultt[j].dltm_time_to,
+                        timeid:resultt[j].dltm_id
+                      }
+
+                      if(resultt[j].dldm_day_number == "MON"){
+                        INFO.mondayid = resultt[j].dltm_dldm_id;
+                        INFO.monday.push(TIMEOBJ);
+                      }else if(resultt[j].dldm_day_number == "TUE"){
+                        INFO.tuesdayid = resultt[j].dltm_dldm_id;
+                        INFO.tuesday.push(TIMEOBJ);
+                      }else if(resultt[j].dldm_day_number == "WED"){
+                        INFO.wednesdayid = resultt[j].dltm_dldm_id;
+                        INFO.wednesday.push(TIMEOBJ);
+                      }else if(resultt[j].dldm_day_number == "THU"){
+                        INFO.thursdayid = resultt[j].dltm_dldm_id;
+                        INFO.thursday.push(TIMEOBJ);
+                      }else if(resultt[j].dldm_day_number == "FRI"){
+                        INFO.fridayid = resultt[j].dltm_dldm_id;
+                        INFO.friday.push(TIMEOBJ);
+                      }else if(resultt[j].dldm_day_number == "SAT"){
+                        INFO.saturdayid = resultt[j].dltm_dldm_id;
+                        INFO.saturday.push(TIMEOBJ);
+                      }else if(resultt[j].dldm_day_number == "SUN"){
+                        INFO.sundayid = resultt[j].dltm_dldm_id;
+                        INFO.sunday.push(TIMEOBJ);
+                      }
+
+                    }
+                    INFO.dlmdmid = result[i].dlm_dm_doctor_id;
+                    INFO.locid = result[i].dlm_lm_location_id;
+                    MainObj.info.push(INFO);
+                    console.log("value of count "+count);
+                    count++;
+                    if(count == result.length){
+                      console.log("in if");
+                      res.send(JSON.stringify(MainObj));
+                    }
                   }
+
+
                 }
               })
 
