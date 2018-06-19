@@ -150,6 +150,79 @@ app.post("/registeruser",function(req,res){
 
 app.post("/checkpoint",function(req,res){
 
+
+  var Object = req.body;
+
+  var DlmId = Object.dlmid;
+  console.log("has been hit in checkpoint");
+
+  var obj = {
+    status : "SUCCESS",
+    progress:0
+    }
+
+  var sql1 = 'SELECT COUNT(*) AS day FROM doctor_location_day_master WHERE dldm_id = ?';
+  var sql2 = 'SELECT COUNT(*) AS service FROM doctor_clinic_services_master WHERE dcsm_dlm_id = ?';
+
+  con.getConnection(function(err, connection) {
+
+    if(err){
+      console.log("ERROR IN CHECKPOINT IN GETTING CONNECTION FOR DLMID = "+DlmId);
+      console.log(err.code);
+      console.log(err);
+      obj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(obj));
+      return err;
+    }else{
+
+      connection.query(sql1,[DlmId], function(err, result) {
+
+        if(err){
+          console.log("ERROR IN CHECKPOINT IN RUNNING SQL1 FOR DLMID = "+DlmId);
+          console.log(err.code);
+          console.log(err);
+          obj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(obj));
+          return err;
+        }else{
+
+          if(result[0].day == 0){
+
+            obj.progress=0;//He has not inserted time
+            obj.status="SUCCESS";
+            res.send(JSON.stringify(obj));
+
+          }else{
+            connection.query(sql2,[DlmId],function(err,resultt){
+              if(err){
+                console.log("ERROR IN CHECKPOINT IN RUNNING SQL2 FOR DLMID = "+DlmId);
+                console.log(err.code);
+                console.log(err);
+                obj.status = "CONNECTION ERROR";
+                res.send(JSON.stringify(obj));
+                return err;
+              }else{
+                if(resultt[0].service == 0){
+                  obj.progress=1;//He has not inserted service but inserted time
+                  obj.status="SUCCESS";
+                  res.send(JSON.stringify(obj));
+                }else{
+                  obj.progress=2;//He has inserted every value
+                  obj.status="SUCCESS";
+                  res.send(JSON.stringify(obj));
+                }
+              }
+            })
+          }
+        }
+
+          connection.release();
+      });
+
+    }
+  });
+
+
 })
 
 app.post("/signin",function(req,res){
@@ -454,6 +527,110 @@ app.post("/clinicaddlocation",function(req,res){
       .on("end", function(){
            var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
            csv.write(Mydata, {headers: true}).pipe(ws);
+
+           var sql1 = 'INSERT INTO location_master (lm_location_id, lm_name, lm_address_line1, lm_address_line2, lm_city, lm_district, lm_state, lm_pincode, lm_flag_home_service_ref) VALUES ((?),(?),(?),(?),(?),(?),(?),(?),(?))';
+           var sql2 = 'INSERT INTO doctor_location_master (dlm_dm_doctor_id, dlm_lm_location_id, dlm_id, dlm_doctor_options) VALUES ((?),(?),(?),(?))';
+
+           con.getConnection(function(err,connection){
+
+             if(err){
+               console.log("ERROR IN CONNECTION TO DATABASE IN CLINICADDLOCATION DOCID = "+Did);
+               console.log("ERROR:"+err);
+               console.log("ERROR CODE:"+err.code);
+               obj.status = "FAIL";
+               res.send(JSON.stringify(obj));
+               return err;
+             }else{
+
+               connection.beginTransaction(function(err){
+
+                 if(err){
+                   console.log("ERROR IN BEGINING TRANSACTION DATABASE IN CLINICADDLOCATION DOCID = "+Did);
+                   console.log("ERROR:"+err);
+                   console.log("ERROR CODE:"+err.code);
+                   obj.status = "FAIL";
+                   res.send(JSON.stringify(obj));
+                   return err;
+                 }else{
+
+                   connection.query(sql1,[LocId,Name,AddressLine1,AddressLine2,City,District,State,Pin,'N'],function(err,result){
+
+                     if(err){
+                       console.log("ERROR IN RUNNING SQL1 IN CLINICADDLOCATION DOCID = "+Did);
+                       console.log("ERROR:"+err);
+                       console.log("ERROR CODE:"+err.code);
+                       obj.status = "FAIL";
+                       res.send(JSON.stringify(obj));
+                       connection.rollback(function(){
+                         return err;
+                       })
+                     }else{
+
+                       if(result.affectedRows == 1){
+
+                         connection.query(sql2,[Did,LocId,DlmId,Options],function(err2,result2){
+
+                           if(err2){
+                             console.log("ERROR IN RUNNING SQL2 IN CLINICADDLOCATION DOCID = "+Did);
+                             console.log("ERROR:"+err2);
+                             console.log("ERROR CODE:"+err2.code);
+                             obj.status = "FAIL";
+                             res.send(JSON.stringify(obj));
+                             connection.rollback(function(){
+                               return err2;
+                             })
+                           }else{
+
+                             if(result2.affectedRows == 1){
+                               connection.commit(function(err){
+                                 if(err){
+                                   console.log("ERROR IN COMMITING TO DATABASE IN CLINICADDLOCATION DOCID = "+Did);
+                                   console.log("ERROR:"+err);
+                                   console.log("ERROR CODE:"+err.code);
+                                   obj.status = "FAIL";
+                                   res.send(JSON.stringify(obj));
+                                   connection.rollback(function(){
+                                     return err;
+                                   })
+                                 }else{
+                                   obj.status = "SUCCESS";
+                                   res.send(JSON.stringify(obj));
+                                 }
+                               })
+                             }else{
+                               connection.rollback(function(){
+                               })
+                               console.log("ERROR AFFECTING ROWS DATABASE IN CLINICADDLOCATION DOCID = "+Did);
+                               obj.status = "FAIL";
+                               res.send(JSON.stringify(obj));
+                             }
+
+                           }
+
+                         })
+
+                       }else{
+                         connection.rollback(function(){
+                         })
+                         console.log("ERROR AFFECTING ROWS DATABASE IN CLINICADDLOCATION DOCID = "+Did);
+                         obj.status = "FAIL";
+                         res.send(JSON.stringify(obj));
+                       }
+
+                     }
+
+                     connection.release();
+
+                   })
+
+                 }
+
+               })
+
+             }
+
+           })
+
       });
   stream.pipe(csvStream);
 
@@ -464,108 +641,7 @@ app.post("/clinicaddlocation",function(req,res){
 
   //have to make change hererererererer
 
-  var sql1 = 'INSERT INTO location_master (lm_location_id, lm_name, lm_address_line1, lm_address_line2, lm_city, lm_district, lm_state, lm_pincode, lm_flag_home_service_ref) VALUES ((?),(?),(?),(?),(?),(?),(?),(?),(?))';
-  var sql2 = 'INSERT INTO doctor_location_master (dlm_dm_doctor_id, dlm_lm_location_id, dlm_id, dlm_doctor_options) VALUES ((?),(?),(?),(?))';
 
-  con.getConnection(function(err,connection){
-
-    if(err){
-      console.log("ERROR IN CONNECTION TO DATABASE IN CLINICADDLOCATION DOCID = "+Did);
-      console.log("ERROR:"+err);
-      console.log("ERROR CODE:"+err.code);
-      obj.status = "FAIL";
-      res.send(JSON.stringify(obj));
-      return err;
-    }else{
-
-      connection.beginTransaction(function(err){
-
-        if(err){
-          console.log("ERROR IN BEGINING TRANSACTION DATABASE IN CLINICADDLOCATION DOCID = "+Did);
-          console.log("ERROR:"+err);
-          console.log("ERROR CODE:"+err.code);
-          obj.status = "FAIL";
-          res.send(JSON.stringify(obj));
-          return err;
-        }else{
-
-          connection.query(sql1,[LocId,Name,AddressLine1,AddressLine2,City,District,State,Pin,'N'],function(err,result){
-
-            if(err){
-              console.log("ERROR IN RUNNING SQL1 IN CLINICADDLOCATION DOCID = "+Did);
-              console.log("ERROR:"+err);
-              console.log("ERROR CODE:"+err.code);
-              obj.status = "FAIL";
-              res.send(JSON.stringify(obj));
-              connection.rollback(function(){
-                return err;
-              })
-            }else{
-
-              if(result.affectedRows == 1){
-
-                connection.query(sql2,[Did,LocId,DlmId,Options],function(err2,result2){
-
-                  if(err2){
-                    console.log("ERROR IN RUNNING SQL2 IN CLINICADDLOCATION DOCID = "+Did);
-                    console.log("ERROR:"+err2);
-                    console.log("ERROR CODE:"+err2.code);
-                    obj.status = "FAIL";
-                    res.send(JSON.stringify(obj));
-                    connection.rollback(function(){
-                      return err2;
-                    })
-                  }else{
-
-                    if(result2.affectedRows == 1){
-                      connection.commit(function(err){
-                        if(err){
-                          console.log("ERROR IN COMMITING TO DATABASE IN CLINICADDLOCATION DOCID = "+Did);
-                          console.log("ERROR:"+err);
-                          console.log("ERROR CODE:"+err.code);
-                          obj.status = "FAIL";
-                          res.send(JSON.stringify(obj));
-                          connection.rollback(function(){
-                            return err;
-                          })
-                        }else{
-                          obj.status = "SUCCESS";
-                          res.send(JSON.stringify(obj));
-                        }
-                      })
-                    }else{
-                      connection.rollback(function(){
-                      })
-                      console.log("ERROR AFFECTING ROWS DATABASE IN CLINICADDLOCATION DOCID = "+Did);
-                      obj.status = "FAIL";
-                      res.send(JSON.stringify(obj));
-                    }
-
-                  }
-
-                })
-
-              }else{
-                connection.rollback(function(){
-                })
-                console.log("ERROR AFFECTING ROWS DATABASE IN CLINICADDLOCATION DOCID = "+Did);
-                obj.status = "FAIL";
-                res.send(JSON.stringify(obj));
-              }
-
-            }
-
-            connection.release();
-
-          })
-
-        }
-
-      })
-
-    }
-
-  })
 
 })
 
@@ -2705,6 +2781,7 @@ app.post("/timeinformation",function(req,res){
                   if(resultt.length == 0){
                     MainObj.status = "SUCCESS";
                     res.send(JSON.stringify(MainObj));
+                    return;
                   }else{
 
                     var INFO={
