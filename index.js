@@ -2883,6 +2883,73 @@ app.post("/timecheck",function(req,res){
 
 })
 
+app.post("serviceinfo",function(req,res){
+
+  var Object = req.body;
+
+  var DlmId = Object.dlmid;
+
+  var obj = {
+    status : "SUCCESS",
+    info : []
+  }
+
+  var INFO = {
+    sid:"",
+    sname:""
+  }
+
+  var sql = 'SELECT sm_service_id, sm_service_name FROM service_master';
+
+  con.getConnection(function(err, connection) {
+
+    if(err){
+      console.log("ERROR IN SERVICEINFO IN GETTING CONNECTION FOR DLMID = "+DlmId);
+      console.log(err.code);
+      console.log(err);
+      obj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(obj));
+      return err;
+    }else{
+
+      connection.query(sql, function(err, result) {
+
+        if(err){
+          console.log("ERROR IN SERVICEINFO IN RUNNING SQL FOR DLMID = "+DlmId);
+          console.log(err.code);
+          console.log(err);
+          obj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(obj));
+          return err;
+        }else{
+
+          if(result.length == 0){
+
+            obj.status="SUCCESS";
+            res.send(JSON.stringify(obj));
+
+          }else{
+
+            for(var i=0;i<result.length:i++){
+              var INFO = {
+                sid:result[i].sm_service_id,
+                sname:result[i].sm_service_name
+              }
+              obj.info.push(INFO);
+            }
+            obj.status="SUCCESS";
+            res.send(JSON.stringify(obj));
+          }
+        }
+
+          connection.release();
+      });
+
+    }
+  });
+
+})
+
 function InsertFinalValue(req,res,id){
 
 
