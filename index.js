@@ -2883,11 +2883,8 @@ app.post("/timecheck",function(req,res){
 
 })
 
-app.post("serviceinfo",function(req,res){
+app.post("/serviceinfo",function(req,res){
 
-  var Object = req.body;
-
-  var DlmId = Object.dlmid;
 
   var obj = {
     status : "SUCCESS",
