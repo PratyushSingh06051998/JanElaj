@@ -2779,11 +2779,11 @@ app.post("/timeinformation",function(req,res){
                 }else{
 
 
-                  if(resultt.length == 0){
-                    MainObj.status = "SUCCESS";
-                    res.send(JSON.stringify(MainObj));
-                    return;
-                  }else{
+                  // if(resultt.length == 0){
+                    // MainObj.status = "SUCCESS";
+                    // res.send(JSON.stringify(MainObj));
+                    // return;
+                  // }else{
 
                     var INFO={
                       dlmid:"",
@@ -2846,7 +2846,7 @@ app.post("/timeinformation",function(req,res){
                       }
                       INFO.dlmid = resultt[j].dldm_id;
                     }
-                    // INFO.locid = resultt[j].dlm_lm_location_id;
+
                     MainObj.info.push(INFO);
                     console.log("value of count "+count);
                     count++;
@@ -2854,7 +2854,7 @@ app.post("/timeinformation",function(req,res){
                       console.log("in if");
                       res.send(JSON.stringify(MainObj));
                     }
-                  }
+                  // }
 
 
                 }
