@@ -2760,6 +2760,7 @@ app.post("/timeinformation",function(req,res){
           if(result.length==0){
             MainObj.status = "SUCCESS";
             res.send(JSON.stringify(MainObj));
+            return;
           }else{
 
             for(var i=0;i<result.length;i++){
