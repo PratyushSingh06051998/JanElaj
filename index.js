@@ -2930,7 +2930,7 @@ app.post("serviceinfo",function(req,res){
 
           }else{
 
-            for(var i=0;i<result.length:i++){
+            for(var i=0;i<result.length;i++){
               var INFO = {
                 sid:result[i].sm_service_id,
                 sname:result[i].sm_service_name
