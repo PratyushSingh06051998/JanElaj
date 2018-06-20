@@ -2988,6 +2988,7 @@ app.post("/oneviewinfo",function(req,res){
 
           if(result.length==0){
             MainObj.status = "SUCCESS";
+            console.log(MainObj);
             res.send(JSON.stringify(MainObj));
             return;
           }else{
@@ -3010,9 +3011,9 @@ app.post("/oneviewinfo",function(req,res){
             }
 
             for(var i=0;i<result.length;i++){
-              console.log("value of i "+i);
-              console.log("lenght of result "+result.length);
-              console.log("valaue of dlmid "+result[i].dlm_id);
+              // console.log("value of i "+i);
+              // console.log("lenght of result "+result.length);
+              // console.log("valaue of dlmid "+result[i].dlm_id);
 
               var TIMEOBJ = {
                 from:result[i].dltm_time_from,
@@ -3062,6 +3063,7 @@ app.post("/oneviewinfo",function(req,res){
 
                   if(resultt.length == 0){
                     MainObj.status = "SUCCESS";
+                    console.log(MainObj);
                     res.send(JSON.stringify(MainObj));
                     return;
                   }else{
@@ -3081,6 +3083,7 @@ app.post("/oneviewinfo",function(req,res){
 
                     if(count2 == resultt.length){
                       MainObj.status = "SUCCESS";
+                      console.log(MainObj);
                       res.send(JSON.stringify(MainObj));
                     }
 
