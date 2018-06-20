@@ -2954,6 +2954,7 @@ app.post("/oneviewinfo",function(req,res){
   var count=0;
   var count2=0;
   var DlmId = Object.dlmid;
+  console.log(DlmId);
 
   var MainObj = {
     status : "SUCCESS",
@@ -3063,8 +3064,6 @@ app.post("/oneviewinfo",function(req,res){
 
                   if(resultt.length == 0){
                     MainObj.status = "SUCCESS";
-                    console.log(MainObj.timeinfo);
-                    console.log(MainObj);
                     res.send(JSON.stringify(MainObj));
                     return;
                   }else{
@@ -3084,13 +3083,6 @@ app.post("/oneviewinfo",function(req,res){
 
                     if(count2 == resultt.length){
                       MainObj.status = "SUCCESS";
-                      console.log(MainObj.timeinfo.get(0).monday);
-                      // console.log(MainObj.tuesday);
-                      // console.log(MainObj.wednesday);
-                      // console.log(MainObj.thursday);
-                      // console.log(MainObj.friday);
-                      // console.log(MainObj.satday);
-                      // console.log(MainObj.sunday);g
                       console.log(MainObj);
                       res.send(JSON.stringify(MainObj));
                     }
