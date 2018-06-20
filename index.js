@@ -2749,7 +2749,7 @@ app.post("/timeinformation",function(req,res){
       connection.query(sql1,[DocId],function(err,result){
 
         if(err){
-          console.log("ERROR IN RUNNING SQL1 FOR DOCMID = "+DocId);
+          console.log("ERROR IN TIMEINFORMATION IN RUNNING SQL1 FOR DOCMID = "+DocId);
           console.log("ERROR : "+err);
           console.log("ERROR CODE : "+err.code);
           MainObj.status = "CONNECTION ERROR";
@@ -2769,7 +2769,7 @@ app.post("/timeinformation",function(req,res){
               console.log("valaue of dlmid "+result[i].dlm_id);
               connection.query(sql2,[result[i].dlm_id],function(err,resultt){
                 if(err){
-                  console.log("ERROR IN RUNNING SQL2 FOR DOCID = "+DocId+" AND DLMDID = "+result[i].dlm_id);
+                  console.log("ERROR IN TIMEINFORMATION IN RUNNING SQL2 FOR DOCID = "+DocId+" AND DLMDID = "+result[i].dlm_id);
                   console.log("ERROR : "+err);
                   console.log("ERROR CODE : "+err.code);
                   MainObj.status = "CONNECTION ERROR";
@@ -2944,6 +2944,163 @@ app.post("/serviceinfo",function(req,res){
 
     }
   });
+
+})
+
+app.post("/oneviewinfo",function(req,res){
+
+  var Object = req.body;
+
+  var count=0;
+  var count2=0;
+  var DlmId = Object.dlmid;
+
+  var MainObj = {
+    status : "SUCCESS",
+    timeinfo:[],
+    serviceinfo:[]
+  }
+
+
+
+  var sql1 = 'SELECT DLDM.dldm_id, DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to, DLTM.dltm_discount_offer_flag FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_dlm_id = DLTM.dltm_dldm_id WHERE DLDM.dldm_id = ?';
+  var sql2 = 'SELECT SM.sm_service_name, DCSM.dcsm_normal_amount, DCSM.dcsm_discounted_amount, DCSM.dcsm_discount_flag FROM service_master AS SM INNER JOIN doctor_clinic_services_master AS DCSM ON SM.sm_service_id = DCSM.dcsm_sm_service_id WHERE DCSM.dcsm_dlm_id = ?';
+
+  con.getConnection(function(err,connection){
+    if(err){
+      console.log("ERROR IN ONEVIEWINFO IN CONNECTING TO DATABASE FOR DLMID = "+DlmId);
+      console.log("ERROR : "+err);
+      console.log("ERROR CODE : "+err.code);
+      MainObj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(MainObj));
+      return err;
+    }else{
+      connection.query(sql1,[DlmId],function(err,result){
+
+        if(err){
+          console.log("ERROR IN ONEVIEWINFO RUNNING SQL1 FOR DLMMID = "+DlmId);
+          console.log("ERROR : "+err);
+          console.log("ERROR CODE : "+err.code);
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+          return err;
+        }else{
+
+          if(result.length==0){
+            MainObj.status = "SUCCESS";
+            res.send(JSON.stringify(MainObj));
+            return;
+          }else{
+
+            var INFO={
+              mondayflag:"",
+              monday:[],
+              tuesdayflag:"",
+              tuesday:[],
+              wednesdayflag:"",
+              wednesday:[],
+              thursdayflag:"",
+              thursday:[],
+              fridayflag:"",
+              friday:[],
+              saturdayflag:"",
+              saturday:[],
+              sundayflag:"",
+              sunday:[]
+            }
+
+            for(var i=0;i<result.length;i++){
+              console.log("value of i "+i);
+              console.log("lenght of result "+result.length);
+              console.log("valaue of dlmid "+result[i].dlm_id);
+
+              var TIMEOBJ = {
+                from:result[i].dltm_time_from,
+                to:result[i].dltm_time_to
+              }
+
+              if(result[i].dldm_day_number == "MON"){
+                INFO.mondayflag = result[i].dltm_discount_offer_flag;
+                INFO.monday.push(TIMEOBJ);
+              }else if(result[i].dldm_day_number == "TUE"){
+                INFO.tuesdayflag = result[i].dltm_discount_offer_flag;
+                INFO.tuesday.push(TIMEOBJ);
+              }else if(result[i].dldm_day_number == "WED"){
+                INFO.wednesdayflag = result[i].dltm_discount_offer_flag;
+                INFO.wednesday.push(TIMEOBJ);
+              }else if(result[i].dldm_day_number == "THU"){
+                INFO.thursdayflag = result[i].dltm_discount_offer_flag;
+                INFO.thursday.push(TIMEOBJ);
+              }else if(result[i].dldm_day_number == "FRI"){
+                INFO.fridayflag = result[i].dltm_discount_offer_flag;
+                INFO.friday.push(TIMEOBJ);
+              }else if(result[i].dldm_day_number == "SAT"){
+                INFO.saturdayflag = result[i].dltm_discount_offer_flag;
+                INFO.saturday.push(TIMEOBJ);
+              }else if(result[i].dldm_day_number == "SUN"){
+                INFO.sundayflag = result[i].dltm_discount_offer_flag;
+                INFO.sunday.push(TIMEOBJ);
+              }
+
+              count++;
+
+            }
+
+            if(count == result.length){
+
+              MainObj.timeinfo.push(INFO);
+
+              connection.query(sql2,[DlmId],function(err,resultt){
+                if(err){
+                  console.log("ERROR IN ONEVIEWINFO IN RUNNING SQL2 FOR DlmID = "+DlmId);
+                  console.log("ERROR : "+err);
+                  console.log("ERROR CODE : "+err.code);
+                  MainObj.status = "CONNECTION ERROR";
+                  res.send(JSON.stringify(MainObj));
+                  return err;
+                }else{
+
+                  for(var j=0;j<resultt.length;j++){
+
+                    var o = {
+                      sname:resultt[j].sm_service_name,
+                      namount:resultt[j].dcsm_normal_amount,
+                      damount:resultt[j].dcsm_discounted_amount,
+                      flag:resultt[j].dcsm_discount_flag
+                    }
+
+                    MainObj.serviceinfo.push(o);
+                    count2++;
+
+                  }
+
+                  if(count2 == resultt.length){
+                    MainObj.status = "SUCCESS";
+                    res.send(JSON.stringify(MainObj));
+                  }
+
+                }
+              })
+
+            }else{
+              MainObj.status = "SUCCESS";
+              res.send(JSON.stringify(MainObj));
+              return;
+            }
+
+
+
+            }
+
+          }
+
+        }
+
+        connection.release();
+
+      })
+    }
+  })
 
 })
 
