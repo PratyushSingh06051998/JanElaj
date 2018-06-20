@@ -749,7 +749,20 @@ app.post("/timeinsert",function(req,res){
   SAT = Object.saturday;
   SUN = Object.sunday;
 
+  console.log("mon");
   console.log(MON);
+  console.log("tue");
+  console.log(TUE);
+  console.log("wed");
+  console.log(WED);
+  console.log("thu");
+  console.log(THU);
+  console.log("fri");
+  console.log(FRI);
+  console.log("sat");
+  console.log(SAT);
+  console.log("sun");
+  console.log(SUN);
 
 
   var MainObj = {
