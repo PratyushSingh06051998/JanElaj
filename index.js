@@ -3063,6 +3063,8 @@ app.post("/oneviewinfo",function(req,res){
 
                   if(resultt.length == 0){
                     MainObj.status = "SUCCESS";
+                    console.log(MainObj.timeinfo.get(0).monday);
+                    console.log(MainObj.timeinfo);
                     console.log(MainObj);
                     res.send(JSON.stringify(MainObj));
                     return;
