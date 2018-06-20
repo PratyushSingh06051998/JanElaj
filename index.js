@@ -3083,13 +3083,13 @@ app.post("/oneviewinfo",function(req,res){
 
                     if(count2 == resultt.length){
                       MainObj.status = "SUCCESS";
-                      console.log(MainObj.monday);
-                      console.log(MainObj.tuesday);
-                      console.log(MainObj.wednesday);
-                      console.log(MainObj.thursday);
-                      console.log(MainObj.friday);
-                      console.log(MainObj.satday);
-                      console.log(MainObj.sunday);
+                      console.log(MainObj.timeinfo);
+                      // console.log(MainObj.tuesday);
+                      // console.log(MainObj.wednesday);
+                      // console.log(MainObj.thursday);
+                      // console.log(MainObj.friday);
+                      // console.log(MainObj.satday);
+                      // console.log(MainObj.sunday);
                       console.log(MainObj);
                       res.send(JSON.stringify(MainObj));
                     }
