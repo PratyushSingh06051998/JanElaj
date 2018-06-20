@@ -3087,7 +3087,7 @@ app.post("/oneviewinfo",function(req,res){
                   }
 
                 }
-              })
+              });
 
             }else{
               MainObj.status = "SUCCESS";
@@ -3101,11 +3101,13 @@ app.post("/oneviewinfo",function(req,res){
 
           }
 
-        }
+
 
         connection.release();
 
       })
+
+
     }
   })
 
