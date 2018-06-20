@@ -3060,23 +3060,30 @@ app.post("/oneviewinfo",function(req,res){
                   return err;
                 }else{
 
-                  for(var j=0;j<resultt.length;j++){
-
-                    var o = {
-                      sname:resultt[j].sm_service_name,
-                      namount:resultt[j].dcsm_normal_amount,
-                      damount:resultt[j].dcsm_discounted_amount,
-                      flag:resultt[j].dcsm_discount_flag
-                    }
-
-                    MainObj.serviceinfo.push(o);
-                    count2++;
-
-                  }
-
-                  if(count2 == resultt.length){
+                  if(resultt.length == 0){
                     MainObj.status = "SUCCESS";
                     res.send(JSON.stringify(MainObj));
+                    return;
+                  }else{
+                    for(var j=0;j<resultt.length;j++){
+
+                      var o = {
+                        sname:resultt[j].sm_service_name,
+                        namount:resultt[j].dcsm_normal_amount,
+                        damount:resultt[j].dcsm_discounted_amount,
+                        flag:resultt[j].dcsm_discount_flag
+                      }
+
+                      MainObj.serviceinfo.push(o);
+                      count2++;
+
+                    }
+
+                    if(count2 == resultt.length){
+                      MainObj.status = "SUCCESS";
+                      res.send(JSON.stringify(MainObj));
+                    }
+
                   }
 
                 }
