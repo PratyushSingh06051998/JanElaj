@@ -3162,13 +3162,13 @@ app.post("/serviceinsert",function(req,res){
 
                        }
 
-                       connection.release();
-
                      })
 
                    }
 
                  }
+
+                 connection.release();
 
                })
 
