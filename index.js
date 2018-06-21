@@ -3131,15 +3131,18 @@ app.post("/serviceinsert",function(req,res){
                      connection.query(sql1,[DlmId,Values[i].sid,dscmid,Values[i].namt,Values[i].damt,Values[i].sflag],function(err,result){
 
                        if(err){
+                         count++;
                          console.log("ERROR IN RUNNING SQL1 IN SERVICEINSERT DLMID = "+DlmId);
                          console.log("ERROR:"+err);
                          console.log("ERROR CODE:"+err.code);
-                         MainObj.status = "CONNECTION ERROR";
-                         res.send(JSON.stringify(MainObj));
                          connection.rollback(function(){
                            return err;
                          })
-                         break;
+                         if(count==Values.length){
+                           MainObj.status = "CONNECTION ERROR";
+                           res.send(JSON.stringify(MainObj));
+                         }
+                         return;
                        }else{
 
                          count++;
