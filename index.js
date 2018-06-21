@@ -3139,7 +3139,7 @@ app.post("/serviceinsert",function(req,res){
                          connection.rollback(function(){
                            return err;
                          })
-                         return;
+                         break;
                        }else{
 
                          count++;
@@ -3504,5 +3504,11 @@ function InsertFinalValue(req,res,id){
 }
 
 app.listen(port,function(err1){
+  for(var i=0;i<10;i++){
+    console.log(i);
+    if(i==6){
+      break;
+    }
+  }
   console.log("Listening on the port 3000");
 });
