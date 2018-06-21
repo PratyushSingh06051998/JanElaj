@@ -3110,7 +3110,7 @@ app.post("/serviceinsert",function(req,res){
                console.log("ERROR IN CONNECTION TO DATABASE IN SERVICEINSERT DLMID = "+DlmId);
                console.log("ERROR:"+err);
                console.log("ERROR CODE:"+err.code);
-               MainObj.status = "FAIL";
+               MainObj.status = "CONNECTION ERROR";
                res.send(JSON.stringify(MainObj));
                return err;
              }else{
@@ -3121,7 +3121,7 @@ app.post("/serviceinsert",function(req,res){
                    console.log("ERROR IN BEGINING TRANSACTION DATABASE IN SERVICEINSERT DLMID = "+DlmId);
                    console.log("ERROR:"+err);
                    console.log("ERROR CODE:"+err.code);
-                   MainObj.status = "FAIL";
+                   MainObj.status = "CONNECTION ERROR";
                    res.send(JSON.stringify(MainObj));
                    return err;
                  }else{
@@ -3134,21 +3134,24 @@ app.post("/serviceinsert",function(req,res){
                          console.log("ERROR IN RUNNING SQL1 IN SERVICEINSERT DLMID = "+DlmId);
                          console.log("ERROR:"+err);
                          console.log("ERROR CODE:"+err.code);
-                         MainObj.status = "FAIL";
+                         MainObj.status = "CONNECTION ERROR";
                          res.send(JSON.stringify(MainObj));
                          connection.rollback(function(){
                            return err;
                          })
+                         return;
                        }else{
 
                          count++;
-                         if(count==Values.length){
+                         console.log(count);
+                         if(count==Values.length);
+                           console.log("in if"+Values.length);
                            connection.commit(function(err){
                              if(err){
                                console.log("ERROR IN COMMITING TO DATABASE IN SERVICEINSERT DLMID = "+DlmId);
                                console.log("ERROR:"+err);
                                console.log("ERROR CODE:"+err.code);
-                               MainObj.status = "FAIL";
+                               MainObj.status = "CONNECTION ERROR";
                                res.send(JSON.stringify(MainObj));
                                connection.rollback(function(){
                                  return err;
