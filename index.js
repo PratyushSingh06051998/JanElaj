@@ -1441,6 +1441,7 @@ function insertmonday(connection,res,req,Dldmid,valuedldm){
   var fricount=0;
   var satcount=0;
   var suncount=0;
+  var sent=0;
 
 
 
@@ -1480,8 +1481,11 @@ function insertmonday(connection,res,req,Dldmid,valuedldm){
         console.log("ERROR IN RUNNING SQL2 IN MONDAY FOR DLDMID = "+DlmId+" AND DLDMID ="+monid);
         console.log("ERROR : "+err);
         console.log("ERROR CODE : "+err.code);
-        MainObj.status = "CONNECTION ERROR";
-        res.send(JSON.stringify(MainObj));
+        if(sent == 0){
+          sent=1;
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+        }
         connection.rollback(function(){
           return err;
         })
@@ -1491,36 +1495,6 @@ function insertmonday(connection,res,req,Dldmid,valuedldm){
         moncount++;
         console.log("moncount = "+moncount);
         if(moncount == MON.length){
-
-          // valuedldm++;
-          //
-          // Dldmid = "DLDM"+""+valuedldm.toString();
-          // console.log("in main forr loop  = "+Dldmid);
-          //
-          // connection.query(sql1,[Dldmid,"TUE",DlmId],function(err,result){
-          //
-          //   if(err){
-          //     console.log("ERROR IN RUNNING SQL1 FOR DLDMID = "+DlmId+" AND DLDMID ="+Dldmid);
-          //     console.log("ERROR : "+err);
-          //     console.log("ERROR CODE : "+err.code);
-          //     MainObj.status = "CONNECTION ERROR";
-          //     res.send(JSON.stringify(MainObj));
-          //     connection.rollback(function(){
-          //       return err;
-          //     })
-          //   }else{
-          //
-          //     if(TUE.length == 0){
-          //       valuedldm++;
-          //       Dldmid = "DLDM"+""+valuedldm.toString();
-          //       insertwednesday(connection,res,req,Dldmid,valuedldm);
-          //     }else{
-          //       inserttuesday(connection,res,req,Dldmid,valuedldm);
-          //     }
-          //
-          //   }
-          //
-          // })
 
           valuedldm++;
 
@@ -1736,6 +1710,7 @@ function inserttuesday(connection,res,req,Dldmid,valuedldm){
   var fricount=0;
   var satcount=0;
   var suncount=0;
+  var sent=0;
 
 
 
@@ -1776,8 +1751,11 @@ function inserttuesday(connection,res,req,Dldmid,valuedldm){
         console.log("ERROR IN RUNNING SQL2 IN TUESDAY FOR DLDMID = "+DlmId+" AND DLDMID ="+tueid);
         console.log("ERROR : "+err);
         console.log("ERROR CODE : "+err.code);
-        MainObj.status = "CONNECTION ERROR";
-        res.send(JSON.stringify(MainObj));
+        if(sent == 0){
+          sent=1;
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+        }
         connection.rollback(function(){
           return err;
         })
@@ -1968,6 +1946,7 @@ function insertwednesday(connection,res,req,Dldmid,valuedldm){
   var fricount=0;
   var satcount=0;
   var suncount=0;
+  var sent=0;
 
 
 
@@ -2008,8 +1987,11 @@ function insertwednesday(connection,res,req,Dldmid,valuedldm){
         console.log("ERROR IN RUNNING SQL2 IN WEDNESDAY FOR DLDMID = "+DlmId+" AND DLDMID ="+wedid);
         console.log("ERROR : "+err);
         console.log("ERROR CODE : "+err.code);
-        MainObj.status = "CONNECTION ERROR";
-        res.send(JSON.stringify(MainObj));
+        if(sent == 0){
+          sent=1;
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+        }
         connection.rollback(function(){
           return err;
         })
@@ -2173,6 +2155,7 @@ function insertthursday(connection,res,req,Dldmid,valuedldm){
   var fricount=0;
   var satcount=0;
   var suncount=0;
+  var sent=0;
 
 
 
@@ -2212,8 +2195,11 @@ function insertthursday(connection,res,req,Dldmid,valuedldm){
         console.log("ERROR IN RUNNING SQL2 IN THURSDAY FOR DLDMID = "+DlmId+" AND DLDMID ="+thuid);
         console.log("ERROR : "+err);
         console.log("ERROR CODE : "+err.code);
-        MainObj.status = "CONNECTION ERROR";
-        res.send(JSON.stringify(MainObj));
+        if(sent == 0){
+          sent=1;
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+        }
         connection.rollback(function(){
           return err;
         })
@@ -2351,6 +2337,7 @@ function insertfriday(connection,res,req,Dldmid,valuedldm){
   var fricount=0;
   var satcount=0;
   var suncount=0;
+  var sent=0;
 
 
 
@@ -2390,8 +2377,11 @@ function insertfriday(connection,res,req,Dldmid,valuedldm){
         console.log("ERROR IN RUNNING SQL2 IN FRIDAY FOR DLDMID = "+DlmId+" AND DLDMID ="+friid);
         console.log("ERROR : "+err);
         console.log("ERROR CODE : "+err.code);
-        MainObj.status = "CONNECTION ERROR";
-        res.send(JSON.stringify(MainObj));
+        if(sent == 0){
+          sent=1;
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+        }
         connection.rollback(function(){
           return err;
         })
@@ -2503,6 +2493,7 @@ function insertsaturday(connection,res,req,Dldmid,valuedldm){
   var fricount=0;
   var satcount=0;
   var suncount=0;
+  var sent=0;
 
 
 
@@ -2543,8 +2534,11 @@ function insertsaturday(connection,res,req,Dldmid,valuedldm){
         console.log("ERROR IN RUNNING SQL2 IN SATURDAY FOR DLDMID = "+DlmId+" AND DLDMID ="+satid);
         console.log("ERROR : "+err);
         console.log("ERROR CODE : "+err.code);
-        MainObj.status = "CONNECTION ERROR";
-        res.send(JSON.stringify(MainObj));
+        if(sent == 0){
+          sent=1;
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+        }
         connection.rollback(function(){
           return err;
         })
@@ -2628,6 +2622,7 @@ function insertsunday(connection,res,req,Dldmid,valuedldm){
   var fricount=0;
   var satcount=0;
   var suncount=0;
+  var sent=0;
 
 
 
@@ -2668,8 +2663,11 @@ function insertsunday(connection,res,req,Dldmid,valuedldm){
         console.log("ERROR IN RUNNING SQL2 IN SUNDAY FOR DLDMID = "+DlmId+" AND DLDMID ="+sunid);
         console.log("ERROR : "+err);
         console.log("ERROR CODE : "+err.code);
-        MainObj.status = "CONNECTION ERROR";
-        res.send(JSON.stringify(MainObj));
+        if(sent == 0){
+          sent=1;
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+        }
         connection.rollback(function(){
           return err;
         })
@@ -2710,6 +2708,7 @@ app.post("/timeinformation",function(req,res){
   var Object = req.body;
 
   var count=0;
+  var sent=0;
   var DocId = Object.docid;
 
   var MainObj = {
@@ -2784,10 +2783,12 @@ app.post("/timeinformation",function(req,res){
                   console.log("ERROR IN TIMEINFORMATION IN RUNNING SQL2 FOR DOCID = "+DocId+" AND DLMDID = "+result[i].dlm_id);
                   console.log("ERROR : "+err);
                   console.log("ERROR CODE : "+err.code);
-                  MainObj.status = "CONNECTION ERROR";
-                  res.send(JSON.stringify(MainObj));
+                  if(sent == 0){
+                    sent=1;
+                    MainObj.status = "CONNECTION ERROR";
+                    res.send(JSON.stringify(MainObj));
+                  }
                   return err;
-                  return;
                 }else{
 
 
@@ -2911,7 +2912,6 @@ app.post("/timeinformationls",function(req,res){
     sundayid:"",
     sunday:[]
   }
-  var count=0;
 
   var sql1 = 'SELECT DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLTM.dltm_dldm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_dlm_id = DLTM.dltm_dldm_id WHERE DLDM.dldm_id = ?';
 
@@ -3081,6 +3081,7 @@ app.post("/serviceinsert",function(req,res){
   var dscmid="";
   var count=0;
   var sent = 0;
+  var valuesdcsid=0;
 
 
   var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
@@ -3092,8 +3093,9 @@ app.post("/serviceinsert",function(req,res){
         if(data[0] == "DSCM"){
 
           valuedscm = parseInt(data[1]);
-          dscmid = "DSCM"+""+data[1];
-          valuedscm++;
+          // dscmid = "DSCM"+""+data[1];
+          valuesdcsid = valuedscm;
+          valuedscm = valuedscm + Values.length;
           data[1]=valuedscm.toString();
         }
 
@@ -3129,10 +3131,12 @@ app.post("/serviceinsert",function(req,res){
 
                    for(var i=0;i<Values.length;i++){
 
+                     dscmid = "DSCM"+""+valuesdcsid;
+                     valuesdcsid++;
+
                      connection.query(sql1,[DlmId,Values[i].sid,dscmid,Values[i].namt,Values[i].damt,Values[i].sflag],function(err,result){
 
                        if(err){
-                         count++;
                          console.log("ERROR IN RUNNING SQL1 IN SERVICEINSERT DLMID = "+DlmId);
                          console.log("ERROR:"+err);
                          console.log("ERROR CODE:"+err.code);
@@ -3148,7 +3152,7 @@ app.post("/serviceinsert",function(req,res){
 
                          count++;
                          console.log(count);
-                         if(count==Values.length && sent == 0){
+                         if(count==Values.length){
                            console.log("in if"+Values.length);
                            connection.commit(function(err){
                              if(err){
