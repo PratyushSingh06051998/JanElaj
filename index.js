@@ -2720,7 +2720,6 @@ app.post("/timeinformation",function(req,res){
   var INFO={
     dlmdmid:"",
     locid:"",
-    // locinfo:[]
     mondayid:"",
     monday:[],
     tuesdayid:"",
@@ -2887,6 +2886,117 @@ app.post("/timeinformation",function(req,res){
 
 })
 
+app.post("/timeinformationls",function(req,res){
+
+  var Object = req.body;
+
+  var count=0;
+  var DlmId = Object.dlmid;
+
+  var MainObj = {
+    status : "SUCCESS",
+    dlmdmid:"",
+    mondayid:"",
+    monday:[],
+    tuesdayid:"",
+    tuesday:[],
+    wednesdayid:"",
+    wednesday:[],
+    thursdayid:"",
+    thursday:[],
+    fridayid:"",
+    friday:[],
+    saturdayid:"",
+    saturday:[],
+    sundayid:"",
+    sunday:[]
+  }
+  var count=0;
+
+  var sql1 = 'SELECT DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLTM.dltm_dldm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_dlm_id = DLTM.dltm_dldm_id WHERE DLDM.dldm_id = ?';
+
+  con.getConnection(function(err,connection){
+    if(err){
+      console.log("ERROR IN TIMEINFORMATIONLS IN CONNECTING TO DATABASE FOR DLMID = "+DlmId);
+      console.log("ERROR : "+err);
+      console.log("ERROR CODE : "+err.code);
+      MainObj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(MainObj));
+      return err;
+    }else{
+      connection.query(sql1,[DlmId],function(err,result){
+
+        if(err){
+          console.log("ERROR IN TIMEINFORMATIONLS IN RUNNING SQL1 FOR DLMID = "+DlmId);
+          console.log("ERROR : "+err);
+          console.log("ERROR CODE : "+err.code);
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+          return err;
+        }else{
+
+          if(result.length==0){
+            MainObj.status = "SUCCESS";
+            MainObj.dlmdmid = DlmId;
+            res.send(JSON.stringify(MainObj));
+            return;
+          }else{
+
+
+            for(var i=0;i<result.length;i++){
+
+              console.log("value of i "+i);
+              console.log("lenght of result "+result.length);
+
+              var TIMEOBJ = {
+                from:result[i].dltm_time_from,
+                to:result[i].dltm_time_to,
+                timeid:result[i].dltm_id
+              }
+
+              if(result[i].dldm_day_number == "MON"){
+                MainObj.mondayid = result[i].dltm_dldm_id;
+                MainObj.monday.push(TIMEOBJ);
+              }else if(result[i].dldm_day_number == "TUE"){
+                MainObj.tuesdayid = result[i].dltm_dldm_id;
+                MainObj.tuesday.push(TIMEOBJ);
+              }else if(result[i].dldm_day_number == "WED"){
+                MainObj.wednesdayid = result[i].dltm_dldm_id;
+                MainObj.wednesday.push(TIMEOBJ);
+              }else if(result[i].dldm_day_number == "THU"){
+                MainObj.thursdayid = result[i].dltm_dldm_id;
+                MainObj.thursday.push(TIMEOBJ);
+              }else if(result[i].dldm_day_number == "FRI"){
+                MainObj.fridayid = result[i].dltm_dldm_id;
+                MainObj.friday.push(TIMEOBJ);
+              }else if(result[i].dldm_day_number == "SAT"){
+                MainObj.saturdayid = result[i].dltm_dldm_id;
+                MainObj.saturday.push(TIMEOBJ);
+              }else if(result[i].dldm_day_number == "SUN"){
+                MainObj.sundayid = result[i].dltm_dldm_id;
+                MainObj.sunday.push(TIMEOBJ);
+              }
+              count++;
+            }
+
+            if(count==result.length){
+              MainObj.status = "SUCCESS";
+              MainObj.dlmdmid = DlmId;
+              res.send(JSON.stringify(MainObj));
+            }
+
+          }
+
+        }
+
+        connection.release();
+
+      })
+    }
+  })
+
+})
+
 app.post("/timecheck",function(req,res){
 
   var obj = {
@@ -2904,10 +3014,6 @@ app.post("/serviceinfo",function(req,res){
     info : []
   }
 
-  var INFO = {
-    sid:"",
-    sname:""
-  }
 
   var sql = 'SELECT sm_service_id, sm_service_name FROM service_master';
 
@@ -2957,6 +3063,123 @@ app.post("/serviceinfo",function(req,res){
 
     }
   });
+
+})
+
+app.post("/serviceinsert",function(req,res){
+
+  var Object = req.body;
+
+  var DlmId = Object.dlmid;
+  console.log(DlmId);
+  var Values = [];
+  Values = Object.values;
+
+  var MainObj = {
+    status : "SUCCESS"
+  }
+  var dscmid="";
+  var count=0;
+
+
+  var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
+  var Mydata = [];
+  var csvStream = csv.parse().on("data", function(data){
+
+        var valuedscm=0;
+
+        if(data[0] == "DSCM"){
+
+          valuedscm = parseInt(data[1]);
+          dscmid = "DSCM"+""+data[1];
+          valuedscm++;
+          data[1]=valuedscm.toString();
+        }
+
+        Mydata.push(data);
+      })
+      .on("end", function(){
+           var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
+           csv.write(Mydata, {headers: true}).pipe(ws);
+
+           var sql1 = 'INSERT INTO doctor_clinic_services_master (dcsm_dlm_id, dcsm_sm_service_id, dscm_id, dcsm_normal_amount, dcsm_discounted_amount, dcsm_discount_flag) VALUES ((?),(?),(?),(?),(?),(?))';
+
+           con.getConnection(function(err,connection){
+
+             if(err){
+               console.log("ERROR IN CONNECTION TO DATABASE IN SERVICEINSERT DLMID = "+DlmId);
+               console.log("ERROR:"+err);
+               console.log("ERROR CODE:"+err.code);
+               MainObj.status = "FAIL";
+               res.send(JSON.stringify(MainObj));
+               return err;
+             }else{
+
+               connection.beginTransaction(function(err){
+
+                 if(err){
+                   console.log("ERROR IN BEGINING TRANSACTION DATABASE IN SERVICEINSERT DLMID = "+DlmId);
+                   console.log("ERROR:"+err);
+                   console.log("ERROR CODE:"+err.code);
+                   MainObj.status = "FAIL";
+                   res.send(JSON.stringify(MainObj));
+                   return err;
+                 }else{
+
+                   for(var i=0;i<Values.length;i++){
+
+                     connection.query(sql1,[DlmId,Values[i].sid,dscmid,Values[i].namt,Values[i].damt,Values[i].sflag],function(err,result){
+
+                       if(err){
+                         console.log("ERROR IN RUNNING SQL1 IN SERVICEINSERT DLMID = "+DlmId);
+                         console.log("ERROR:"+err);
+                         console.log("ERROR CODE:"+err.code);
+                         MainObj.status = "FAIL";
+                         res.send(JSON.stringify(MainObj));
+                         connection.rollback(function(){
+                           return err;
+                         })
+                       }else{
+
+                         count++;
+                         if(count==Values.length){
+                           connection.commit(function(err){
+                             if(err){
+                               console.log("ERROR IN COMMITING TO DATABASE IN SERVICEINSERT DLMID = "+DlmId);
+                               console.log("ERROR:"+err);
+                               console.log("ERROR CODE:"+err.code);
+                               MainObj.status = "FAIL";
+                               res.send(JSON.stringify(MainObj));
+                               connection.rollback(function(){
+                                 return err;
+                               })
+                             }else{
+                               MainObj.status = "SUCCESS";
+                               res.send(JSON.stringify(MainObj));
+                             }
+                           })
+                         }
+
+                       }
+
+                       connection.release();
+
+                     })
+
+                   }
+
+                 }
+
+               })
+
+             }
+
+           })
+
+
+         });
+         stream.pipe(csvStream);
+
 
 })
 
