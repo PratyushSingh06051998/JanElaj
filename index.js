@@ -3145,7 +3145,7 @@ app.post("/serviceinsert",function(req,res){
                          count++;
                          console.log(count);
                          if(count==Values.length);
-                           console.log("in if"+Values.length);
+                           console.log("in if"+Values.length){
                            connection.commit(function(err){
                              if(err){
                                console.log("ERROR IN COMMITING TO DATABASE IN SERVICEINSERT DLMID = "+DlmId);
