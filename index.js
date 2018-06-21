@@ -3270,7 +3270,7 @@ app.post("/oneviewinfo",function(req,res){
               var TIMEOBJ = {
                 from:result[i].dltm_time_from,
                 to:result[i].dltm_time_to,
-                flag:result[i].dltm_discount_offer_flag;
+                flag:result[i].dltm_discount_offer_flag
               }
 
               if(result[i].dldm_day_number == "MON"){
