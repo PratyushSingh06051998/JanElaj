@@ -2997,6 +2997,10 @@ app.post("/timeinformationls",function(req,res){
 
 })
 
+app.post("/discountupdate",function(req,res){
+
+})
+
 app.post("/timecheck",function(req,res){
 
   var obj = {
@@ -3242,19 +3246,19 @@ app.post("/oneviewinfo",function(req,res){
           }else{
 
             var INFO={
-              mondayflag:"",
+              // mondayflag:"",
               monday:[],
-              tuesdayflag:"",
+              // tuesdayflag:"",
               tuesday:[],
-              wednesdayflag:"",
+              // wednesdayflag:"",
               wednesday:[],
-              thursdayflag:"",
+              // thursdayflag:"",
               thursday:[],
-              fridayflag:"",
+              // fridayflag:"",
               friday:[],
-              saturdayflag:"",
+              // saturdayflag:"",
               saturday:[],
-              sundayflag:"",
+              // sundayflag:"",
               sunday:[]
             }
 
@@ -3265,29 +3269,30 @@ app.post("/oneviewinfo",function(req,res){
 
               var TIMEOBJ = {
                 from:result[i].dltm_time_from,
-                to:result[i].dltm_time_to
+                to:result[i].dltm_time_to,
+                flag:result[i].dltm_discount_offer_flag;
               }
 
               if(result[i].dldm_day_number == "MON"){
-                INFO.mondayflag = result[i].dltm_discount_offer_flag;
+                // INFO.mondayflag = result[i].dltm_discount_offer_flag;
                 INFO.monday.push(TIMEOBJ);
               }else if(result[i].dldm_day_number == "TUE"){
-                INFO.tuesdayflag = result[i].dltm_discount_offer_flag;
+                // INFO.tuesdayflag = result[i].dltm_discount_offer_flag;
                 INFO.tuesday.push(TIMEOBJ);
               }else if(result[i].dldm_day_number == "WED"){
-                INFO.wednesdayflag = result[i].dltm_discount_offer_flag;
+                // INFO.wednesdayflag = result[i].dltm_discount_offer_flag;
                 INFO.wednesday.push(TIMEOBJ);
               }else if(result[i].dldm_day_number == "THU"){
-                INFO.thursdayflag = result[i].dltm_discount_offer_flag;
+                // INFO.thursdayflag = result[i].dltm_discount_offer_flag;
                 INFO.thursday.push(TIMEOBJ);
               }else if(result[i].dldm_day_number == "FRI"){
-                INFO.fridayflag = result[i].dltm_discount_offer_flag;
+                // INFO.fridayflag = result[i].dltm_discount_offer_flag;
                 INFO.friday.push(TIMEOBJ);
               }else if(result[i].dldm_day_number == "SAT"){
-                INFO.saturdayflag = result[i].dltm_discount_offer_flag;
+                // INFO.saturdayflag = result[i].dltm_discount_offer_flag;
                 INFO.saturday.push(TIMEOBJ);
               }else if(result[i].dldm_day_number == "SUN"){
-                INFO.sundayflag = result[i].dltm_discount_offer_flag;
+                // INFO.sundayflag = result[i].dltm_discount_offer_flag;
                 INFO.sunday.push(TIMEOBJ);
               }
 
