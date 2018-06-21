@@ -3080,6 +3080,7 @@ app.post("/serviceinsert",function(req,res){
   }
   var dscmid="";
   var count=0;
+  var sent = 0;
 
 
   var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
@@ -3138,16 +3139,16 @@ app.post("/serviceinsert",function(req,res){
                          connection.rollback(function(){
                            return err;
                          })
-                         if(count==Values.length){
+                         if(sent==0){
+                           sent=1;
                            MainObj.status = "CONNECTION ERROR";
                            res.send(JSON.stringify(MainObj));
                          }
-                         return;
                        }else{
 
                          count++;
                          console.log(count);
-                         if(count==Values.length){
+                         if(count==Values.length && sent == 0){
                            console.log("in if"+Values.length);
                            connection.commit(function(err){
                              if(err){
