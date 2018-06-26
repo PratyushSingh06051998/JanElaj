@@ -3471,51 +3471,66 @@ app.post("/updatediscount",function(req,res){
       return err;
     }else{
 
-      if(AllDisc == "Y"){
-        connection.query(sql1,['N',DocId],function(err,result){
-          if(err){
-            console.log("ERROR IN updatediscount IN RUNNING SQL1 TO DATABASE FOR DOCID = "+DocId);
-            console.log("ERROR : "+err);
-            console.log("ERROR CODE : "+err.code);
-            MainObj.status = "CONNECTION ERROR";
-            res.send(JSON.stringify(MainObj));
-            return err;
-          }else{
-            if(result.affectedRows == 1){
-              MainObj.status = "SUCCESS";
-              res.send(JSON.stringify(MainObj));
-            }else{
-              console.log("ERROR IN updatediscount IN RUNNING SQL1 TO DATABASE FOR DOCID = "+DocId);
-              MainObj.status = "CONNECTION ERROR";
-              res.send(JSON.stringify(MainObj));
-            }
-          }
-        })
+      connection.beginTransaction(function(err){
+        if(err){
 
-      }else if(SingleDisc == "Y" && AllDisc == "N"){
-        connection.query(sql,['N',DocId,LocId],function(err,result){
-          if(err){
-            console.log("ERROR IN updatediscount IN RUNNING SQL TO DATABASE FOR DOCID = "+DocId);
-            console.log("ERROR : "+err);
-            console.log("ERROR CODE : "+err.code);
-            MainObj.status = "CONNECTION ERROR";
-            res.send(JSON.stringify(MainObj));
-            return err;
-          }else{
-            if(result.affectedRows == 1){
-              MainObj.status = "SUCCESS";
-              res.send(JSON.stringify(MainObj));
-            }else{
+        }else{
+          connection.query(sql,[SingleDisc,DocId,LocId],function(err,result){
+            if(err){
               console.log("ERROR IN updatediscount IN RUNNING SQL TO DATABASE FOR DOCID = "+DocId);
+              console.log("ERROR : "+err);
+              console.log("ERROR CODE : "+err.code);
               MainObj.status = "CONNECTION ERROR";
               res.send(JSON.stringify(MainObj));
+              connection.rollback(function(err){
+                return err;
+              })
+            }else{
+              if(result.affectedRows == 1){
+                connection.query(sql1,[AllDisc,DocId],function(err,resultt){
+                  if(err){
+                    console.log("ERROR IN updatediscount IN RUNNING SQL1 TO DATABASE FOR DOCID = "+DocId);
+                    console.log("ERROR : "+err);
+                    console.log("ERROR CODE : "+err.code);
+                    MainObj.status = "CONNECTION ERROR";
+                    res.send(JSON.stringify(MainObj));
+                    connection.rollback(function(err){
+                      return err;
+                    })
+                  }else{
+                    if(resultt.affectedRows == 1){
+                      connection.commit(function(err){
+                        if(err){
+                          console.log("ERROR IN updatediscount IN COMMITING TO DATABASE FOR DOCID = "+DocId);
+                          console.log("ERROR : "+err);
+                          console.log("ERROR CODE : "+err.code);
+                          MainObj.status = "CONNECTION ERROR";
+                          res.send(JSON.stringify(MainObj));
+                          connection.rollback(function(err){
+                            return err;
+                          })
+                        }else{
+                          MainObj.status = "SUCCESS";
+                          res.send(JSON.stringify(MainObj));
+                        }
+                      })
+                    }else{
+                      console.log("ERROR IN updatediscount IN RUNNING SQL1 TO DATABASE FOR DOCID = "+DocId);
+                      MainObj.status = "CONNECTION ERROR";
+                      res.send(JSON.stringify(MainObj));
+                    }
+                  }
+                })
+              }else{
+                console.log("ERROR IN updatediscount IN RUNNING SQL TO DATABASE FOR DOCID = "+DocId);
+                MainObj.status = "CONNECTION ERROR";
+                res.send(JSON.stringify(MainObj));
+              }
             }
-          }
-        })
-      }else{
-        MainObj.status = "SUCCESS";
-        res.send(JSON.stringify(MainObj));
-      }
+          })
+        }
+      })
+
 
       connection.release();
     }
