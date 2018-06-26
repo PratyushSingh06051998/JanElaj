@@ -244,6 +244,7 @@ app.post("/signin",function(req,res){
 
   var sql = 'SELECT pld_password, pld_partner_id FROM partner_login_details_master WHERE pld_username = ?';
   var sql2 = 'SELECT COUNT(*) AS exist FROM doctor_location_master WHERE dlm_dm_doctor_id = ?';
+  var sql3 = 'SELECT dm_profiling_complete from doctor_master WHERE pld_username = ?';
 
   con.getConnection(function(err,connection){
 
@@ -257,7 +258,7 @@ app.post("/signin",function(req,res){
 
     }else{
 
-      connection.query(sql,[Email,Password],function(err,result){
+      connection.query(sql,[Email],function(err,result){
 
         if(err){
           console.log("ERROR IN RUNNING SQL IN SIGNIN FOR Email = "+Email);
@@ -299,6 +300,27 @@ app.post("/signin",function(req,res){
                     obj.status = "SUCCESS";
                     obj.checkpoint = 2;// go to manage location screen
                     res.send(JSON.stringify(obj));
+                    connection.query(sql3,[Email],function(err,ress){
+                      if(err){
+                        console.log("ERROR IN RUNNING SQL3 IN SIGNIN FOR Email = "+Email);
+                        console.log("ERROR : "+err.code);
+                        obj.status = "CONNECTION ERROR";
+                        res.send(JSON.stringify(obj));
+                        return err;
+                      }else{
+                        if(ress[0].dm_profiling_complete == 'Y'){
+                          console.log("in checkpoint 3");
+                          obj.status = "SUCCESS";
+                          obj.checkpoint = 3;// go to dashboard screen
+                          res.send(JSON.stringify(obj));
+                        }else{
+                          console.log("in checkpoint 2");
+                          obj.status = "SUCCESS";
+                          obj.checkpoint = 2;// go to manage location screen
+                          res.send(JSON.stringify(obj));
+                        }
+                      }
+                    })
 
                   }
 
@@ -3414,6 +3436,171 @@ app.post("/oneviewinfo",function(req,res){
 
     }
   })
+
+})
+
+app.post("/updatediscount",function(req,res){
+
+
+  var Object = req.body;
+
+  var DocId = Object.docid;
+  var LocId = Object.locid;
+
+  var MainObj = {
+    status : "SUCCESS"
+  }
+
+  var sql = 'UPDATE doctor_location_master SET dlm_currentloc_discount_flag = ? WHERE dlm_dm_doctor_id = ? AND dlm_lm_location_id = ?';
+
+  con.getConnection(function(err,connection){
+    if(err){
+      console.log("ERROR IN updatediscount IN CONNECTING TO DATABASE FOR DOCID = "+DocId);
+      console.log("ERROR : "+err);
+      console.log("ERROR CODE : "+err.code);
+      MainObj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(MainObj));
+      return err;
+    }else{
+      connection.query(sql,['N',DocId,LocId],function(err,result){
+        if(err){
+          console.log("ERROR IN updatediscount IN RUNNING SQL TO DATABASE FOR DOCID = "+DocId);
+          console.log("ERROR : "+err);
+          console.log("ERROR CODE : "+err.code);
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+          return err;
+        }else{
+          if(result.affectedRows == 1){
+            MainObj.status = "SUCCESS";
+            res.send(JSON.stringify(MainObj));
+          }else{
+            console.log("ERROR IN updatediscount IN RUNNING SQL TO DATABASE FOR DOCID = "+DocId);
+            MainObj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(MainObj));
+          }
+        }
+      })
+      connection.release();
+    }
+  })
+
+})
+
+app.post("/profilingcomplete",function(req,res){
+
+  var Object = req.body;
+
+  var DocId = Object.docid;
+
+  var MainObj = {
+    status : "SUCCESS"
+  }
+
+  var sql = 'UPDATE doctor_master SET dm_profiling_complete = ? WHERE dm_doctor_id = ?';
+
+  con.getConnection(function(err,connection){
+    if(err){
+      console.log("ERROR IN profilingcomplete IN CONNECTING TO DATABASE FOR DOCID = "+DocId);
+      console.log("ERROR : "+err);
+      console.log("ERROR CODE : "+err.code);
+      MainObj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(MainObj));
+      return err;
+    }else{
+      connection.query(sql,['Y',DocId],function(err,result){
+        if(err){
+          console.log("ERROR IN profilingcomplete IN RUNNING SQL TO DATABASE FOR DOCID = "+DocId);
+          console.log("ERROR : "+err);
+          console.log("ERROR CODE : "+err.code);
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+          return err;
+        }else{
+          if(result.affectedRows == 1){
+            MainObj.status = "SUCCESS";
+            res.send(JSON.stringify(MainObj));
+          }else{
+            console.log("ERROR IN profilingcomplete IN RUNING SQL TO DATABASE FOR DOCID = "+DocId);
+            MainObj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(MainObj));
+          }
+        }
+      })
+      connection.release();
+    }
+  })
+
+
+})
+
+app.post("/chooselocation",function(req,res){
+
+
+  var Object = req.body;
+
+  var DocId = Object.docid;
+
+  console.log("has been hit in manage location");
+
+  var Aray = [];
+
+  var MainObj = {
+    status:"",
+    locations : []
+  }
+
+
+  var sql = "SELECT LM.lm_name, LM.lm_flag_home_service_ref, LM.lm_address_line1, LM.lm_location_id, LM.lm_city, DLM.dlm_id FROM location_master AS LM INNER JOIN doctor_location_master AS DLM ON LM.lm_location_id = DLM.dlm_lm_location_id WHERE DLM.dlm_dm_doctor_id = ?";
+
+  con.getConnection(function(err,connection){
+
+    if(err){
+      console.log("ERROR IN BUILDING CONNECTION IN FETCHLOCATION FOR DocId = "+DocId);
+      console.log("ERROR CODE :"+err.code);
+      console.log("ERROR : "+err);
+      MainObj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(MainObj));
+      return err;
+    }else{
+      connection.query(sql,[DocId],function(err,result){
+        if(err){
+          console.log("ERROR IN RUNNING SQL IN FETCHLOCATION FOR DocId = "+DocId);
+          console.log("ERROR CODE :"+err.code);
+          console.log("ERROR : "+err);
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+          return err;
+        }else{
+
+          MainObj.status = "SUCCESS";
+          for(var i=0;i<result.length;i++){
+
+            var obj = {
+              lname:result[i].lm_name,
+              lflagservice:result[i].lm_flag_home_service_ref,
+              ladrline1:result[i].lm_address_line1,
+              dlmid:result[i].dlm_id,
+              lcity:result[i].lm_city,
+              lid:result[i].lm_location_id,
+              did:DocId
+            }
+
+            MainObj.locations.push(obj);
+
+          }
+
+          res.send(JSON.stringify(MainObj));
+
+        }
+
+        connection.release();
+
+      })
+    }
+
+  })
+
 
 })
 
