@@ -3493,6 +3493,7 @@ app.post("/profilingcomplete",function(req,res){
 
   var DocId = Object.docid;
 
+  console.log(DocId);
   var MainObj = {
     status : "SUCCESS"
   }
