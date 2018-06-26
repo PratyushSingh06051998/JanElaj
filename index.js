@@ -3446,12 +3446,20 @@ app.post("/updatediscount",function(req,res){
 
   var DocId = Object.docid;
   var LocId = Object.locid;
+  var AllDisc = Object.alldisc;
+  var SingleDisc = Object.singledisc;
+  console.log(DocId);
+  console.log(LocId);
+  console.log(AllDisc);
+  console.log(SingleDisc);
 
   var MainObj = {
     status : "SUCCESS"
   }
 
   var sql = 'UPDATE doctor_location_master SET dlm_currentloc_discount_flag = ? WHERE dlm_dm_doctor_id = ? AND dlm_lm_location_id = ?';
+  var sql1 = 'UPDATE doctor_master SET dm_overall_discount = ? WHERE dm_doctor_id = ?';
+
 
   con.getConnection(function(err,connection){
     if(err){
@@ -3462,25 +3470,53 @@ app.post("/updatediscount",function(req,res){
       res.send(JSON.stringify(MainObj));
       return err;
     }else{
-      connection.query(sql,['N',DocId,LocId],function(err,result){
-        if(err){
-          console.log("ERROR IN updatediscount IN RUNNING SQL TO DATABASE FOR DOCID = "+DocId);
-          console.log("ERROR : "+err);
-          console.log("ERROR CODE : "+err.code);
-          MainObj.status = "CONNECTION ERROR";
-          res.send(JSON.stringify(MainObj));
-          return err;
-        }else{
-          if(result.affectedRows == 1){
-            MainObj.status = "SUCCESS";
-            res.send(JSON.stringify(MainObj));
-          }else{
-            console.log("ERROR IN updatediscount IN RUNNING SQL TO DATABASE FOR DOCID = "+DocId);
+
+      if(AllDisc == "Y"){
+        connection.query(sql1,['N',DocId],function(err,result){
+          if(err){
+            console.log("ERROR IN updatediscount IN RUNNING SQL1 TO DATABASE FOR DOCID = "+DocId);
+            console.log("ERROR : "+err);
+            console.log("ERROR CODE : "+err.code);
             MainObj.status = "CONNECTION ERROR";
             res.send(JSON.stringify(MainObj));
+            return err;
+          }else{
+            if(result.affectedRows == 1){
+              MainObj.status = "SUCCESS";
+              res.send(JSON.stringify(MainObj));
+            }else{
+              console.log("ERROR IN updatediscount IN RUNNING SQL1 TO DATABASE FOR DOCID = "+DocId);
+              MainObj.status = "CONNECTION ERROR";
+              res.send(JSON.stringify(MainObj));
+            }
           }
-        }
-      })
+        })
+
+      }else if(SingleDisc == "Y" && AllDisc == "N"){
+        connection.query(sql,['N',DocId,LocId],function(err,result){
+          if(err){
+            console.log("ERROR IN updatediscount IN RUNNING SQL TO DATABASE FOR DOCID = "+DocId);
+            console.log("ERROR : "+err);
+            console.log("ERROR CODE : "+err.code);
+            MainObj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(MainObj));
+            return err;
+          }else{
+            if(result.affectedRows == 1){
+              MainObj.status = "SUCCESS";
+              res.send(JSON.stringify(MainObj));
+            }else{
+              console.log("ERROR IN updatediscount IN RUNNING SQL TO DATABASE FOR DOCID = "+DocId);
+              MainObj.status = "CONNECTION ERROR";
+              res.send(JSON.stringify(MainObj));
+            }
+          }
+        })
+      }else{
+        MainObj.status = "SUCCESS";
+        res.send(JSON.stringify(MainObj));
+      }
+
       connection.release();
     }
   })
