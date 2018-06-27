@@ -358,13 +358,14 @@ app.post("/allinformation",function(req,res){
     docdob: "",
     docgender: "",
     docspeciality: "",
-    introduction : ""
+    introduction : "",
+    experience : 0
     }
 
   var Object = req.body;
   var DocId = Object.docid;
 
-  var sql4 = 'SELECT dm_doctor_name, dm_dob, dm_gender, dm_doctor_speciality_id, dm_introduction FROM doctor_master WHERE dm_doctor_id = ?';
+  var sql4 = 'SELECT dm_doctor_name, dm_dob, dm_gender, dm_doctor_speciality_id, dm_introduction, round((to_days(sysdate())-to_days(dm_dob))/365) as EXP FROM doctor_master WHERE dm_doctor_id = ?';
 
   con.getConnection(function(err,connection){
     if(err){
@@ -393,6 +394,7 @@ app.post("/allinformation",function(req,res){
             obj.docgender = result1[0].dm_gender;
             obj.docspeciality = result1[0].dm_doctor_speciality_id;
             obj.introduction = result1[0].dm_introduction;
+            obj.experience = result1[0].EXP;
             res.send(JSON.stringify(obj));
 
           }else{
@@ -412,7 +414,58 @@ app.post("/allinformation",function(req,res){
 
 })
 
-app.post("/updateextras",function(req,res){
+app.post("/updateintroduction",function(req,res){
+
+  var Object = req.body;
+
+  var DocId =  Object.docid;
+  var Introduction = Object.introduction;
+  console.log(DocId);
+
+  var obj = {
+    status : "SUCCESS"
+  }
+
+  var sql = 'UPDATE doctor_master SET dm_introduction = ? WHERE dm_doctor_id = ?';
+
+  con.getConnection(function(err, connection) {
+
+
+      if(err){
+        console.log("ERROR IN updateintroduction IN BUILDING CONNECTION FOR DOCID = "+DocId);
+        console.log("ERROR CODE :"+err.code);
+        obj.status = "CONNECTION ERROR";
+        res.send(JSON.stringify(obj));
+        return err;
+      }else{
+
+        connection.query(sql,[Introduction,DocId], function(err, result) {
+
+          if(err){
+            console.log("ERROR IN updateintroduction IN RUNNING QUERY FOR DOCID = "+DocId);
+            console.log("ERROR CODE "+err.code);
+            obj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(obj));
+            return err;
+          }else{
+
+            if(result.affectedRows == 1){
+              console.log("Success");
+              obj.status = "SUCCESS";
+              res.send(JSON.stringify(obj));
+            }else{
+              obj.status = "CONNECTION ERROR";
+              res.send(JSON.stringify(obj));
+            }
+          }
+
+            connection.release();
+        });
+
+      }
+
+
+  });
 
 })
 
