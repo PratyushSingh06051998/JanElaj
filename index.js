@@ -359,13 +359,14 @@ app.post("/allinformation",function(req,res){
     docgender: "",
     docspeciality: "",
     introduction : "",
-    experience : 0
+    experience : 0,
+    age : 0
     }
 
   var Object = req.body;
   var DocId = Object.docid;
 
-  var sql4 = 'SELECT dm_doctor_name, dm_dob, dm_gender, dm_doctor_speciality_id, dm_introduction, round((to_days(sysdate())-to_days(dm_dob))/365) as EXP FROM doctor_master WHERE dm_doctor_id = ?';
+  var sql4 = 'SELECT dm_doctor_name, dm_dob, dm_gender, dm_doctor_speciality_id, dm_introduction, dm_doctor_experience, round((to_days(sysdate())-to_days(dm_dob))/365) as AGE FROM doctor_master WHERE dm_doctor_id = ?';
 
   con.getConnection(function(err,connection){
     if(err){
@@ -394,7 +395,8 @@ app.post("/allinformation",function(req,res){
             obj.docgender = result1[0].dm_gender;
             obj.docspeciality = result1[0].dm_doctor_speciality_id;
             obj.introduction = result1[0].dm_introduction;
-            obj.experience = result1[0].EXP;
+            obj.experience = result1[0].dm_doctor_experience;
+            obj.age = result1[0].AGE;
             res.send(JSON.stringify(obj));
 
           }else{
