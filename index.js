@@ -397,6 +397,7 @@ app.post("/allinformation",function(req,res){
             obj.introduction = result1[0].dm_introduction;
             obj.experience = result1[0].dm_doctor_experience;
             obj.age = result1[0].AGE;
+            console.log(obj);
             res.send(JSON.stringify(obj));
 
           }else{
