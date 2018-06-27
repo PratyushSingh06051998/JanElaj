@@ -231,6 +231,7 @@ app.post("/signin",function(req,res){
 
   var obj = {
     status : "SUCCESS",
+    docid : "",
     checkpoint : 0
   }
 
@@ -243,6 +244,7 @@ app.post("/signin",function(req,res){
   console.log(Password);
 
   var sql = 'SELECT pld_password, pld_partner_id FROM partner_login_details_master WHERE pld_username = ?';
+  var sql4 = 'SELECT dm_doctor_name, dm_dob, dm_gender, dm_doctor_speciality_id FROM doctor_master WHERE dm_doctor_id = ?';
   var sql2 = 'SELECT COUNT(*) AS exist FROM doctor_location_master WHERE dlm_dm_doctor_id = ?';
   var sql3 = 'SELECT dm_profiling_complete from doctor_master WHERE pld_username = ?';
 
@@ -274,8 +276,9 @@ app.post("/signin",function(req,res){
             if(result[0].pld_password == Password){
 
               DocId = result[0].pld_partner_id;
-
+              obj.docid = DocId;
               console.log("i am here "+DocId);
+
               connection.query(sql2,[DocId],function(err,resul){
 
                 if(err){
@@ -328,6 +331,7 @@ app.post("/signin",function(req,res){
 
               })
 
+
             }else{
               obj.status = "YOU PASSWORD IS INCORRECT";
               res.send(JSON.stringify(obj));
@@ -345,6 +349,72 @@ app.post("/signin",function(req,res){
   })
 
 });
+
+app.post("/allinformation",function(req,res){
+
+  var obj = {
+    status : "SUCCESS",
+    docname: "",
+    docdob: "",
+    docgender: "",
+    docspeciality: "",
+    introduction : ""
+    }
+
+  var Object = req.body;
+  var DocId = Object.docid;
+
+  var sql4 = 'SELECT dm_doctor_name, dm_dob, dm_gender, dm_doctor_speciality_id, dm_introduction FROM doctor_master WHERE dm_doctor_id = ?';
+
+  con.getConnection(function(err,connection){
+    if(err){
+      console.log("ERROR IN RUNNING SQL1 IN SIGNIN FOR Email = "+Email);
+      console.log(err);
+      console.log("ERROR : "+err.code);
+      obj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(obj));
+      return err;
+    }else{
+
+      connection.query(sql4,[DocId],function(err,result1){
+        if(err){
+          console.log("ERROR IN RUNNING SQL1 IN SIGNIN FOR Email = "+Email);
+          console.log(err);
+          console.log("ERROR : "+err.code);
+          obj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(obj));
+          return err;
+        }else{
+
+          if(result1.length == 1){
+
+            obj.docname = result1[0].dm_doctor_name;
+            obj.docdob = result1[0].dm_dob;
+            obj.docgender = result1[0].dm_gender;
+            obj.docspeciality = result1[0].dm_doctor_speciality_id;
+            obj.introduction = result1[0].dm_introduction;
+            res.send(JSON.stringify(obj));
+
+          }else{
+            console.log("ERROR IN RUNNING SQL1 0 ROWS RETURNED IN SIGNIN FOR Email = "+Email);
+            obj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(obj));
+          }
+
+        }
+      })
+      connection.release();
+
+
+    }
+  })
+
+
+})
+
+app.post("/updateextras",function(req,res){
+
+})
 
 //Leave it fr now
 app.post("/hvisitaddlocation",function(req,res){
