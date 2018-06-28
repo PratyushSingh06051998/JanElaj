@@ -22,6 +22,112 @@ app.get("/q",function(req,res){
   res.send("hi from server");
 })
 
+app.post("/updatetime",function(req,res){
+
+  var Object = req.body;
+
+  var TimeId =  Object.tid;
+  var From = Object.from;
+  var To = Object.to;
+  console.log(TimeId);
+
+  var obj = {
+    status : "SUCCESS"
+  }
+
+  var sql = 'UPDATE doctor_location_time_master SET dltm_time_from = ?, dltm_time_to = ? WHERE dltm_id = ?';
+
+  con.getConnection(function(err, connection) {
+
+
+      if(err){
+        console.log("ERROR IN updatetime IN BUILDING CONNECTION FOR TIMEID = "+TimeId);
+        console.log("ERROR CODE :"+err.code);
+        obj.status = "CONNECTION ERROR";
+        res.send(JSON.stringify(obj));
+        return err;
+      }else{
+
+        connection.query(sql,[From,To,TimeId], function(err, result) {
+
+          if(err){
+            console.log("ERROR IN updatetime IN RUNNING QUERY FOR TIMEID = "+TimeId);
+            console.log("ERROR CODE "+err.code);
+            obj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(obj));
+            return err;
+          }else{
+
+            if(result.affectedRows == 1){
+              res.send(JSON.stringify(obj));
+            }else{
+              obj.status = "CONNECTION ERROR";
+              res.send(JSON.stringify(obj));
+            }
+          }
+
+            connection.release();
+        });
+
+      }
+
+
+  });
+
+})
+
+app.post("/deletetime",function(req,res){
+
+  var Object = req.body;
+
+  var TimeId =  Object.tid;
+  console.log(TimeId+"Deletetime has been hit");
+
+  var obj = {
+    status : "SUCCESS"
+  }
+
+  var sql = 'DELETE FROM doctor_location_time_master WHERE dltm_id = ?';
+
+  con.getConnection(function(err, connection) {
+
+
+      if(err){
+        console.log("ERROR IN deletetime IN BUILDING CONNECTION FOR TIMEID = "+TimeId);
+        console.log("ERROR CODE :"+err.code);
+        obj.status = "CONNECTION ERROR";
+        res.send(JSON.stringify(obj));
+        return err;
+      }else{
+
+        connection.query(sql,[From,To,TimeId], function(err, result) {
+
+          if(err){
+            console.log("ERROR IN deletetime IN RUNNING QUERY FOR TIMEID = "+TimeId);
+            console.log("ERROR CODE "+err.code);
+            obj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(obj));
+            return err;
+          }else{
+
+            if(result.affectedRows == 1){
+              res.send(JSON.stringify(obj));
+            }else{
+              obj.status = "CONNECTION ERROR";
+              res.send(JSON.stringify(obj));
+            }
+          }
+
+            connection.release();
+        });
+
+      }
+
+
+  });
+
+})
+
 app.post("/numberverify",function(req,res){
 
   var Object = req.body;
