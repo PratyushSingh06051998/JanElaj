@@ -3906,6 +3906,7 @@ app.post("/fettimings2",function(req,res){
 
   var Object = req.body;
   var DocId = Object.docid;
+  var count=0;
 
   var MainObj = {
     status : "",
@@ -3926,11 +3927,10 @@ app.post("/fettimings2",function(req,res){
 
           }else{
 
-
-
             if(result.length > 0){
 
               for(var i=0;i<result.length;i++){
+                count++;
 
                 var from = result[i].dltm_time_from;
                 var to = result[i].dltm_time_to;
@@ -3996,6 +3996,11 @@ app.post("/fettimings2",function(req,res){
                   })
                 }
 
+              }
+
+              if(count == result.length){
+                MainObj.status = "SUCCESS";
+                res.send(JSON.stringify(MainObj));
               }
 
             }else{
