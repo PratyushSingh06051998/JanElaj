@@ -3907,6 +3907,7 @@ app.post("/fettimings2",function(req,res){
   var Object = req.body;
   var DocId = Object.docid;
   var count=0;
+  var count2=0;
 
   var MainObj = {
     status : "",
@@ -3916,7 +3917,7 @@ app.post("/fettimings2",function(req,res){
 
 
     var sql2 = 'SELECT DLDM.dldm_id, DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLTM.dltm_dldm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_dlm_id = DLTM.dltm_dldm_id WHERE DLDM.dldm_id = ?';
-    var sql1 = 'SELECT DLDM.dldm_day_number, DLTM.dltm_dldm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_dlm_id = DLTM.dltm_dldm_id WHERE DLTM.dltm_time_from = ? AND DLTM.dltm_time_to = ?';
+    var sql1 = 'SELECT DLDM.dldm_day_number, DLTM.dltm_dldm_id, DLTM.dltm_id, DLTM.dltm_time_from, DLTM.dltm_time_to FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_dlm_id = DLTM.dltm_dldm_id WHERE DLTM.dltm_time_from = ? AND DLTM.dltm_time_to = ?';
 
     con.getConnection(function(err,connection){
       if(err){
@@ -3932,7 +3933,6 @@ app.post("/fettimings2",function(req,res){
               console.log("intial value result "+result.length);
 
               for(var i=0;i<result.length;i++){
-                count++;
 
                 console.log("in loop "+count);
                 var from = result[i].dltm_time_from;
@@ -3965,12 +3965,14 @@ app.post("/fettimings2",function(req,res){
                     if(err){
 
                     }else{
+                      count++;
+
                       if(resultt.length > 0){
 
                         console.log("initaial value resultt "+resultt.length);
 
-                        time.from = from;
-                        time.to = to;
+                        from = resultt[0].dltm_time_from;
+                        to = resultt[0].dltm_time_to;
 
                         for(var k=0;k<resultt.length;k++){
 
@@ -3994,6 +3996,11 @@ app.post("/fettimings2",function(req,res){
 
                         MainObj.alltimings.push(time);
 
+                        if(count == result.length){
+                          MainObj.status = "SUCCESS";
+                          res.send(JSON.stringify(MainObj));
+                        }
+
                       }else{
                         //fail
                       }
@@ -4005,10 +4012,10 @@ app.post("/fettimings2",function(req,res){
 
 
               console.log("final value count "+count);
-              if(count == result.length){
-                MainObj.status = "SUCCESS";
-                res.send(JSON.stringify(MainObj));
-              }
+              // if(count == result.length){
+                // MainObj.status = "SUCCESS";
+                // res.send(JSON.stringify(MainObj));
+              // }
 
             }else{
               //fail
