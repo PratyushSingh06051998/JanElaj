@@ -4013,6 +4013,7 @@ app.post("/fettimings2",function(req,res){
                         MainObj.alltimings.push(time);
 
                         if(count == result.length){
+                          console.log(MainObj);
                           MainObj.status = "SUCCESS";
                           res.send(JSON.stringify(MainObj));
                         }
