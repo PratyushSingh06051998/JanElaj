@@ -3916,7 +3916,7 @@ app.post("/fettimings2",function(req,res){
 
 
     var sql2 = 'SELECT DLDM.dldm_id, DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLTM.dltm_dldm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_dlm_id = DLTM.dltm_dldm_id WHERE DLDM.dldm_id = ?';
-    var sql1 = 'SELECT DLDM.dldm_day_number, DLTM.dltm_dldm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_dlm_id = DLTM.dltm_dldm_id WHERE DLTM.dltm_time_from = ? && DLTM.dltm_time_to = ?';
+    var sql1 = 'SELECT DLDM.dldm_day_number, DLTM.dltm_dldm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_dlm_id = DLTM.dltm_dldm_id WHERE DLTM.dltm_time_from = ? AND DLTM.dltm_time_to = ?';
 
     con.getConnection(function(err,connection){
       if(err){
