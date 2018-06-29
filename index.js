@@ -3913,7 +3913,7 @@ app.post("/fettimings2",function(req,res){
     status : "",
     alltimings : []
     }
-
+  var used = [];
 
 
     var sql2 = 'SELECT DLDM.dldm_id, DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLTM.dltm_dldm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_dlm_id = DLTM.dltm_dldm_id WHERE DLDM.dldm_id = ?';
@@ -3954,14 +3954,24 @@ app.post("/fettimings2",function(req,res){
 
                 var flag = 0;
 
-                for(var j=0;j<MainObj.alltimings.length;j++){
-                  if(from == MainObj.alltimings[j].from && to == MainObj.alltimings[j].to){
+
+
+                for(var j=0;j<used.length;j++){
+                  if(from == used[j].from && to == used[j].to){
                     flag = 1;
                     break;
                   }else{
                     flag = 0;
                   }
                 }
+
+                var usedobj = {
+                  from :"",
+                  to : ""
+                }
+                usedobj.from = from;
+                usedobj.to = to;
+                used.push(usedobj);
 
                 if(flag == 0){
                   connection.query(sql1,[from,to,DocId],function(err,resultt){
@@ -3974,8 +3984,8 @@ app.post("/fettimings2",function(req,res){
 
                         console.log("initaial value resultt "+resultt.length);
 
-                        from = resultt[0].dltm_time_from;
-                        to = resultt[0].dltm_time_to;
+                        time.from = resultt[0].dltm_time_from;
+                        time.to = resultt[0].dltm_time_to;
 
                         for(var k=0;k<resultt.length;k++){
 
