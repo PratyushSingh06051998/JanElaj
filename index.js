@@ -3941,6 +3941,7 @@ app.post("/fettimings2",function(req,res){
                 console.log(to);
                 console.log(DocId);
                 var time = {
+                  id : "",
                   from : "",
                   to : "",
                   mon : "N",
@@ -3987,6 +3988,7 @@ app.post("/fettimings2",function(req,res){
 
                         time.from = resultt[0].dltm_time_from;
                         time.to = resultt[0].dltm_time_to;
+                        time.id = resultt[0].dltm_id;
 
                         for(var k=0;k<resultt.length;k++){
 
