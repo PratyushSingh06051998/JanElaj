@@ -3780,7 +3780,7 @@ app.post("/updateproffesion",function(req,res){
   var Md = Object.MD;
   var Ms = Object.MS;
   var Diploma = Object.Diploma;
-  var Verification = Object.verification_no;
+  var Verification = parseInt(Object.verification_no);
   var AdhaarFlag = "N";
   var VoterIdFlag = "N";
   var PassportFlag = "N";
