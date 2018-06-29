@@ -3905,6 +3905,7 @@ app.post("/updateproffesion",function(req,res){
 app.post("/fettimings2",function(req,res){
 
   var Object = req.body;
+  var DocId = Object.docid;
 
   var MainObj = {
     status : "",
@@ -3920,7 +3921,7 @@ app.post("/fettimings2",function(req,res){
       if(err){
 
       }else{
-        connection.query(function(err,result){
+        connection.query(sql2,[DocId],function(err,result){
           if(err){
 
           }else{
@@ -4003,6 +4004,7 @@ app.post("/fettimings2",function(req,res){
 
           }
         })
+        connection.release();
       }
     })
 
