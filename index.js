@@ -3929,9 +3929,12 @@ app.post("/fettimings2",function(req,res){
 
             if(result.length > 0){
 
+              console.log("intial value result "+result.length);
+
               for(var i=0;i<result.length;i++){
                 count++;
 
+                console.log("in loop "+count);
                 var from = result[i].dltm_time_from;
                 var to = result[i].dltm_time_to;
                 var time = {
@@ -3963,6 +3966,8 @@ app.post("/fettimings2",function(req,res){
 
                     }else{
                       if(resultt.length > 0){
+
+                        console.log("initaial value resultt "+resultt.length);
 
                         time.from = from;
                         time.to = to;
@@ -3998,6 +4003,8 @@ app.post("/fettimings2",function(req,res){
 
               }
 
+
+              console.log("final value count "+count);
               if(count == result.length){
                 MainObj.status = "SUCCESS";
                 res.send(JSON.stringify(MainObj));
