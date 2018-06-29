@@ -3818,6 +3818,79 @@ app.post("/profilingcomplete",function(req,res){
 
 })
 
+app.post("/updateproffesion",function(req,res){
+
+
+  var Object = req.body;
+
+  var DocId = Object.docid;
+  var Mbbs = Object.MBBS;
+  var Md = Object.MD;
+  var Ms = Object.MS;
+  var Diploma = Object.Diploma;
+  var Verification = Object.verification_no;
+  var AdhaarFlag = "N";
+  var VoterIdFlag = "N";
+  var PassportFlag = "N";
+  var AdhaarNumber = "";
+  var VoterIdNumber = "";
+  var PassportNumber = "";
+
+  if(Verification == 1){
+    AdhaarFlag = "Y";
+    AdhaarNumber = Object.number;
+  }else if(Verification == 2){
+    VoterIdFlag = "Y";
+    VoterIdNumber = Object.number;
+  }else{
+    PassportFlag = "Y";
+    PassportNumber = Object.number;
+  }
+
+  console.log(DocId);
+  console.log(Verification);
+  console.log(Object.number);
+  var MainObj = {
+    status : "SUCCESS"
+  }
+
+  var sql = 'UPDATE doctor_master SET dm_doctor_mbbs_flag = ?, dm_doctor_md_flag = ?, dm_doctor_ms_flag = ?, dm_doctor_diploma_flag = ?, dm_aadhar_verify_flag = ?, dm_voter_id_verify_flag = ?, dm_passport_flag = ?, dm_aadhar_number = ?, dm_voter_id_number = ?, dm_passport_number = ? WHERE dm_doctor_id = ?';
+
+  con.getConnection(function(err,connection){
+    if(err){
+      console.log("ERROR IN updateproffesion IN CONNECTING TO DATABASE FOR DOCID = "+DocId);
+      console.log("ERROR : "+err);
+      console.log("ERROR CODE : "+err.code);
+      MainObj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(MainObj));
+      return err;
+    }else{
+      connection.query(sql,[Mbbs,Md,Ms,Diploma,AdhaarFlag,VoterIdFlag,PassportFlag,AdhaarNumber,VoterIdNumber,PassportNumber,DocId],function(err,result){
+        if(err){
+          console.log("ERROR IN updateproffesion IN RUNNING SQL TO DATABASE FOR DOCID = "+DocId);
+          console.log("ERROR : "+err);
+          console.log("ERROR CODE : "+err.code);
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+          return err;
+        }else{
+          if(result.affectedRows == 1){
+            MainObj.status = "SUCCESS";
+            res.send(JSON.stringify(MainObj));
+          }else{
+            console.log("ERROR IN updateproffesion IN RUNING SQL TO DATABASE FOR DOCID = "+DocId);
+            MainObj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(MainObj));
+          }
+        }
+      })
+      connection.release();
+    }
+  })
+
+
+})
+
 app.post("/chooselocation",function(req,res){
 
 
