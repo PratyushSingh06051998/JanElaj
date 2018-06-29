@@ -3781,6 +3781,8 @@ app.post("/updateproffesion",function(req,res){
   var Ms = Object.MS;
   var Diploma = Object.Diploma;
   var Verification = parseInt(Object.verification_no);
+  console.log(Object.verification_no);
+  console.log(parseInt(Object.verification_no));
   var AdhaarFlag = "N";
   var VoterIdFlag = "N";
   var PassportFlag = "N";
