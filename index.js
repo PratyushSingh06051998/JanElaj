@@ -3902,6 +3902,112 @@ app.post("/updateproffesion",function(req,res){
 
 })
 
+app.post("/fettimings2",function(req,res){
+
+  var Object = req.body;
+
+  var MainObj = {
+    status : "",
+    alltimings : []
+    }
+
+
+
+    var sql2 = 'SELECT DLDM.dldm_id, DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLTM.dltm_dldm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_dlm_id = DLTM.dltm_dldm_id WHERE DLDM.dldm_id = ?';
+    var sql1 = 'SELECT DLDM.dldm_day_number, DLTM.dltm_dldm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_dlm_id = DLTM.dltm_dldm_id WHERE DLTM.dltm_time_from = ? && DLTM.dltm_time_to = ?';
+
+    con.getConnection(function(err,connection){
+      if(err){
+
+      }else{
+        connection.query(function(err,result){
+          if(err){
+
+          }else{
+
+
+
+            if(result.length > 0){
+
+              for(var i=0;i<result.length;i++){
+
+                var from = result[i].dltm_time_from;
+                var to = result[i].dltm_time_to;
+                var time = {
+                  from : "",
+                  to : "",
+                  mon : "N",
+                  tue : "N",
+                  wed : "N",
+                  thu : "N",
+                  fri : "N",
+                  sat : "N",
+                  sun : "N"
+                }
+
+                var flag = 0;
+
+                for(var j=0;j<MainObj.alltimings.length;j++){
+                  if(from == MainObj.alltimings[j].from && to == MainObj.alltimings[j].to){
+                    flag = 1;
+                    break;
+                  }else{
+                    flag = 0;
+                  }
+                }
+
+                if(flag == 0){
+                  connection.query(sql1,[from,to],function(err,resultt){
+                    if(err){
+
+                    }else{
+                      if(resultt.length > 0){
+
+                        time.from = from;
+                        time.to = to;
+
+                        for(var k=0;k<resultt.length;k++){
+
+                          if(resultt[k].dldm_day_number == "MON"){
+                            time.mon = "Y"
+                          }else if(resultt[k].dldm_day_number == "TUE"){
+                            time.tue = "Y"
+                          }else if(resultt[k].dldm_day_number == "WED"){
+                            time.wed = "Y"
+                          }else if(resultt[k].dldm_day_number == "THU"){
+                            time.thu = "Y"
+                          }else if(resultt[k].dldm_day_number == "FRI"){
+                            time.fri = "Y"
+                          }else if(resultt[k].dldm_day_number == "SAT"){
+                            time.sat = "Y"
+                          }else if (resultt[k].dldm_day_number == "SUN") {
+                            time.sun = "Y"
+                          }
+
+                        }
+
+                        MainObj.alltimings.push(time);
+
+                      }else{
+                        //fail
+                      }
+                    }
+                  })
+                }
+
+              }
+
+            }else{
+              //fail
+            }
+
+          }
+        })
+      }
+    })
+
+})
+
 app.post("/chooselocation",function(req,res){
 
 
