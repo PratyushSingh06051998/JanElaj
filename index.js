@@ -3958,6 +3958,7 @@ app.post("/fettimings2",function(req,res){
 
                 for(var j=0;j<used.length;j++){
                   if(from == used[j].from && to == used[j].to){
+                    count++;
                     flag = 1;
                     break;
                   }else{
