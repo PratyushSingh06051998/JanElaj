@@ -3770,54 +3770,6 @@ app.post("/updatediscount",function(req,res){
 
 })
 
-app.post("/profilingcomplete",function(req,res){
-
-  var Object = req.body;
-
-  var DocId = Object.docid;
-
-  console.log(DocId);
-  var MainObj = {
-    status : "SUCCESS"
-  }
-
-  var sql = 'UPDATE doctor_master SET dm_profiling_complete = ? WHERE dm_doctor_id = ?';
-
-  con.getConnection(function(err,connection){
-    if(err){
-      console.log("ERROR IN profilingcomplete IN CONNECTING TO DATABASE FOR DOCID = "+DocId);
-      console.log("ERROR : "+err);
-      console.log("ERROR CODE : "+err.code);
-      MainObj.status = "CONNECTION ERROR";
-      res.send(JSON.stringify(MainObj));
-      return err;
-    }else{
-      connection.query(sql,['Y',DocId],function(err,result){
-        if(err){
-          console.log("ERROR IN profilingcomplete IN RUNNING SQL TO DATABASE FOR DOCID = "+DocId);
-          console.log("ERROR : "+err);
-          console.log("ERROR CODE : "+err.code);
-          MainObj.status = "CONNECTION ERROR";
-          res.send(JSON.stringify(MainObj));
-          return err;
-        }else{
-          if(result.affectedRows == 1){
-            MainObj.status = "SUCCESS";
-            res.send(JSON.stringify(MainObj));
-          }else{
-            console.log("ERROR IN profilingcomplete IN RUNING SQL TO DATABASE FOR DOCID = "+DocId);
-            MainObj.status = "CONNECTION ERROR";
-            res.send(JSON.stringify(MainObj));
-          }
-        }
-      })
-      connection.release();
-    }
-  })
-
-
-})
-
 app.post("/updateproffesion",function(req,res){
 
 
@@ -3855,6 +3807,7 @@ app.post("/updateproffesion",function(req,res){
   }
 
   var sql = 'UPDATE doctor_master SET dm_doctor_mbbs_flag = ?, dm_doctor_md_flag = ?, dm_doctor_ms_flag = ?, dm_doctor_diploma_flag = ?, dm_aadhar_verify_flag = ?, dm_voter_id_verify_flag = ?, dm_passport_flag = ?, dm_aadhar_number = ?, dm_voter_id_number = ?, dm_passport_number = ? WHERE dm_doctor_id = ?';
+  var sql1 = 'UPDATE doctor_master SET dm_profiling_complete = ? WHERE dm_doctor_id = ?';
 
   con.getConnection(function(err,connection){
     if(err){
@@ -3865,25 +3818,81 @@ app.post("/updateproffesion",function(req,res){
       res.send(JSON.stringify(MainObj));
       return err;
     }else{
-      connection.query(sql,[Mbbs,Md,Ms,Diploma,AdhaarFlag,VoterIdFlag,PassportFlag,AdhaarNumber,VoterIdNumber,PassportNumber,DocId],function(err,result){
+
+      connection.beginTransaction(function(err){
         if(err){
-          console.log("ERROR IN updateproffesion IN RUNNING SQL TO DATABASE FOR DOCID = "+DocId);
+          console.log("ERROR IN updateproffesion IN BEGINING TRANSACTION TO DATABASE FOR DOCID = "+DocId);
           console.log("ERROR : "+err);
           console.log("ERROR CODE : "+err.code);
           MainObj.status = "CONNECTION ERROR";
           res.send(JSON.stringify(MainObj));
           return err;
         }else{
-          if(result.affectedRows == 1){
-            MainObj.status = "SUCCESS";
-            res.send(JSON.stringify(MainObj));
-          }else{
-            console.log("ERROR IN updateproffesion IN RUNING SQL TO DATABASE FOR DOCID = "+DocId);
-            MainObj.status = "CONNECTION ERROR";
-            res.send(JSON.stringify(MainObj));
-          }
+          connection.query(sql,[Mbbs,Md,Ms,Diploma,AdhaarFlag,VoterIdFlag,PassportFlag,AdhaarNumber,VoterIdNumber,PassportNumber,DocId],function(err,result){
+            if(err){
+              console.log("ERROR IN updateproffesion IN RUNNING SQL TO DATABASE FOR DOCID = "+DocId);
+              console.log("ERROR : "+err);
+              console.log("ERROR CODE : "+err.code);
+              MainObj.status = "CONNECTION ERROR";
+              res.send(JSON.stringify(MainObj));
+              connection.rollback(function(){
+                return err;
+              })
+            }else{
+              if(result.affectedRows == 1){
+
+                connection.query(sql1,['Y',DocId],function(err,result){
+                  if(err){
+                    console.log("ERROR IN updateproffesion IN RUNNING SQL1 TO DATABASE FOR DOCID = "+DocId);
+                    console.log("ERROR : "+err);
+                    console.log("ERROR CODE : "+err.code);
+                    MainObj.status = "CONNECTION ERROR";
+                    res.send(JSON.stringify(MainObj));
+                    connection.rollback(function(){
+                      return err;
+                    })
+                  }else{
+                    if(result.affectedRows == 1){
+                      connection.commit(function(err){
+                        if(err){
+                          console.log("ERROR IN updateproffesion IN COMMITING SQL1 TO DATABASE FOR DOCID = "+DocId);
+                          console.log("ERROR : "+err);
+                          console.log("ERROR CODE : "+err.code);
+                          MainObj.status = "CONNECTION ERROR";
+                          res.send(JSON.stringify(MainObj));
+                          connection.rollback(function(){
+                            return err;
+                          })
+                        }else{
+                          MainObj.status = "SUCCESS";
+                          res.send(JSON.stringify(MainObj));
+                        }
+                      })
+
+                    }else{
+                      console.log("ERROR IN updateproffesion IN RUNING SQL TO DATABASE FOR DOCID = "+DocId);
+                      MainObj.status = "CONNECTION ERROR";
+                      res.send(JSON.stringify(MainObj));
+                      connection.rollback(function(){
+                      })
+                    }
+                  }
+                })
+
+              }else{
+                console.log("ERROR IN updateproffesion IN RUNING SQL TO DATABASE FOR DOCID = "+DocId);
+                MainObj.status = "CONNECTION ERROR";
+                res.send(JSON.stringify(MainObj));
+                connection.rollback(function(){
+                  return err;
+                })
+              }
+            }
+          })
         }
       })
+
+
       connection.release();
     }
   })
