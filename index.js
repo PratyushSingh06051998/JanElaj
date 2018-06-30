@@ -3940,18 +3940,7 @@ app.post("/fettimings2",function(req,res){
                 console.log(from);
                 console.log(to);
                 console.log(DocId);
-                var time = {
-                  id : "",
-                  from : "",
-                  to : "",
-                  mon : "N",
-                  tue : "N",
-                  wed : "N",
-                  thu : "N",
-                  fri : "N",
-                  sat : "N",
-                  sun : "N"
-                }
+
 
                 var flag = 0;
 
@@ -3981,6 +3970,18 @@ app.post("/fettimings2",function(req,res){
 
                     }else{
                       count++;
+                      var time = {
+                        id : "",
+                        from : "",
+                        to : "",
+                        mon : "N",
+                        tue : "N",
+                        wed : "N",
+                        thu : "N",
+                        fri : "N",
+                        sat : "N",
+                        sun : "N"
+                      }
 
                       if(resultt.length > 0){
 
