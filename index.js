@@ -499,7 +499,7 @@ app.post("/allinformation",function(req,res){
 
   con.getConnection(function(err,connection){
     if(err){
-      console.log("ERROR IN RUNNING SQL1 IN SIGNIN FOR Email = "DocId);
+      console.log("ERROR IN RUNNING SQL1 IN SIGNIN FOR DocId = "+DocId);
       console.log(err);
       console.log("ERROR : "+err.code);
       obj.status = "CONNECTION ERROR";
@@ -509,7 +509,7 @@ app.post("/allinformation",function(req,res){
 
       connection.query(sql4,[DocId],function(err,result1){
         if(err){
-          console.log("ERROR IN RUNNING SQL1 IN SIGNIN FOR Email = "+DocId);
+          console.log("ERROR IN RUNNING SQL1 IN SIGNIN FOR DocId = "+DocId);
           console.log(err);
           console.log("ERROR : "+err.code);
           obj.status = "CONNECTION ERROR";
@@ -530,7 +530,7 @@ app.post("/allinformation",function(req,res){
             res.send(JSON.stringify(obj));
 
           }else{
-            console.log("ERROR IN RUNNING SQL1 0 ROWS RETURNED IN SIGNIN FOR Email = "+DocId);
+            console.log("ERROR IN RUNNING SQL1 0 ROWS RETURNED IN SIGNIN FOR DocId = "+DocId);
             obj.status = "CONNECTION ERROR";
             res.send(JSON.stringify(obj));
           }
