@@ -90,6 +90,7 @@ app.post("/deletetime",function(req,res){
   arr = Object.idss;
   var sent =0;
   var count=0;
+  console.log(arr);
 
   var sql = 'DELETE FROM doctor_location_time_master WHERE dltm_id = ?';
 
