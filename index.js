@@ -100,7 +100,7 @@ app.post("/deletetime",function(req,res){
         return err;
       }else{
 
-        connection.query(sql,[From,To,TimeId], function(err, result) {
+        connection.query(sql,[TimeId], function(err, result) {
 
           if(err){
             console.log("ERROR IN deletetime IN RUNNING QUERY FOR TIMEID = "+TimeId);
@@ -3497,6 +3497,82 @@ app.post("/serviceinsert",function(req,res){
 
          });
          stream.pipe(csvStream);
+
+
+})
+
+app.post("/serviceselected",function(req,res){
+
+  var Object = req.body;
+  var DlmId = Object.dlmid;
+
+  var MainObj = {
+    status:"SUCCESS",
+    serviceinfo : []
+  }
+
+  var count2=0;
+
+  var sql = "SELECT SM.sm_service_id, SM.sm_service_name, DCSM.dcsm_id, DCSM.dcsm_normal_amount, DCSM.dcsm_discounted_amount, DCSM.dcsm_discount_flag, DCSM.dcsm_dlm_id FROM service_master AS SM INNER JOIN doctor_clinic_services_master AS DCSM ON SM.sm_service_id = DCSM.dcsm_sm_service_id WHERE DCSM.dcsm_dlm_id = ?";
+
+  con.getConnection(function(err,connection){
+    if(err){
+      console.log("ERROR IN serviceselected IN CONNECTING DATABASE FOR DlmID = "+DlmId);
+      console.log("ERROR : "+err);
+      console.log("ERROR CODE : "+err.code);
+      MainObj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(MainObj));
+      return err;
+    }else{
+      connection.query(sql2,[DlmId],function(err,resultt){
+        if(err){
+          console.log("ERROR IN serviceselected IN RUNNING SQL2 FOR DlmID = "+DlmId);
+          console.log("ERROR : "+err);
+          console.log("ERROR CODE : "+err.code);
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+          return err;
+        }else{
+
+          if(resultt.length == 0){
+            MainObj.status = "SUCCESS";
+            res.send(JSON.stringify(MainObj));
+            return;
+          }else{
+            for(var j=0;j<resultt.length;j++){
+
+              var o = {
+                sname:resultt[j].sm_service_name,
+                namount:resultt[j].dcsm_normal_amount,
+                damount:resultt[j].dcsm_discounted_amount,
+                flag:resultt[j].dcsm_discount_flag
+              }
+
+              MainObj.serviceinfo.push(o);
+              count2++;
+
+            }
+
+            if(count2 == resultt.length){
+              MainObj.status = "SUCCESS";
+              console.log(MainObj);
+              res.send(JSON.stringify(MainObj));
+            }
+
+          }
+
+        }
+      });
+
+      connection.release();
+
+    }
+  })
+
+})
+
+app.post("/deleteservice",function(req,res){
+
 
 
 })
