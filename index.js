@@ -4047,15 +4047,21 @@ app.post("/fettimings2",function(req,res){
                     }else{
                       count++;
                       var time = {
-                        id : "",
                         from : "",
                         to : "",
+                        monid : 0,
                         mon : "N",
+                        tueid : 0,
                         tue : "N",
+                        wedid : 0,
                         wed : "N",
+                        thuid : 0,
                         thu : "N",
+                        friid : 0,
                         fri : "N",
+                        satid : 0,
                         sat : "N",
+                        sunid : 0,
                         sun : "N"
                       }
 
@@ -4070,19 +4076,26 @@ app.post("/fettimings2",function(req,res){
                         for(var k=0;k<resultt.length;k++){
 
                           if(resultt[k].dldm_day_number == "MON"){
-                            time.mon = "Y"
+                            time.mon = "Y";
+                            time.monid = resultt[0].dltm_id;
                           }else if(resultt[k].dldm_day_number == "TUE"){
-                            time.tue = "Y"
+                            time.tue = "Y";
+                            time.monid = resultt[0].dltm_id;
                           }else if(resultt[k].dldm_day_number == "WED"){
-                            time.wed = "Y"
+                            time.wed = "Y";
+                            time.monid = resultt[0].dltm_id;
                           }else if(resultt[k].dldm_day_number == "THU"){
-                            time.thu = "Y"
+                            time.thu = "Y";
+                            time.monid = resultt[0].dltm_id;
                           }else if(resultt[k].dldm_day_number == "FRI"){
-                            time.fri = "Y"
+                            time.fri = "Y";
+                            time.monid = resultt[0].dltm_id;
                           }else if(resultt[k].dldm_day_number == "SAT"){
-                            time.sat = "Y"
+                            time.sat = "Y";
+                            time.monid = resultt[0].dltm_id;
                           }else if (resultt[k].dldm_day_number == "SUN") {
-                            time.sun = "Y"
+                            time.sun = "Y";
+                            time.monid = resultt[0].dltm_id;
                           }
 
                         }
