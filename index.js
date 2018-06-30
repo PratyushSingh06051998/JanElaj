@@ -4085,25 +4085,25 @@ app.post("/fettimings2",function(req,res){
 
                           if(resultt[k].dldm_day_number == "MON"){
                             time.mon = "Y";
-                            time.monid = resultt[0].dltm_id;
+                            time.monid = resultt[k].dltm_id;
                           }else if(resultt[k].dldm_day_number == "TUE"){
                             time.tue = "Y";
-                            time.monid = resultt[0].dltm_id;
+                            time.monid = resultt[k].dltm_id;
                           }else if(resultt[k].dldm_day_number == "WED"){
                             time.wed = "Y";
-                            time.monid = resultt[0].dltm_id;
+                            time.monid = resultt[k].dltm_id;
                           }else if(resultt[k].dldm_day_number == "THU"){
                             time.thu = "Y";
-                            time.monid = resultt[0].dltm_id;
+                            time.monid = resultt[k].dltm_id;
                           }else if(resultt[k].dldm_day_number == "FRI"){
                             time.fri = "Y";
-                            time.monid = resultt[0].dltm_id;
+                            time.monid = resultt[k].dltm_id;
                           }else if(resultt[k].dldm_day_number == "SAT"){
                             time.sat = "Y";
-                            time.monid = resultt[0].dltm_id;
+                            time.monid = resultt[k].dltm_id;
                           }else if (resultt[k].dldm_day_number == "SUN") {
                             time.sun = "Y";
-                            time.monid = resultt[0].dltm_id;
+                            time.monid = resultt[k].dltm_id;
                           }
 
                         }
