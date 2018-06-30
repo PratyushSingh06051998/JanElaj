@@ -105,6 +105,7 @@ app.post("/deletetime",function(req,res){
         return err;
       }else{
 
+        console.log(arr.length);
         for(var i=0;i<arr.length;i++){
 
           connection.query(sql,[arr[i].id], function(err, result) {
@@ -122,7 +123,7 @@ app.post("/deletetime",function(req,res){
 
               count++;
               if(result.affectedRows == 1){
-                if(count == result.length && sent==0){
+                if(count == arr.length && sent==0){
                   res.send(JSON.stringify(obj));
                   sent=1;
                 }
