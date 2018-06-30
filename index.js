@@ -135,13 +135,13 @@ app.post("/deletetime",function(req,res){
               }
             }
 
-              connection.release();
+
           });
 
 
         }
 
-
+        connection.release();
       }
 
 
