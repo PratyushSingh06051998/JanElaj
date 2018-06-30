@@ -80,7 +80,7 @@ app.post("/deletetime",function(req,res){
 
   var Object = req.body;
 
-  console.log("Deletetime has been hit");
+  console.log("Deletetime has been hit wrglwrGBVAIUBKVRAUBVJADB;OUFLWR vliuaehsrbiS< vsLUf,vhsbf");
 
   var obj = {
     status : "SUCCESS"
@@ -120,7 +120,7 @@ app.post("/deletetime",function(req,res){
               }
               return err;
             }else{
-
+              console.log("in here loooooooooooooooooop "+count);
               count++;
               if(result.affectedRows == 1){
                 if(count == arr.length && sent==0){
