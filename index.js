@@ -3999,11 +3999,11 @@ app.post("/fettimings2",function(req,res){
 
     con.getConnection(function(err,connection){
       if(err){
-
+        console.log("1"+err);
       }else{
         connection.query(sql2,[DocId],function(err,result){
           if(err){
-
+            console.log("2"+err);
           }else{
 
             if(result.length > 0){
@@ -4109,7 +4109,8 @@ app.post("/fettimings2",function(req,res){
                         }
 
                       }else{
-                        //fail
+                        MainObj.status = "SUCCESS";
+                        res.send(JSON.stringify(MainObj));
                       }
                     }
                   })
@@ -4125,7 +4126,8 @@ app.post("/fettimings2",function(req,res){
               // }
 
             }else{
-              //fail
+              MainObj.status = "SUCCESS";
+              res.send(JSON.stringify(MainObj));
             }
 
           }
