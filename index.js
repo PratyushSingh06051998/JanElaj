@@ -4088,22 +4088,22 @@ app.post("/fettimings2",function(req,res){
                             time.monid = resultt[k].dltm_id;
                           }else if(resultt[k].dldm_day_number == "TUE"){
                             time.tue = "Y";
-                            time.monid = resultt[k].dltm_id;
+                            time.tueid = resultt[k].dltm_id;
                           }else if(resultt[k].dldm_day_number == "WED"){
                             time.wed = "Y";
-                            time.monid = resultt[k].dltm_id;
+                            time.wedid = resultt[k].dltm_id;
                           }else if(resultt[k].dldm_day_number == "THU"){
                             time.thu = "Y";
-                            time.monid = resultt[k].dltm_id;
+                            time.thuid = resultt[k].dltm_id;
                           }else if(resultt[k].dldm_day_number == "FRI"){
                             time.fri = "Y";
-                            time.monid = resultt[k].dltm_id;
+                            time.friid = resultt[k].dltm_id;
                           }else if(resultt[k].dldm_day_number == "SAT"){
                             time.sat = "Y";
-                            time.monid = resultt[k].dltm_id;
+                            time.satid = resultt[k].dltm_id;
                           }else if (resultt[k].dldm_day_number == "SUN") {
                             time.sun = "Y";
-                            time.monid = resultt[k].dltm_id;
+                            time.sunid = resultt[k].dltm_id;
                           }
 
                         }
