@@ -121,7 +121,7 @@ app.post("/deletetime",function(req,res){
 
               count++;
               if(result.affectedRows == 1){
-                if(count == resultt.length && sent==0){
+                if(count == result.length && sent==0){
                   res.send(JSON.stringify(obj));
                   sent=1;
                 }
