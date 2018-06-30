@@ -80,12 +80,14 @@ app.post("/deletetime",function(req,res){
 
   var Object = req.body;
 
-  var TimeId =  Object.tid;
-  console.log(TimeId+"Deletetime has been hit");
+  console.log("Deletetime has been hit");
 
   var obj = {
     status : "SUCCESS"
   }
+
+  var arr = [];
+  arr = Object.idss;
 
   var sql = 'DELETE FROM doctor_location_time_master WHERE dltm_id = ?';
 
@@ -93,33 +95,39 @@ app.post("/deletetime",function(req,res){
 
 
       if(err){
-        console.log("ERROR IN deletetime IN BUILDING CONNECTION FOR TIMEID = "+TimeId);
+        console.log("ERROR IN deletetime IN BUILDING CONNECTION FOR TIMEID ");
         console.log("ERROR CODE :"+err.code);
         obj.status = "CONNECTION ERROR";
         res.send(JSON.stringify(obj));
         return err;
       }else{
 
-        connection.query(sql,[TimeId], function(err, result) {
+        for(var i=0;i<arr.length;i++){
 
-          if(err){
-            console.log("ERROR IN deletetime IN RUNNING QUERY FOR TIMEID = "+TimeId);
-            console.log("ERROR CODE "+err.code);
-            obj.status = "CONNECTION ERROR";
-            res.send(JSON.stringify(obj));
-            return err;
-          }else{
+          connection.query(sql,[arr[i].id], function(err, result) {
 
-            if(result.affectedRows == 1){
-              res.send(JSON.stringify(obj));
-            }else{
+            if(err){
+              console.log("ERROR IN deletetime IN RUNNING QUERY FOR TIMEID");
+              console.log("ERROR CODE "+err.code);
               obj.status = "CONNECTION ERROR";
               res.send(JSON.stringify(obj));
-            }
-          }
+              return err;
+            }else{
 
-            connection.release();
-        });
+              if(result.affectedRows == 1){
+                res.send(JSON.stringify(obj));
+              }else{
+                obj.status = "CONNECTION ERROR";
+                res.send(JSON.stringify(obj));
+              }
+            }
+
+              connection.release();
+          });
+
+
+        }
+
 
       }
 
