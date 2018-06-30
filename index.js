@@ -3985,6 +3985,8 @@ app.post("/fettimings2",function(req,res){
   var count=0;
   var count2=0;
 
+  console.log(DocId);
+
   var MainObj = {
     status : "",
     alltimings : []
@@ -4019,8 +4021,6 @@ app.post("/fettimings2",function(req,res){
 
 
                 var flag = 0;
-
-
 
                 for(var j=0;j<used.length;j++){
                   if(from == used[j].from && to == used[j].to){
@@ -4071,7 +4071,7 @@ app.post("/fettimings2",function(req,res){
 
                         time.from = resultt[0].dltm_time_from;
                         time.to = resultt[0].dltm_time_to;
-                        time.id = resultt[0].dltm_id;
+                        // time.id = resultt[0].dltm_id;
 
                         for(var k=0;k<resultt.length;k++){
 
