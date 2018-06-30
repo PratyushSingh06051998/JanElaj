@@ -88,6 +88,8 @@ app.post("/deletetime",function(req,res){
 
   var arr = [];
   arr = Object.idss;
+  var sent =0;
+  var count=0;
 
   var sql = 'DELETE FROM doctor_location_time_master WHERE dltm_id = ?';
 
@@ -109,16 +111,27 @@ app.post("/deletetime",function(req,res){
             if(err){
               console.log("ERROR IN deletetime IN RUNNING QUERY FOR TIMEID");
               console.log("ERROR CODE "+err.code);
-              obj.status = "CONNECTION ERROR";
-              res.send(JSON.stringify(obj));
+              if(sent == 0){
+                obj.status = "CONNECTION ERROR";
+                res.send(JSON.stringify(obj));
+                sent=1;
+              }
               return err;
             }else{
 
+              count++;
               if(result.affectedRows == 1){
-                res.send(JSON.stringify(obj));
+                if(count == resultt.length && sent==0){
+                  res.send(JSON.stringify(obj));
+                  sent=1;
+                }
               }else{
-                obj.status = "CONNECTION ERROR";
-                res.send(JSON.stringify(obj));
+                if(sent ==0){
+                  obj.status = "CONNECTION ERROR";
+                  res.send(JSON.stringify(obj));
+                  sent=1;
+                }
+
               }
             }
 
