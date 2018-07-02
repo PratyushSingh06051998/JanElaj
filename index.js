@@ -431,7 +431,7 @@ app.post("/signin",function(req,res){
                     console.log("in checkpoint 2");
                     obj.status = "SUCCESS";
                     obj.checkpoint = 2;// go to manage location screen
-                    res.send(JSON.stringify(obj));
+                    // res.send(JSON.stringify(obj));
                     connection.query(sql3,[Email],function(err,ress){
                       if(err){
                         console.log("ERROR IN RUNNING SQL3 IN SIGNIN FOR Email = "+Email);
