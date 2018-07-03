@@ -3547,7 +3547,7 @@ app.post("/serviceselected",function(req,res){
       res.send(JSON.stringify(MainObj));
       return err;
     }else{
-      connection.query(sql2,[DlmId],function(err,resultt){
+      connection.query(sql,[DlmId],function(err,resultt){
         if(err){
           console.log("ERROR IN serviceselected IN RUNNING SQL2 FOR DlmID = "+DlmId);
           console.log("ERROR : "+err);
@@ -3594,9 +3594,128 @@ app.post("/serviceselected",function(req,res){
 
 })
 
+app.post("/updateservice",function(req,res){
+
+  var Object = req.body;
+
+  var DcsmId =  Object.dcsmid;
+  var NormalAmount = Object.namount;
+  var DiscountAmount = Object.damount;
+  var DiscountFlag = Object.dflag;
+  console.log(DcsmId);
+  console.log(DiscountAmount);
+  console.log(DiscountFlag);
+
+  var obj = {
+    status : "SUCCESS"
+  }
+
+  var sql = 'UPDATE doctor_clinic_services_master SET dcsm_normal_amount = ?, dcsm_discounted_amount = ?, dcsm_discounted_flag = ? WHERE dcsm_id = ?';
+
+  con.getConnection(function(err, connection) {
+
+
+      if(err){
+        console.log("ERROR IN updateservice IN BUILDING CONNECTION FOR DCSMID = "+DcsmId);
+        console.log("ERROR CODE :"+err.code);
+        obj.status = "CONNECTION ERROR";
+        res.send(JSON.stringify(obj));
+        return err;
+      }else{
+
+        connection.query(sql,[From,To,TimeId], function(err, result) {
+
+          if(err){
+            console.log("ERROR IN updateservice IN RUNNING QUERY FOR DCSMID = "+DcsmId);
+            console.log("ERROR CODE "+err.code);
+            obj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(obj));
+            return err;
+          }else{
+
+            if(result.affectedRows == 1){
+              res.send(JSON.stringify(obj));
+            }else{
+              obj.status = "CONNECTION ERROR";
+              res.send(JSON.stringify(obj));
+            }
+          }
+
+            connection.release();
+        });
+
+      }
+
+
+  });
+
+})
+
 app.post("/deleteservice",function(req,res){
 
+  var Object = req.body;
 
+  console.log("Deletetime has been hit wrglwrGBVAIUBKVRAUBVJADB;OUFLWR vliuaehsrbiS< vsLUf,vhsbf");
+
+  var obj = {
+    status : "SUCCESS"
+  }
+
+  var DcsmId = Object.dcsmid;
+
+  var sql = 'DELETE FROM doctor_location_time_master WHERE dltm_id = ?';
+
+  con.getConnection(function(err, connection) {
+
+
+      if(err){
+        console.log("ERROR IN deleteservice IN BUILDING CONNECTION FOR TIMEID ");
+        console.log("ERROR CODE :"+err.code);
+        obj.status = "CONNECTION ERROR";
+        res.send(JSON.stringify(obj));
+        return err;
+      }else{
+
+        connection.query(sql,[arr[i].id], function(err, result) {
+
+          if(err){
+            console.log("ERROR IN deletetime IN RUNNING QUERY FOR TIMEID");
+            console.log("ERROR CODE "+err.code);
+            if(sent == 0){
+              obj.status = "CONNECTION ERROR";
+              res.send(JSON.stringify(obj));
+              sent=1;
+            }
+            return err;
+          }else{
+            console.log("in here loooooooooooooooooop "+count);
+            count++;
+            if(result.affectedRows == 1){
+              if(count == arr.length && sent==0){
+                res.send(JSON.stringify(obj));
+                sent=1;
+              }
+            }else{
+              if(sent ==0){
+                obj.status = "CONNECTION ERROR";
+                res.send(JSON.stringify(obj));
+                sent=1;
+              }
+
+            }
+          }
+
+
+        });
+
+
+
+
+        connection.release();
+      }
+
+
+  });
 
 })
 
