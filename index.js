@@ -3528,6 +3528,7 @@ app.post("/serviceselected",function(req,res){
 
   var Object = req.body;
   var DlmId = Object.dlmid;
+  console.log(DlmId);
 
   var MainObj = {
     status:"SUCCESS",
