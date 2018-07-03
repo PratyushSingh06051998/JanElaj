@@ -3435,7 +3435,7 @@ app.post("/serviceinsert",function(req,res){
            var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
            csv.write(Mydata, {headers: true}).pipe(ws);
 
-           var sql1 = 'INSERT INTO doctor_clinic_services_master (dcsm_dlm_id, dcsm_sm_service_id, dscm_id, dcsm_normal_amount, dcsm_discounted_amount, dcsm_discount_flag) VALUES ((?),(?),(?),(?),(?),(?))';
+           var sql1 = 'INSERT INTO doctor_clinic_services_master (dcsm_dlm_id, dcsm_sm_service_id, dcsm_id, dcsm_normal_amount, dcsm_discounted_amount, dcsm_discount_flag) VALUES ((?),(?),(?),(?),(?),(?))';
 
            con.getConnection(function(err,connection){
 
