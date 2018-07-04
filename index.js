@@ -3655,6 +3655,143 @@ app.post("/updateservice",function(req,res){
 
 })
 
+app.post("/managediscount",function(req,res){
+
+  var Object = req.body;
+
+  var count=0;
+  var sent=0;
+  var DlmId = Object.dlmid;
+
+  var MainObj = {
+    status : "SUCCESS",
+    mondayid:"",
+    monday:[],
+    tuesdayid:"",
+    tuesday:[],
+    wednesdayid:"",
+    wednesday:[],
+    thursdayid:"",
+    thursday:[],
+    fridayid:"",
+    friday:[],
+    saturdayid:"",
+    saturday:[],
+    sundayid:"",
+    sunday:[]
+  }
+
+
+  var TIMEOBJ = {
+    from:"",
+    to:"",
+    timeid:""
+  }
+
+
+  var sql2 = 'SELECT DLDM.dldm_id, DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLTM.dltm_dldm_id, DLTM.dltm_id, DLTM.dltm_discount_offer_flag FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_dlm_id = DLTM.dltm_dldm_id WHERE DLDM.dldm_id = ?';
+
+  con.getConnection(function(err,connection){
+    if(err){
+      console.log("ERROR IN managediscount IN CONNECTING TO DATABASE FOR DLMID = "+DlmId);
+      console.log("ERROR : "+err);
+      console.log("ERROR CODE : "+err.code);
+      MainObj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(MainObj));
+      return err;
+    }else{
+
+      connection.query(sql2,[DlmId,function(err,resultt){
+        if(err){
+          console.log("ERROR IN managediscount IN RUNNING SQL2 FOR DLMID = "+DlmId);
+          console.log("ERROR : "+err);
+          console.log("ERROR CODE : "+err.code);
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+          return err;
+        }else{
+
+            var INFO={
+              dlmid:"",
+              mondayid:"",
+              monday:[],
+              tuesdayid:"",
+              tuesday:[],
+              wednesdayid:"",
+              wednesday:[],
+              thursdayid:"",
+              thursday:[],
+              fridayid:"",
+              friday:[],
+              saturdayid:"",
+              saturday:[],
+              sundayid:"",
+              sunday:[]
+            }
+
+            for(var j=0;j<resultt.length;j++){
+
+              console.log("value of j "+j);
+              console.log("lenght of resultt "+resultt.length);
+              console.log("valaue of dltmid "+resultt[j].dltm_id);
+
+              var TIMEOBJ = {
+                from:resultt[j].dltm_time_from,
+                to:resultt[j].dltm_time_to,
+                discountflag : resultt[j].dltm_discount_offer_flag,
+                timeid:resultt[j].dltm_id
+              }
+
+              if(resultt[j].dldm_day_number == "MON"){
+                console.log("in monday id "+resultt[j].dltm_dldm_id);
+                INFO.mondayid = resultt[j].dltm_dldm_id;
+                INFO.monday.push(TIMEOBJ);
+              }else if(resultt[j].dldm_day_number == "TUE"){
+                console.log("in tue id "+resultt[j].dltm_dldm_id);
+                INFO.tuesdayid = resultt[j].dltm_dldm_id;
+                INFO.tuesday.push(TIMEOBJ);
+              }else if(resultt[j].dldm_day_number == "WED"){
+                console.log("in wed id "+resultt[j].dltm_dldm_id);
+                INFO.wednesdayid = resultt[j].dltm_dldm_id;
+                INFO.wednesday.push(TIMEOBJ);
+              }else if(resultt[j].dldm_day_number == "THU"){
+                console.log("in thu id "+resultt[j].dltm_dldm_id);
+                INFO.thursdayid = resultt[j].dltm_dldm_id;
+                INFO.thursday.push(TIMEOBJ);
+              }else if(resultt[j].dldm_day_number == "FRI"){
+                console.log("in fri id "+resultt[j].dltm_dldm_id);
+                INFO.fridayid = resultt[j].dltm_dldm_id;
+                INFO.friday.push(TIMEOBJ);
+              }else if(resultt[j].dldm_day_number == "SAT"){
+                console.log("in sat id "+resultt[j].dltm_dldm_id);
+                INFO.saturdayid = resultt[j].dltm_dldm_id;
+                INFO.saturday.push(TIMEOBJ);
+              }else if(resultt[j].dldm_day_number == "SUN"){
+                console.log("in sun id "+resultt[j].dltm_dldm_id);
+                INFO.sundayid = resultt[j].dltm_dldm_id;
+                INFO.sunday.push(TIMEOBJ);
+              }
+              INFO.dlmid = resultt[j].dldm_id;
+            }
+
+            MainObj.info.push(INFO);
+            console.log("value of count "+count);
+            count++;
+            if(count == result.length){
+              console.log("in if");
+              res.send(JSON.stringify(MainObj));
+            }
+          // }
+
+
+        }
+      })
+
+    }
+  })
+
+})
+
 app.post("/deleteservice",function(req,res){
 
   var Object = req.body;
@@ -3764,26 +3901,16 @@ app.post("/oneviewinfo",function(req,res){
           }else{
 
             var INFO={
-              // mondayflag:"",
               monday:[],
-              // tuesdayflag:"",
               tuesday:[],
-              // wednesdayflag:"",
               wednesday:[],
-              // thursdayflag:"",
               thursday:[],
-              // fridayflag:"",
               friday:[],
-              // saturdayflag:"",
               saturday:[],
-              // sundayflag:"",
               sunday:[]
             }
 
             for(var i=0;i<result.length;i++){
-              // console.log("value of i "+i);
-              // console.log("lenght of result "+result.length);
-              // console.log("valaue of dlmid "+result[i].dlm_id);
 
               var TIMEOBJ = {
                 from:result[i].dltm_time_from,
