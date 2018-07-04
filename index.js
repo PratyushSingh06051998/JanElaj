@@ -3774,11 +3774,11 @@ app.post("/managediscount",function(req,res){
             }
 
             console.log("value of count "+count);
-            count++;
-            if(count == resultt.length){
+            if(count == (resultt.length-1)){
               console.log("in if");
               res.send(JSON.stringify(MainObj));
             }
+            count++;
 
 
         }
