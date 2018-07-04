@@ -3602,8 +3602,8 @@ app.post("/updateservice",function(req,res){
   var Object = req.body;
 
   var DcsmId =  Object.dcsmid;
-  var NormalAmount = Object.namount;
-  var DiscountAmount = Object.damount;
+  var NormalAmount = parseInt(Object.namount);
+  var DiscountAmount = parseInt(Object.damount);
   var DiscountFlag = Object.dflag;
   console.log(DcsmId);
   console.log(DiscountAmount);
