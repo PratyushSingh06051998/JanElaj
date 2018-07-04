@@ -3630,6 +3630,7 @@ app.post("/updateservice",function(req,res){
 
           if(err){
             console.log("ERROR IN updateservice IN RUNNING QUERY FOR DCSMID = "+DcsmId);
+            console.log(err);
             console.log("ERROR CODE "+err.code);
             obj.status = "CONNECTION ERROR";
             res.send(JSON.stringify(obj));
