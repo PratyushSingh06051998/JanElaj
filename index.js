@@ -3661,6 +3661,7 @@ app.post("/deleteservice",function(req,res){
   var DcsmId = Object.dcsmid
 
   console.log("Deletetime has been hit");
+  console.log(DcsmId);
 
   var obj = {
     status : "SUCCESS"
