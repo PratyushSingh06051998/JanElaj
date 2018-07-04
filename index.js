@@ -3624,7 +3624,7 @@ app.post("/updateservice",function(req,res){
         return err;
       }else{
 
-        connection.query(sql,[From,To,TimeId], function(err, result) {
+        connection.query(sql,[NormalAmount,DiscountAmount,DiscountFlag,DcsmId], function(err, result) {
 
           if(err){
             console.log("ERROR IN updateservice IN RUNNING QUERY FOR DCSMID = "+DcsmId);
