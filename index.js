@@ -3711,23 +3711,23 @@ app.post("/managediscount",function(req,res){
           return err;
         }else{
 
-            var INFO={
-              dlmid:"",
-              mondayid:"",
-              monday:[],
-              tuesdayid:"",
-              tuesday:[],
-              wednesdayid:"",
-              wednesday:[],
-              thursdayid:"",
-              thursday:[],
-              fridayid:"",
-              friday:[],
-              saturdayid:"",
-              saturday:[],
-              sundayid:"",
-              sunday:[]
-            }
+            // var INFO={
+            //   dlmid:"",
+            //   mondayid:"",
+            //   monday:[],
+            //   tuesdayid:"",
+            //   tuesday:[],
+            //   wednesdayid:"",
+            //   wednesday:[],
+            //   thursdayid:"",
+            //   thursday:[],
+            //   fridayid:"",
+            //   friday:[],
+            //   saturdayid:"",
+            //   saturday:[],
+            //   sundayid:"",
+            //   sunday:[]
+            // }
 
             for(var j=0;j<resultt.length;j++){
 
@@ -3744,37 +3744,35 @@ app.post("/managediscount",function(req,res){
 
               if(resultt[j].dldm_day_number == "MON"){
                 console.log("in monday id "+resultt[j].dltm_dldm_id);
-                INFO.mondayid = resultt[j].dltm_dldm_id;
-                INFO.monday.push(TIMEOBJ);
+                MainObj.mondayid = resultt[j].dltm_dldm_id;
+                MainObj.monday.push(TIMEOBJ);
               }else if(resultt[j].dldm_day_number == "TUE"){
                 console.log("in tue id "+resultt[j].dltm_dldm_id);
-                INFO.tuesdayid = resultt[j].dltm_dldm_id;
-                INFO.tuesday.push(TIMEOBJ);
+                MainObj.tuesdayid = resultt[j].dltm_dldm_id;
+                MainObj.tuesday.push(TIMEOBJ);
               }else if(resultt[j].dldm_day_number == "WED"){
                 console.log("in wed id "+resultt[j].dltm_dldm_id);
-                INFO.wednesdayid = resultt[j].dltm_dldm_id;
-                INFO.wednesday.push(TIMEOBJ);
+                MainObj.wednesdayid = resultt[j].dltm_dldm_id;
+                MainObj.wednesday.push(TIMEOBJ);
               }else if(resultt[j].dldm_day_number == "THU"){
                 console.log("in thu id "+resultt[j].dltm_dldm_id);
-                INFO.thursdayid = resultt[j].dltm_dldm_id;
-                INFO.thursday.push(TIMEOBJ);
+                MainObj.thursdayid = resultt[j].dltm_dldm_id;
+                MainObj.thursday.push(TIMEOBJ);
               }else if(resultt[j].dldm_day_number == "FRI"){
                 console.log("in fri id "+resultt[j].dltm_dldm_id);
-                INFO.fridayid = resultt[j].dltm_dldm_id;
-                INFO.friday.push(TIMEOBJ);
+                MainObj.fridayid = resultt[j].dltm_dldm_id;
+                MainObj.friday.push(TIMEOBJ);
               }else if(resultt[j].dldm_day_number == "SAT"){
                 console.log("in sat id "+resultt[j].dltm_dldm_id);
-                INFO.saturdayid = resultt[j].dltm_dldm_id;
-                INFO.saturday.push(TIMEOBJ);
+                MainObj.saturdayid = resultt[j].dltm_dldm_id;
+                MainObj.saturday.push(TIMEOBJ);
               }else if(resultt[j].dldm_day_number == "SUN"){
                 console.log("in sun id "+resultt[j].dltm_dldm_id);
-                INFO.sundayid = resultt[j].dltm_dldm_id;
-                INFO.sunday.push(TIMEOBJ);
+                MainObj.sundayid = resultt[j].dltm_dldm_id;
+                MainObj.sunday.push(TIMEOBJ);
               }
-              INFO.dlmid = resultt[j].dldm_id;
             }
 
-            MainObj.info.push(INFO);
             console.log("value of count "+count);
             count++;
             if(count == result.length){
