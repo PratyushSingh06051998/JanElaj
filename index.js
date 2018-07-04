@@ -3775,7 +3775,7 @@ app.post("/managediscount",function(req,res){
 
             console.log("value of count "+count);
             count++;
-            if(count == result.length){
+            if(count == resultt.length){
               console.log("in if");
               res.send(JSON.stringify(MainObj));
             }
