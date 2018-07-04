@@ -3784,6 +3784,8 @@ app.post("/managediscount",function(req,res){
         }
       })
 
+      connection.release();
+
     }
   })
 
