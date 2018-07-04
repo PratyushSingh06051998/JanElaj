@@ -3658,53 +3658,45 @@ app.post("/updateservice",function(req,res){
 app.post("/deleteservice",function(req,res){
 
   var Object = req.body;
+  var DcsmId = Object.dcsmid
 
-  console.log("Deletetime has been hit wrglwrGBVAIUBKVRAUBVJADB;OUFLWR vliuaehsrbiS< vsLUf,vhsbf");
+  console.log("Deletetime has been hit");
 
   var obj = {
     status : "SUCCESS"
   }
 
-  var DcsmId = Object.dcsmid;
 
-  var sql = 'DELETE FROM doctor_location_time_master WHERE dltm_id = ?';
+  var sql = 'DELETE FROM doctor_clinic_services_master WHERE dcsm_id = ?';
 
   con.getConnection(function(err, connection) {
 
 
       if(err){
-        console.log("ERROR IN deleteservice IN BUILDING CONNECTION FOR TIMEID ");
+        console.log("ERROR IN deleteservice IN BUILDING CONNECTION FOR DCSMID =" +DcsmId);
         console.log("ERROR CODE :"+err.code);
         obj.status = "CONNECTION ERROR";
         res.send(JSON.stringify(obj));
         return err;
       }else{
 
-        connection.query(sql,[arr[i].id], function(err, result) {
+        connection.query(sql,[DcsmId], function(err, result) {
 
           if(err){
-            console.log("ERROR IN deletetime IN RUNNING QUERY FOR TIMEID");
+            console.log("ERROR IN deleteservice IN RUNNING QUERY FOR DCSMID =" +DcsmId);
+            console.log(err);
             console.log("ERROR CODE "+err.code);
-            if(sent == 0){
-              obj.status = "CONNECTION ERROR";
-              res.send(JSON.stringify(obj));
-              sent=1;
-            }
+            obj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(obj));
             return err;
           }else{
-            console.log("in here loooooooooooooooooop "+count);
-            count++;
             if(result.affectedRows == 1){
-              if(count == arr.length && sent==0){
-                res.send(JSON.stringify(obj));
-                sent=1;
-              }
+              obj.status = "SUCCESS";
+              res.send(JSON.stringify(obj));
             }else{
-              if(sent ==0){
-                obj.status = "CONNECTION ERROR";
-                res.send(JSON.stringify(obj));
-                sent=1;
-              }
+              console.log("ERROR IN deleteservice IN RUNNING QUERY 0 ROWS AFFECTED FOR DCSMID =" +DcsmId);
+              obj.status = "CONNECTION ERROR";
+              res.send(JSON.stringify(obj));
 
             }
           }
