@@ -3613,7 +3613,7 @@ app.post("/updateservice",function(req,res){
     status : "SUCCESS"
   }
 
-  var sql = 'UPDATE doctor_clinic_services_master SET dcsm_normal_amount = ?, dcsm_discounted_amount = ?, dcsm_discounted_flag = ? WHERE dcsm_id = ?';
+  var sql = 'UPDATE doctor_clinic_services_master SET dcsm_normal_amount = ?, dcsm_discounted_amount = ?, dcsm_discount_flag = ? WHERE dcsm_id = ?';
 
   con.getConnection(function(err, connection) {
 
