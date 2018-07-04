@@ -3701,7 +3701,7 @@ app.post("/managediscount",function(req,res){
       return err;
     }else{
 
-      connection.query(sql2,[DlmId,function(err,resultt){
+      connection.query(sql2,[DlmId],function(err,resultt){
         if(err){
           console.log("ERROR IN managediscount IN RUNNING SQL2 FOR DLMID = "+DlmId);
           console.log("ERROR : "+err);
@@ -3781,7 +3781,6 @@ app.post("/managediscount",function(req,res){
               console.log("in if");
               res.send(JSON.stringify(MainObj));
             }
-          // }
 
 
         }
