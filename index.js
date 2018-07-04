@@ -3569,7 +3569,9 @@ app.post("/serviceselected",function(req,res){
                 sname:resultt[j].sm_service_name,
                 namount:resultt[j].dcsm_normal_amount,
                 damount:resultt[j].dcsm_discounted_amount,
-                flag:resultt[j].dcsm_discount_flag
+                flag:resultt[j].dcsm_discount_flag,
+                dcsmid : resultt[j].dcsm_id,
+                sid : resultt[j].sm_service_id
               }
 
               MainObj.serviceinfo.push(o);
