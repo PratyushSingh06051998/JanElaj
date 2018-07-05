@@ -3660,6 +3660,7 @@ app.post("/updatemanagediscount",function(req,res){
   var Object = req.body;
   var arr = [];
   arr = Object.values;
+  console.log("has beeen hit in updatemaneagadiscoujnt");
   console.log(Object.values);
   var sent =0;
   var count =0;
