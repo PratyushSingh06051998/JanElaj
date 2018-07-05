@@ -3729,7 +3729,6 @@ app.post("/updatemanagediscount",function(req,res){
                       })
                     }
 
-                    res.send(JSON.stringify(obj));
                   }else{
                     if(sent == 0){
                       obj.status = "CONNECTION ERROR";
