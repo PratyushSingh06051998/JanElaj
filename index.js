@@ -3739,7 +3739,6 @@ app.post("/updatemanagediscount",function(req,res){
                   }
                 }
 
-                  connection.release();
               });
             }
           }
