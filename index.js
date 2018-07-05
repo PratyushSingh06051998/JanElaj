@@ -3655,6 +3655,59 @@ app.post("/updateservice",function(req,res){
 
 })
 
+app.post("/updatemanagediscount",function(req,res){
+
+  var Object = req.body;
+
+  var TimeId =  Object.tid;
+  var Flag = Object.flag;
+  console.log(TimeId);
+
+  var obj = {
+    status : "SUCCESS"
+  }
+
+  var sql = 'UPDATE doctor_location_time_master SET dltm_discount_offer_flag = ? WHERE dltm_id = ?';
+
+  con.getConnection(function(err, connection) {
+
+
+      if(err){
+        console.log("ERROR IN updatemanagediscount IN BUILDING CONNECTION FOR TIMEID = "+TimeId);
+        console.log("ERROR CODE :"+err.code);
+        obj.status = "CONNECTION ERROR";
+        res.send(JSON.stringify(obj));
+        return err;
+      }else{
+
+        connection.query(sql,[Flag,TimeId], function(err, result) {
+
+          if(err){
+            console.log("ERROR IN updatemanagediscount IN RUNNING QUERY FOR TIMEID = "+TimeId);
+            console.log("ERROR CODE "+err.code);
+            obj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(obj));
+            return err;
+          }else{
+
+            if(result.affectedRows == 1){
+              res.send(JSON.stringify(obj));
+            }else{
+              obj.status = "CONNECTION ERROR";
+              res.send(JSON.stringify(obj));
+            }
+          }
+
+            connection.release();
+        });
+
+      }
+
+
+  });
+
+})
+
 app.post("/managediscount",function(req,res){
 
   var Object = req.body;
