@@ -3658,10 +3658,13 @@ app.post("/updateservice",function(req,res){
 app.post("/updatemanagediscount",function(req,res){
 
   var Object = req.body;
-
-  var TimeId =  Object.tid;
-  var Flag = Object.flag;
-  console.log(TimeId);
+  var arr = [];
+  arr = Object.values;
+  var sent =0;
+  var count =0;
+  // var TimeId =  Object.tid;
+  // var Flag = Object.flag;
+  console.log(arr);
 
   var obj = {
     status : "SUCCESS"
@@ -3673,33 +3676,74 @@ app.post("/updatemanagediscount",function(req,res){
 
 
       if(err){
-        console.log("ERROR IN updatemanagediscount IN BUILDING CONNECTION FOR TIMEID = "+TimeId);
+        console.log("ERROR IN updatemanagediscount IN BUILDING CONNECTION ");
         console.log("ERROR CODE :"+err.code);
         obj.status = "CONNECTION ERROR";
         res.send(JSON.stringify(obj));
         return err;
       }else{
 
-        connection.query(sql,[Flag,TimeId], function(err, result) {
-
+        connection.beginTransaction(function(err){
           if(err){
-            console.log("ERROR IN updatemanagediscount IN RUNNING QUERY FOR TIMEID = "+TimeId);
-            console.log("ERROR CODE "+err.code);
+            console.log("ERROR IN updatemanagediscount IN BUILDING CONNECTION");
+            console.log("ERROR CODE :"+err.code);
             obj.status = "CONNECTION ERROR";
             res.send(JSON.stringify(obj));
             return err;
           }else{
+            for(var i=0;i<arr.length;i++){
 
-            if(result.affectedRows == 1){
-              res.send(JSON.stringify(obj));
-            }else{
-              obj.status = "CONNECTION ERROR";
-              res.send(JSON.stringify(obj));
+              connection.query(sql,[arr[i].flag,arr[i].timeid], function(err, result) {
+
+                if(err){
+                  console.log("ERROR IN updatemanagediscount IN RUNNING QUERY ");
+                  console.log("ERROR CODE "+err.code);
+                  if(sent == 0){
+                    obj.status = "CONNECTION ERROR";
+                    res.send(JSON.stringify(obj));
+                  }
+                  sent = 1;
+                  connection.rollback(function(){
+                    return err;
+                  })
+
+                }else{
+
+                  if(result.affectedRows == 1){
+
+                    count++;
+
+                    if(count == arr.length && sent == 0){
+                      connection.commit(function(err){
+                        if(err){
+                          console.log("ERROR IN updatemanagediscount IN COMMITING ");
+                          console.log("ERROR CODE :"+err.code);
+                          obj.status = "CONNECTION ERROR";
+                          res.send(JSON.stringify(obj));
+                          return err;
+                        }else{
+                          res.send(JSON.stringify(obj));
+                        }
+                      })
+                    }
+
+                    res.send(JSON.stringify(obj));
+                  }else{
+                    if(sent == 0){
+                      obj.status = "CONNECTION ERROR";
+                      res.send(JSON.stringify(obj));
+                    }
+                    sent =1;
+                  }
+                }
+
+                  connection.release();
+              });
             }
           }
+        })
 
-            connection.release();
-        });
+        connection.release();
 
       }
 
