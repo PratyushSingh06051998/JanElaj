@@ -413,6 +413,7 @@ app.post("/signin",function(req,res){
                 if(err){
                   console.log("ERROR IN RUNNING SQL2 IN SIGNIN FOR Email = "+Email);
                   console.log("ERROR : "+err.code);
+                  console.log(err);
                   obj.status = "CONNECTION ERROR";
                   res.send(JSON.stringify(obj));
                   return err;
@@ -436,6 +437,7 @@ app.post("/signin",function(req,res){
                       if(err){
                         console.log("ERROR IN RUNNING SQL3 IN SIGNIN FOR Email = "+Email);
                         console.log("ERROR : "+err.code);
+                        console.log(err);
                         obj.status = "CONNECTION ERROR";
                         res.send(JSON.stringify(obj));
                         return err;
