@@ -375,7 +375,7 @@ app.post("/signin",function(req,res){
   var sql = 'SELECT pld_password, pld_partner_id FROM partner_login_details_master WHERE pld_username = ?';
   var sql4 = 'SELECT dm_doctor_name, dm_dob, dm_gender, dm_doctor_speciality_id FROM doctor_master WHERE dm_doctor_id = ?';
   var sql2 = 'SELECT COUNT(*) AS exist FROM doctor_location_master WHERE dlm_dm_doctor_id = ?';
-  var sql3 = 'SELECT dm_profiling_complete from doctor_master WHERE pld_username = ?';
+  var sql3 = 'SELECT dm_profiling_complete from partner_login_details_master WHERE pld_username = ?';
 
   con.getConnection(function(err,connection){
 
