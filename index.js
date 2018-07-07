@@ -783,16 +783,16 @@ app.post("/updatelocation",function(req,res){
 
   con.getConnection(function(err,connection){
     if(err){
-      console.log("ERROR IN updatelocation IN BUILDING CONNECTION FOR DOCID = "+DocId);
+      console.log("ERROR IN updatelocation IN BUILDING CONNECTION FOR DOCID = "+LocId);
       console.log("ERROR CODE :"+err.code);
       console.log(err);
       obj.status = "CONNECTION ERROR";
       res.send(JSON.stringify(obj));
       return err;
     }else{
-      connection.query(sql,[Name,AddressLine1,AddressLine2,City,District,State,Pin],function(err,result){
+      connection.query(sql,[Name,AddressLine1,AddressLine2,City,District,State,Pin,LocId],function(err,result){
         if(err){
-          console.log("ERROR IN updatelocation IN RUNNING SQL FOR DOCID = "+DocId);
+          console.log("ERROR IN updatelocation IN RUNNING SQL FOR DOCID = "+LocId);
           console.log("ERROR CODE :"+err.code);
           console.log(err);
           obj.status = "CONNECTION ERROR";
@@ -803,7 +803,7 @@ app.post("/updatelocation",function(req,res){
             obj.status = "SUCCESS";
             res.send(JSON.stringify(obj));
           }else{
-            console.log("ERROR IN updatelocation IN SQL 0 ROWS AFFESCTED FOR DOCID = "+DocId);
+            console.log("ERROR IN updatelocation IN SQL 0 ROWS AFFESCTED FOR DOCID = "+LocId);
             obj.status = "CONNECTION ERROR";
             res.send(JSON.stringify(obj));
           }
