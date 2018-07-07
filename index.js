@@ -777,10 +777,9 @@ app.post("/updatelocation",function(req,res){
   var District = Object.district;
   var State = Object.state;
   var Pin = Object.pin;
-  var Options = Object.option;
   var LocId=Object.locid;
 
-  var sql = "UPDATE location_master SET lm_name = ?, lm_address_line1 = ?, lm_address_line2 = ?, lm_city = ?, lm_district = ?, lm_state = ?, lm_pincode = ?, lm_flag_home_service_ref = ? WHERE lm_location_id = ?";
+  var sql = "UPDATE location_master SET lm_name = ?, lm_address_line1 = ?, lm_address_line2 = ?, lm_city = ?, lm_district = ?, lm_state = ?, lm_pincode = ? WHERE lm_location_id = ?";
 
   con.getConnection(function(err,connection){
     if(err){
@@ -791,7 +790,7 @@ app.post("/updatelocation",function(req,res){
       res.send(JSON.stringify(obj));
       return err;
     }else{
-      connection.query(sql,[Name,AddressLine1,AddressLine2,City,District,State,Pin,Options],function(err,result){
+      connection.query(sql,[Name,AddressLine1,AddressLine2,City,District,State,Pin],function(err,result){
         if(err){
           console.log("ERROR IN updatelocation IN RUNNING SQL FOR DOCID = "+DocId);
           console.log("ERROR CODE :"+err.code);
