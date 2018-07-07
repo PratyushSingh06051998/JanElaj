@@ -762,6 +762,60 @@ app.post("/hvisitaddlocation",function(req,res){
 })
 //Leave it fr now
 
+app.post("/updatelocation",function(req,res){
+
+  var Object = req.body;
+
+  var obj = {
+    status : ""
+  }
+
+  var Name = Object.name;
+  var AddressLine1 = Object.adrline1;
+  var AddressLine2 = Object.adrline2;
+  var City = Object.city;
+  var District = Object.district;
+  var State = Object.state;
+  var Pin = Object.pin;
+  var Options = Object.option;
+  var LocId=Object.locid;
+
+  var sql = "UPDATE location_master SET lm_name = ?, lm_address_line1 = ?, lm_address_line2 = ?, lm_city = ?, lm_district = ?, lm_state = ?, lm_pincode = ?, lm_flag_home_service_ref = ? WHERE lm_location_id = ?";
+
+  con.getConnection(function(err,connection){
+    if(err){
+      console.log("ERROR IN updatelocation IN BUILDING CONNECTION FOR DOCID = "+DocId);
+      console.log("ERROR CODE :"+err.code);
+      console.log(err);
+      obj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(obj));
+      return err;
+    }else{
+      connection.query(sql,[Name,AddressLine1,AddressLine2,City,District,State,Pin,Options],function(err,result){
+        if(err){
+          console.log("ERROR IN updatelocation IN RUNNING SQL FOR DOCID = "+DocId);
+          console.log("ERROR CODE :"+err.code);
+          console.log(err);
+          obj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(obj));
+          return err;
+        }else{
+          if(result.affectedRows == 1){
+            obj.status = "SUCCESS";
+            res.send(JSON.stringify(obj));
+          }else{
+            console.log("ERROR IN updatelocation IN SQL 0 ROWS AFFESCTED FOR DOCID = "+DocId);
+            obj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(obj));
+          }
+        }
+      })
+      connection.release();
+    }
+  })
+
+})
+
 app.post("/clinicaddlocation",function(req,res){
 
   var Object = req.body;
@@ -925,6 +979,87 @@ app.post("/clinicaddlocation",function(req,res){
 
 })
 
+app.post("/fetchlocation",function(req,res){
+
+  var Object = req.body;
+
+  var LocId = Object.locid;
+
+  console.log("has been hit in manage location");
+
+  var Aray = [];
+
+
+  var MainObj = {
+    status:"",
+    lname:"",
+    lflagservice:"",
+    ladrline1:"",
+    ladrline2:"",
+    city:"",
+    district:"",
+    state:"",
+    pincode:""
+  }
+
+  var sql = "SELECT LM.lm_name, LM.lm_flag_home_service_ref, LM.lm_address_line1, LM.lm_location_id, LM.lm_city, LM.lm_address_line2, LM.lm_district, LM.lm_state, LM.lm_pincode FROM location_master AS LM WHERE LM.lm_location_id = ?";
+
+  con.getConnection(function(err,connection){
+
+    if(err){
+      console.log("ERROR IN BUILDING CONNECTION IN FETCHLOCATION FOR LocId = "+LocId);
+      console.log("ERROR CODE :"+err.code);
+      console.log("ERROR : "+err);
+      MainObj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(MainObj));
+      return err;
+    }else{
+      connection.query(sql,[LocId],function(err,result){
+        if(err){
+          console.log("ERROR IN RUNNING SQL IN FETCHLOCATION FOR LocId = "+LocId);
+          console.log("ERROR CODE :"+err.code);
+          console.log("ERROR : "+err);
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+          return err;
+        }else{
+
+
+          if(result.length > 0){
+
+            MainObj.status = "SUCCESS";
+
+
+            MainObj.lname = result[0].lm_name
+            MainObj.lflagservice = result[0].lm_flag_home_service_ref
+            MainObj.ladrline1= result[0].lm_address_line1
+            MainObj.ladrline2=result[0].lm_address_line2
+            MainObj.city=result[0].lm_city
+            MainObj.district=result[0].lm_district
+            MainObj.state=result[0].lm_state
+            MainObj.pincode=result[0].lm_pincode
+
+            res.send(JSON.stringify(MainObj));
+
+
+          }else{
+            console.log("ERROR IN RUNNING SQL IN FETCHLOCATION FOR LocId = "+LocId);
+            MainObj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(MainObj));
+          }
+
+
+        }
+
+        connection.release();
+
+      })
+    }
+
+  })
+
+})
+
 app.post("/managelocation",function(req,res){
 
   var Object = req.body;
@@ -945,7 +1080,7 @@ app.post("/managelocation",function(req,res){
   con.getConnection(function(err,connection){
 
     if(err){
-      console.log("ERROR IN BUILDING CONNECTION IN FETCHLOCATION FOR DocId = "+DocId);
+      console.log("ERROR IN BUILDING CONNECTION IN managelocation FOR DocId = "+DocId);
       console.log("ERROR CODE :"+err.code);
       console.log("ERROR : "+err);
       MainObj.status = "CONNECTION ERROR";
@@ -954,7 +1089,7 @@ app.post("/managelocation",function(req,res){
     }else{
       connection.query(sql,[DocId],function(err,result){
         if(err){
-          console.log("ERROR IN RUNNING SQL IN FETCHLOCATION FOR DocId = "+DocId);
+          console.log("ERROR IN RUNNING SQL IN managelocation FOR DocId = "+DocId);
           console.log("ERROR CODE :"+err.code);
           console.log("ERROR : "+err);
           MainObj.status = "CONNECTION ERROR";
