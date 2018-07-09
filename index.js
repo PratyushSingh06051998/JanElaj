@@ -4731,7 +4731,7 @@ app.post("/iftimeexist",function(req,res){
 
   console.log(locid);
 
-  var obj = {
+  var MainObj = {
     status : "SUCCESS",
     time_exist : ""
   }
@@ -4771,13 +4771,13 @@ app.post("/iftimeexist",function(req,res){
             }else{
               console.log("row of this lenght is   "+row.length);
               if(row.length >0){
-                obj.status = "SUCCESS";
-                obj.time_exist = "Y";
-                res.send(JSON.stringify(obj));
+                MainObj.status = "SUCCESS";
+                MainObj.time_exist = "Y";
+                res.send(JSON.stringify(MainObj));
               }else{
-                obj.status = "SUCCESS";
-                obj.time_exist = "N";
-                res.send(JSON.stringify(obj));
+                MainObj.status = "SUCCESS";
+                MainObj.time_exist = "N";
+                res.send(JSON.stringify(MainObj));
               }
             }
           })
