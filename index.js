@@ -4727,9 +4727,9 @@ app.post("/iftimeexist",function(req,res){
 
   var Object = req.body;
 
-  var dlmid = Object.dlmid;
+  var locid = Object.locid;
 
-  console.log(dlmid);
+  console.log(locid);
 
   var obj = {
     status : "SUCCESS",
@@ -4737,37 +4737,55 @@ app.post("/iftimeexist",function(req,res){
   }
 
   var sql = "SELECT * FROM doctor_location_day_master WHERE dldm_id = ?";
+  var sql0 = "SELEECT dlm_id FROM doctor_location_master WHERE dlm_lm_location_id = ?";
 
   con.getConnection(function(err,connection){
     if(err){
-      console.log("ERROR IN BUILDING CONNECTION IN iftimeexist FOR dlmid = "+dlmid);
+      console.log("ERROR IN BUILDING CONNECTION IN iftimeexist FOR locid = "+locid);
       console.log("ERROR CODE :"+err.code);
       console.log("ERROR : "+err);
       MainObj.status = "CONNECTION ERROR";
       res.send(JSON.stringify(MainObj));
       return err;
     }else{
-      connection.query(sql,[dlmid],function(err,row){
+
+      connection.query(sql0,[locid],function(err,row0){
         if(err){
-          console.log("ERROR IN RUNNING SQL IN iftimeexist FOR dlmid = "+dlmid);
+          console.log("ERROR IN RUNNING SQL0 IN iftimeexist FOR locid = "+locid);
           console.log("ERROR CODE :"+err.code);
           console.log("ERROR : "+err);
           MainObj.status = "CONNECTION ERROR";
           res.send(JSON.stringify(MainObj));
           return err;
         }else{
-          console.log("row of this lenght is   "+row.length);
-          if(row.length >0){
-            obj.status = "SUCCESS";
-            obj.time_exist = "Y";
-            res.send(JSON.stringify(obj));
-          }else{
-            obj.status = "SUCCESS";
-            obj.time_exist = "N";
-            res.send(JSON.stringify(obj));
-          }
+          console.log(row0[0].dlm_id);
+
+          connection.query(sql,[row0[0].dlm_id],function(err,row){
+            if(err){
+              console.log("ERROR IN RUNNING SQL IN iftimeexist FOR locid = "+locid);
+              console.log("ERROR CODE :"+err.code);
+              console.log("ERROR : "+err);
+              MainObj.status = "CONNECTION ERROR";
+              res.send(JSON.stringify(MainObj));
+              return err;
+            }else{
+              console.log("row of this lenght is   "+row.length);
+              if(row.length >0){
+                obj.status = "SUCCESS";
+                obj.time_exist = "Y";
+                res.send(JSON.stringify(obj));
+              }else{
+                obj.status = "SUCCESS";
+                obj.time_exist = "N";
+                res.send(JSON.stringify(obj));
+              }
+            }
+          })
+
         }
       })
+
+
       connection.release();
     }
   })
