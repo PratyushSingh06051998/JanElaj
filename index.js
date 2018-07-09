@@ -4736,8 +4736,12 @@ app.post("/iftimeexist",function(req,res){
     time_exist : ""
   }
 
-  var sql = "SELECT * FROM doctor_location_day_master WHERE dldm_id = ?";
+  var sent=0;
+  var count =0;
+
   var sql0 = "SELECT dlm_id FROM doctor_location_master WHERE dlm_lm_location_id = ?";
+  var sql = "SELECT dldm_dlm_id FROM doctor_location_day_master WHERE dldm_id = ?";
+  var sql2 = "SELECT dltm_time_from FROM doctor_location_time_master WHERE dltm_dldm_id = ?";
 
   con.getConnection(function(err,connection){
     if(err){
@@ -4771,9 +4775,41 @@ app.post("/iftimeexist",function(req,res){
             }else{
               console.log("row of this lenght is   "+row.length);
               if(row.length >0){
-                MainObj.status = "SUCCESS";
-                MainObj.time_exist = "Y";
-                res.send(JSON.stringify(MainObj));
+
+                for(var i =0;i<row.length;i++){
+
+                  connection.query(sql2,[row[i].dldm_dlm_id],function(err,row2){
+                    count++;
+                    if(err){
+                      console.log("ERROR IN RUNNING SQL1 IN iftimeexist FOR locid = "+locid);
+                      console.log("ERROR CODE :"+err.code);
+                      console.log("ERROR : "+err);
+                      if(sent ==0){
+                        MainObj.status = "CONNECTION ERROR";
+                        res.send(JSON.stringify(MainObj));
+                      }
+                      sent = 1;
+                      return err;
+                    }else{
+                      if(row2.length > 0){
+                        if(sent ==0){
+                          MainObj.status = "SUCCESS";
+                          MainObj.time_exist = "Y";
+                          res.send(JSON.stringify(MainObj));
+                        }
+                        sent =1;
+                      }else{
+                        if(count == row2.length && sent ==0){
+                          MainObj.status = "SUCCESS";
+                          MainObj.time_exist = "N";
+                          res.send(JSON.stringify(MainObj));
+                        }
+                      }
+                    }
+                  })
+
+                }
+
               }else{
                 MainObj.status = "SUCCESS";
                 MainObj.time_exist = "N";
