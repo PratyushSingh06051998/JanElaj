@@ -4737,7 +4737,7 @@ app.post("/iftimeexist",function(req,res){
   }
 
   var sql = "SELECT * FROM doctor_location_day_master WHERE dldm_id = ?";
-  var sql0 = "SELEECT dlm_id FROM doctor_location_master WHERE dlm_lm_location_id = ?";
+  var sql0 = "SELECT dlm_id FROM doctor_location_master WHERE dlm_lm_location_id = ?";
 
   con.getConnection(function(err,connection){
     if(err){
