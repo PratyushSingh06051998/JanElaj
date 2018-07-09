@@ -4736,7 +4736,7 @@ app.post("/iftimeexist",function(req,res){
 
   var sql = "SELECT * FROM doctor_location_day_master WHERE dldm_id = ?";
 
-  con.getConnection(function(err){
+  con.getConnection(function(err,connection){
     if(err){
       console.log("ERROR IN BUILDING CONNECTION IN iftimeexist FOR dlmid = "+dlmid);
       console.log("ERROR CODE :"+err.code);
@@ -4760,11 +4760,12 @@ app.post("/iftimeexist",function(req,res){
             res.send(JSON.stringify(obj));
           }else{
             obj.status = "SUCCESS";
-            obj.time_exist = "Y";
+            obj.time_exist = "N";
             res.send(JSON.stringify(obj));
           }
         }
       })
+      connection.release();
     }
   })
 
