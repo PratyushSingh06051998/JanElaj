@@ -4285,7 +4285,14 @@ app.post("/updatediscount",function(req,res){
 
       connection.beginTransaction(function(err){
         if(err){
-
+          console.log("ERROR IN updatediscount IN BEGINING TRANSCTION TO DATABASE FOR DOCID = "+DocId);
+          console.log("ERROR : "+err);
+          console.log("ERROR CODE : "+err.code);
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+          connection.rollback(function(err){
+            return err;
+          })
         }else{
           connection.query(sql,[SingleDisc,DocId,LocId],function(err,result){
             if(err){
@@ -4294,7 +4301,7 @@ app.post("/updatediscount",function(req,res){
               console.log("ERROR CODE : "+err.code);
               MainObj.status = "CONNECTION ERROR";
               res.send(JSON.stringify(MainObj));
-              connection.rollback(function(err){
+              connection.rollback(function(){
                 return err;
               })
             }else{
@@ -4306,7 +4313,7 @@ app.post("/updatediscount",function(req,res){
                     console.log("ERROR CODE : "+err.code);
                     MainObj.status = "CONNECTION ERROR";
                     res.send(JSON.stringify(MainObj));
-                    connection.rollback(function(err){
+                    connection.rollback(function(){
                       return err;
                     })
                   }else{
@@ -4318,7 +4325,7 @@ app.post("/updatediscount",function(req,res){
                           console.log("ERROR CODE : "+err.code);
                           MainObj.status = "CONNECTION ERROR";
                           res.send(JSON.stringify(MainObj));
-                          connection.rollback(function(err){
+                          connection.rollback(function(){
                             return err;
                           })
                         }else{
@@ -4328,6 +4335,8 @@ app.post("/updatediscount",function(req,res){
                       })
                     }else{
                       console.log("ERROR IN updatediscount IN RUNNING SQL1 TO DATABASE FOR DOCID = "+DocId);
+                      connection.rollback(function(){
+                      })
                       MainObj.status = "CONNECTION ERROR";
                       res.send(JSON.stringify(MainObj));
                     }
@@ -4335,6 +4344,8 @@ app.post("/updatediscount",function(req,res){
                 })
               }else{
                 console.log("ERROR IN updatediscount IN RUNNING SQL TO DATABASE FOR DOCID = "+DocId);
+                connection.rollback(function(){
+                })
                 MainObj.status = "CONNECTION ERROR";
                 res.send(JSON.stringify(MainObj));
               }
@@ -4664,7 +4675,7 @@ app.post("/chooselocation",function(req,res){
   con.getConnection(function(err,connection){
 
     if(err){
-      console.log("ERROR IN BUILDING CONNECTION IN FETCHLOCATION FOR DocId = "+DocId);
+      console.log("ERROR IN BUILDING CONNECTION IN chooselocation FOR DocId = "+DocId);
       console.log("ERROR CODE :"+err.code);
       console.log("ERROR : "+err);
       MainObj.status = "CONNECTION ERROR";
@@ -4673,7 +4684,7 @@ app.post("/chooselocation",function(req,res){
     }else{
       connection.query(sql,[DocId],function(err,result){
         if(err){
-          console.log("ERROR IN RUNNING SQL IN FETCHLOCATION FOR DocId = "+DocId);
+          console.log("ERROR IN RUNNING SQL IN chooselocation FOR DocId = "+DocId);
           console.log("ERROR CODE :"+err.code);
           console.log("ERROR : "+err);
           MainObj.status = "CONNECTION ERROR";
@@ -4709,6 +4720,53 @@ app.post("/chooselocation",function(req,res){
 
   })
 
+
+})
+
+app.post("/iftimeexist",function(req,res){
+
+  var Object = req.body;
+
+  var dlmid = Object.dlmid;
+
+  var obj = {
+    status : "SUCCESS",
+    time_exist : ""
+  }
+
+  var sql = "SELECT * FROM doctor_location_day_master WHERE dldm_id = ?";
+
+  con.getConnection(function(err){
+    if(err){
+      console.log("ERROR IN BUILDING CONNECTION IN iftimeexist FOR dlmid = "+dlmid);
+      console.log("ERROR CODE :"+err.code);
+      console.log("ERROR : "+err);
+      MainObj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(MainObj));
+      return err;
+    }else{
+      connection.query(sql,[dlmid],function(err,row){
+        if(err){
+          console.log("ERROR IN RUNNING SQL IN iftimeexist FOR dlmid = "+dlmid);
+          console.log("ERROR CODE :"+err.code);
+          console.log("ERROR : "+err);
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+          return err;
+        }else{
+          if(row.length >0){
+            obj.status = "SUCCESS";
+            obj.time_exist = "Y";
+            res.send(JSON.stringify(obj));
+          }else{
+            obj.status = "SUCCESS";
+            obj.time_exist = "Y";
+            res.send(JSON.stringify(obj));
+          }
+        }
+      })
+    }
+  })
 
 })
 
