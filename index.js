@@ -4729,6 +4729,8 @@ app.post("/iftimeexist",function(req,res){
 
   var dlmid = Object.dlmid;
 
+  console.log(dlmid);
+
   var obj = {
     status : "SUCCESS",
     time_exist : ""
@@ -4754,6 +4756,7 @@ app.post("/iftimeexist",function(req,res){
           res.send(JSON.stringify(MainObj));
           return err;
         }else{
+          console.log("row of this lenght is   "+row.length);
           if(row.length >0){
             obj.status = "SUCCESS";
             obj.time_exist = "Y";
