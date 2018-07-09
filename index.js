@@ -4800,8 +4800,8 @@ app.post("/iftimeexist",function(req,res){
                         sent =1;
                       }else{
                         console.log(count);
-                        console.log(row2.length);
-                        if(count == (row2.length-1) && sent ==0){
+                        console.log(row.length);
+                        if(count == (row.length) && sent ==0){
                           MainObj.status = "SUCCESS";
                           MainObj.time_exist = "N";
                           res.send(JSON.stringify(MainObj));
