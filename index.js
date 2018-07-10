@@ -4855,19 +4855,19 @@ function InsertFinalValue(req,res,id){
   var REGISTRATION_YEAR =  Object.registeryear;
   var EXPERIENCE =  parseInt(Object.experience);
   var REGISTERDATE="";
-  // console.log(ID);
-  // console.log(PLD_ROLE);
-  // console.log(NAME);
-  // console.log(DOB);
-  // console.log(GENDER);
-  // console.log(EMAIL);
-  // console.log(PASSWORD);
-  // console.log(MOBILE);
-  // console.log(SPECIALITY_ID);
-  // console.log(REGISTRATION_NUMBER);
-  // console.log(REGISTRATION_COUNCIL);
-  // console.log(REGISTRATION_YEAR);
-  // console.log(EXPERIENCE);
+  console.log(ID);
+  console.log(PLD_ROLE);
+  console.log(NAME);
+  console.log(DOB);
+  console.log(GENDER);
+  console.log(EMAIL);
+  console.log(PASSWORD);
+  console.log(MOBILE);
+  console.log(SPECIALITY_ID);
+  console.log(REGISTRATION_NUMBER);
+  console.log(REGISTRATION_COUNCIL);
+  console.log(REGISTRATION_YEAR);
+  console.log(EXPERIENCE);
   console.log("has been hit in insertfinvalue");
 
 
