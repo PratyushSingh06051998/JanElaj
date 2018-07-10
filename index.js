@@ -501,11 +501,11 @@ app.post("/allinformation",function(req,res){
   var Object = req.body;
   var DocId = Object.docid;
 
-  var sql4 = 'SELECT dm_doctor_name, dm_dob, dm_gender,dm_doctor_mbbs_flag,dm_doctor_md_flag,dm_doctor_ms_flag,dm_doctor_diploma_flag, dm_doctor_speciality_id, dm_introduction, dm_doctor_experience,, round((to_days(sysdate())-to_days(dm_dob))/365) as AGE FROM doctor_master WHERE dm_doctor_id = ?';
+  var sql4 = 'SELECT dm_doctor_name, dm_dob, dm_gender,dm_doctor_mbbs_flag,dm_doctor_md_flag,dm_doctor_ms_flag,dm_doctor_diploma_flag, dm_doctor_speciality_id, dm_introduction, dm_doctor_experience, round((to_days(sysdate())-to_days(dm_dob))/365) as AGE FROM doctor_master WHERE dm_doctor_id = ?';
 
   con.getConnection(function(err,connection){
     if(err){
-      console.log("ERROR IN RUNNING SQL1 IN SIGNIN FOR DocId = "+DocId);
+      console.log("ERROR IN RUNNING SQL1 IN allinformation FOR DocId = "+DocId);
       console.log(err);
       console.log("ERROR : "+err.code);
       obj.status = "CONNECTION ERROR";
@@ -515,7 +515,7 @@ app.post("/allinformation",function(req,res){
 
       connection.query(sql4,[DocId],function(err,result1){
         if(err){
-          console.log("ERROR IN RUNNING SQL1 IN SIGNIN FOR DocId = "+DocId);
+          console.log("ERROR IN RUNNING SQL1 IN allinformation FOR DocId = "+DocId);
           console.log(err);
           console.log("ERROR : "+err.code);
           obj.status = "CONNECTION ERROR";
@@ -540,7 +540,7 @@ app.post("/allinformation",function(req,res){
             res.send(JSON.stringify(obj));
 
           }else{
-            console.log("ERROR IN RUNNING SQL1 0 ROWS RETURNED IN SIGNIN FOR DocId = "+DocId);
+            console.log("ERROR IN RUNNING SQL1 0 ROWS RETURNED IN allinformation FOR DocId = "+DocId);
             obj.status = "CONNECTION ERROR";
             res.send(JSON.stringify(obj));
           }
