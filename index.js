@@ -4871,7 +4871,7 @@ function InsertFinalValue(req,res,id){
   console.log("has been hit in insertfinvalue");
 
 
-  var sql = "INSERT INTO doctor_master (dm_doctor_id, dm_doctor_name, dm_dob, dm_gender, dm_doctor_contact_mobile, dm_doctor_speciality_id, dm_doctor_email, dm_medical_registration_number, dm_registration_council, dm_registration_year, dm_doctor_experience, dm_reg_date) VALUES((?),(?),SELECT STR_TO_DATE(DOB, "%d %m %Y"),(?),(?),(?),(?),(?),(?),(?),(?),SYSDATE())";
+  var sql = "INSERT INTO doctor_master (dm_doctor_id, dm_doctor_name, dm_dob, dm_gender, dm_doctor_contact_mobile, dm_doctor_speciality_id, dm_doctor_email, dm_medical_registration_number, dm_registration_council, dm_registration_year, dm_doctor_experience, dm_reg_date) VALUES((?),(?),SELECT STR_TO_DATE(DOB, '%d %m %Y'),(?),(?),(?),(?),(?),(?),(?),(?),SYSDATE())";
   var sql1 = "INSERT INTO partner_login_details_master (pld_role, pld_username, pld_password, pld_partner_id, pld_mobile) VALUES ((?),(?),(?),(?),(?))";
 
 
