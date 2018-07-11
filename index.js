@@ -1135,6 +1135,8 @@ app.post("/managelocation",function(req,res){
 
 })
 
+
+
 app.post("/timeinsert",function(req,res){
 
   var Object = req.body;
@@ -1193,7 +1195,7 @@ app.post("/timeinsert",function(req,res){
 
   var method = 0;//0 for insert and 1 for select
 
-  var sql0 = "SELECT dldm_dlm_id FROM doctor_location_day_master ";
+  var sql0 = "SELECT dldm_dlm_id FROM doctor_location_day_master WHERE dldm_dlm_id = ?";
 
   con.getConnection(function(err,connection2){
     if(err){
@@ -1204,7 +1206,7 @@ app.post("/timeinsert",function(req,res){
       res.send(JSON.stringify(MainObj));
       return err;
     }else{
-      connection2.query(sql0,function(err,row0){
+      connection2.query(sql0,[DlmId],function(err,row0){
         if(err){
           console.log("ERROR IN RUNNING SQL1 FOR DLDMID = "+DlmId+" AND DLDMID ="+Dldmid);
           console.log("ERROR : "+err);
@@ -1221,15 +1223,33 @@ app.post("/timeinsert",function(req,res){
 
                 con.getConnection(function(err,connection){
                   if(err){
-
+                    console.log("ERROR IN GETTING CONNECTION FOR DLDMID = "+DlmId+" AND DLDMID ="+Dldmid);
+                    console.log("ERROR : "+err);
+                    console.log("ERROR CODE : "+err.code);
+                    MainObj.status = "CONNECTION ERROR";
+                    res.send(JSON.stringify(MainObj));
+                      return err;
                   }else{
                     connection.beginTransaction(function(err){
                       if(err){
+                        console.log("ERROR IN BEGIING TRANSACTION FOR DLDMID = "+DlmId+" AND DLDMID ="+Dldmid);
+                        console.log("ERROR : "+err);
+                        console.log("ERROR CODE : "+err.code);
+                        MainObj.status = "CONNECTION ERROR";
+                        res.send(JSON.stringify(MainObj));
+                          return err;
 
                       }else{
                         connection.query(sql1,["MON",DlmId],function(err,row1){
                           if(err){
-
+                            console.log("ERROR IN RUNNING SQL1 FOR DLDMID = "+DlmId+" AND DLDMID ="+Dldmid);
+                            console.log("ERROR : "+err);
+                            console.log("ERROR CODE : "+err.code);
+                            MainObj.status = "CONNECTION ERROR";
+                            res.send(JSON.stringify(MainObj));
+                            connection.rollback(function(){
+                              return err;
+                            })
                           }else{
 
                             console.log("5");
@@ -3423,8 +3443,6 @@ function insertsunday2(connection,res,req,Dldmid,valuedldm){
 
 }
 
-
-
 function insertmonday(connection,res,req,Dldmid,valuedldm){
 
 
@@ -4708,6 +4726,7 @@ function insertsunday(connection,res,req,Dldmid,valuedldm){
   }
 
 }
+
 
 app.post("/timeinformation",function(req,res){
 
