@@ -1214,6 +1214,8 @@ app.post("/timeinsert",function(req,res){
     }
   })
 
+  console.log(method+"methoooooooooososssssss hiaaiai ye");
+
   if(method == 0){
 
     var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
