@@ -5877,7 +5877,7 @@ app.post("/alllocdis",function(req,res){
 
   var sql0 = 'UPDATE doctor_master SET dm_overall_discount = ? WHERE dm_doctor_id = ?';
   var sql1 = "UPDATE doctor_location_master SET dlm_currentloc_discount_flag = ? WHERE dlm_dm_doctor_id = ?";
-  var sql2 = "UPDATE doctor_location_time_master,doctor_location_master,doctor_location_day_master INNER JOIN doctor_location_master ON doctor_location_day_master.dldm_dlm_id = doctor_location_master.dlm_id INNER JOIN doctor_location_day_master.dldm_id = doctor_location_time_master.dltm_dldm_id SET doctor_location_time_master.dltm_discount_offer_flag = ?, doctor_location_master.dlm_currentloc_discount_flag = ? WHERE doctor_location_master.dlm_dm_doctor_id = ?";
+  var sql2 = "UPDATE doctor_location_time_master AS dltm INNER JOIN doctor_location_day_master AS dldm ON dltm.dltm_dldm_id = dldm.dldm_id INNER JOIN doctor_location_master AS dlm ON dldm.dldm_dlm_id = dlm.dlm_id SET dltm.dltm_discount_offer_flag = "Y" WHERE dlm.dlm_dm_doctor_id = ?";
 
   con.getConnection(function(err,connection){
     if(err){
@@ -5909,8 +5909,9 @@ app.post("/alllocdis",function(req,res){
                 return err;
               })
             }else{
-              if (result.affectedRows == 1) {
-                connection.query(sql2,[Response,Response,DocId],function(err,result1){
+              if (result.affectedRows > 0) {
+
+                connection.query(sql1,[Response,DocId],function(err,result1){
                   if(err){
                     console.log("ERROR IN alllocdis IN RUNNING SQL1 TO DATABASE FOR DOCID = "+DocId);
                     console.log("ERROR : "+err);
@@ -5921,40 +5922,68 @@ app.post("/alllocdis",function(req,res){
                       return err;
                     })
                   }else{
-                    if(result1.affectedRows == 1){
-                      console.log("ERROR IN alllocdis IN COMMITING TO DATABASE FOR DOCID = "+DocId);
-                      console.log("ERROR : "+err);
-                      console.log("ERROR CODE : "+err.code);
-                      MainObj.status = "CONNECTION ERROR";
-                      res.send(JSON.stringify(MainObj));
-                      connection.rollback(function(){
-                        return err;
+                    if(result1.affectedRows > 0){
+
+                      connection.query(sql2,[Response,DocId],function(err,result2){
+                        if(err){
+                          console.log("ERROR IN alllocdis IN RUNNING SQL2 TO DATABASE FOR DOCID = "+DocId);
+                          console.log("ERROR : "+err);
+                          console.log("ERROR CODE : "+err.code);
+                          MainObj.status = "CONNECTION ERROR";
+                          res.send(JSON.stringify(MainObj));
+                          connection.rollback(function(){
+                            return err;
+                          })
+                        }else{
+                          if(result2.affectedRows > 0){
+
+                            connection.commit(function(err){
+                              if(err){
+                                console.log("ERROR IN alllocdis IN COMMITING TO DATABASE FOR DOCID = "+DocId);
+                                console.log("ERROR : "+err);
+                                console.log("ERROR CODE : "+err.code);
+                                MainObj.status = "CONNECTION ERROR";
+                                res.send(JSON.stringify(MainObj));
+                                connection.rollback(function(){
+                                  return err;
+                                })
+                              }else{
+                                MainObj.status = "SUCCESS";
+                                res.send(JSON.stringify(MainObj));
+                              }
+                            })
+
+                          }else{
+                            console.log("ERROR IN alllocdis IN RUNNING SQL2 0 ROWS RETURNED TO DATABASE FOR DOCID = "+DocId);
+                            MainObj.status = "CONNECTION ERROR";
+                            res.send(JSON.stringify(MainObj));
+                            connection.rollback(function(){
+                            })
+                          }
+                        }
                       })
+
                     }else{
                       console.log("ERROR IN alllocdis IN RUNNING SQL1 0 ROWS RETURNED TO DATABASE FOR DOCID = "+DocId);
-                      console.log("ERROR : "+err);
-                      console.log("ERROR CODE : "+err.code);
                       MainObj.status = "CONNECTION ERROR";
                       res.send(JSON.stringify(MainObj));
                       connection.rollback(function(){
-                        return err;
                       })
                     }
                   }
                 })
+
+
               }else{
                 console.log("ERROR IN alllocdis IN RUNNING SQL0 0 ROWS RETURNED TO DATABASE FOR DOCID = "+DocId);
-                console.log("ERROR : "+err);
-                console.log("ERROR CODE : "+err.code);
                 MainObj.status = "CONNECTION ERROR";
                 res.send(JSON.stringify(MainObj));
                 connection.rollback(function(){
-                  return err;
                 })
               }
             }
           })
-          conn.release();
+          connection.release();
         }
       })
     }
@@ -5979,7 +6008,9 @@ app.post("/currentlocdis",function(req,res){
 
   // var sql = "UPDATE doctor_location_time_master AS dltm INNER JOIN doctor_location_day_master AS dldm ON dldm.dldm_id = dltm.dltm_dldm_id INNER JOIN doctor_location_master AS  ON dlm.dlm_id = dldm.dldm_dlm_id   SET dlm.dlm_currentloc_discount_flag = "Y",dltm.dltm_discount_offer_flag = "Y" WHERE dlm.dlm_lm_location_id = "LOC10172"";
 
-  var sql = "";
+  var sql0 = "UPDATE doctor_location_master SET dlm_currentloc_discount_flag WHERE dlm_lm_location_id = ?";
+  var sql1 = "UPDATE doctor_location_time_master AS dltm INNER JOIN doctor_location_day_master AS dldm ON dldm.dldm_id = dltm.dltm_dldm_id INNER JOIN doctor_location_master AS dlm ON dlm.dlm_id = dldm.dldm_dlm_id SET dltm.dltm_discount_offer_flag = ? WHERE dlm.dlm_lm_location_id = ?";
+
   con.getConnection(function(err,connection){
     if(err){
       console.log("ERROR IN currentlocdis IN OPENING DATABASE TO DATABASE FOR LocId = "+LocId);
@@ -5989,27 +6020,77 @@ app.post("/currentlocdis",function(req,res){
       res.send(JSON.stringify(MainObj));
       return err;
     }else{
-      connection.query(sql,[Response,Response,LocId],function(err,row){
+
+      connection.beginTransaction(function(err){
         if(err){
-          console.log("ERROR IN currentlocdis IN RUNNING SQL TO DATABASE FOR LocId = "+LocId);
+          console.log("ERROR IN currentlocdis IN BEGINING TRANSACTION TO DATABASE FOR LocId = "+LocId);
           console.log("ERROR : "+err);
           console.log("ERROR CODE : "+err.code);
           MainObj.status = "CONNECTION ERROR";
           res.send(JSON.stringify(MainObj));
           return err;
         }else{
-          if(row.affectedRows == 1){
+          connection.query(sql0,[Response,LocId],function(err,row){
+            if(err){
+              console.log("ERROR IN currentlocdis IN RUNNING SQL0 TO DATABASE FOR LocId = "+LocId);
+              console.log("ERROR : "+err);
+              console.log("ERROR CODE : "+err.code);
+              MainObj.status = "CONNECTION ERROR";
+              res.send(JSON.stringify(MainObj));
+              connection.rollback(function(){
+                return err;
+              })
+            }else{
+              if(row.affectedRows > 0){
 
-          }else{
-            console.log("ERROR IN currentlocdis IN SQL 0 ROWS RETURNED TO DATABASE FOR LocId = "+LocId);
-            console.log("ERROR : "+err);
-            console.log("ERROR CODE : "+err.code);
-            MainObj.status = "CONNECTION ERROR";
-            res.send(JSON.stringify(MainObj));
-            return err;
-          }
+                connection.query(sql1,[Response,LocId],function(err,row1){
+                  if(err){
+                    console.log("ERROR IN currentlocdis IN RUNNING SQL1 TO DATABASE FOR LocId = "+LocId);
+                    console.log("ERROR : "+err);
+                    console.log("ERROR CODE : "+err.code);
+                    MainObj.status = "CONNECTION ERROR";
+                    res.send(JSON.stringify(MainObj));
+                    connection.rollback(function(){
+                      return err;
+                    })
+                  }else{
+                    if(row1.affectedRows >0){
+                      connection.commit(function(err){
+                        if(err){
+                          console.log("ERROR IN currentlocdis IN COMMITNG TO DATABASE FOR LocId = "+LocId);
+                          console.log("ERROR : "+err);
+                          console.log("ERROR CODE : "+err.code);
+                          MainObj.status = "CONNECTION ERROR";
+                          res.send(JSON.stringify(MainObj));
+                          connection.rollback(function(){
+                            return err;
+                          })
+                        }else{
+                          MainObj.status = "SUCCESS";
+                          res.send(JSON.stringify(MainObj));
+                        }
+                      })
+                    }else{
+                      console.log("ERROR IN currentlocdis IN SQL1 0 ROWS RETURNED TO DATABASE FOR LocId = "+LocId);
+                      MainObj.status = "CONNECTION ERROR";
+                      res.send(JSON.stringify(MainObj));
+                      return err;
+                    }
+                  }
+                })
+
+              }else{
+                console.log("ERROR IN currentlocdis IN SQL0 0 ROWS RETURNED TO DATABASE FOR LocId = "+LocId);
+                MainObj.status = "CONNECTION ERROR";
+                res.send(JSON.stringify(MainObj));
+                return err;
+              }
+            }
+          })
         }
       })
+
+
       connection.release();
     }
   })
