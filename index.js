@@ -1214,7 +1214,7 @@ app.post("/timeinsert",function(req,res){
            csv.write(Mydata, {headers: true}).pipe(ws);
 
            var sql1 = "INSERT INTO doctor_location_day_master (dldm_id, dldm_day_number, dldm_dlm_id) VALUES ((?),(?),(?))";
-           var sql2 = "INSERT INTO doctor_location_time_master (dltm_dldm_dlm_id, dltm_time_from, dltm_time_to, dltm_discount_offer_flag) VALUES ((?),(?),(?),(?))";
+           var sql2 = "INSERT INTO doctor_location_time_master (dltm_dldm_id, dltm_time_from, dltm_time_to, dltm_discount_offer_flag) VALUES ((?),(?),(?),(?))";
 
            console.log("3");
            con.getConnection(function(err,connection){
@@ -1887,7 +1887,7 @@ function insertmonday(connection,res,req,Dldmid,valuedldm){
   }
 
   var sql1 = "INSERT INTO doctor_location_day_master (dldm_id, dldm_day_number, dldm_dlm_id) VALUES ((?),(?),(?))";
-  var sql2 = "INSERT INTO doctor_location_time_master (dltm_dldm_dlm_id, dltm_time_from, dltm_time_to, dltm_discount_offer_flag) VALUES ((?),(?),(?),(?))";
+  var sql2 = "INSERT INTO doctor_location_time_master (dltm_dldm_id, dltm_time_from, dltm_time_to, dltm_discount_offer_flag) VALUES ((?),(?),(?),(?))";
 
   for(var moni=0;moni<MON.length;moni++){
 
@@ -2156,7 +2156,7 @@ function inserttuesday(connection,res,req,Dldmid,valuedldm){
   }
 
   var sql1 = "INSERT INTO doctor_location_day_master (dldm_id, dldm_day_number, dldm_dlm_id) VALUES ((?),(?),(?))";
-  var sql2 = "INSERT INTO doctor_location_time_master (dltm_dldm_dlm_id, dltm_time_from, dltm_time_to, dltm_discount_offer_flag) VALUES ((?),(?),(?),(?))";
+  var sql2 = "INSERT INTO doctor_location_time_master (dltm_dldm_id, dltm_time_from, dltm_time_to, dltm_discount_offer_flag) VALUES ((?),(?),(?),(?))";
 
 
   for(var tuei=0;tuei<TUE.length;tuei++){
@@ -2392,7 +2392,7 @@ function insertwednesday(connection,res,req,Dldmid,valuedldm){
   }
 
   var sql1 = "INSERT INTO doctor_location_day_master (dldm_id, dldm_day_number, dldm_dlm_id) VALUES ((?),(?),(?))";
-  var sql2 = "INSERT INTO doctor_location_time_master (dltm_dldm_dlm_id, dltm_time_from, dltm_time_to, dltm_discount_offer_flag) VALUES ((?),(?),(?),(?))";
+  var sql2 = "INSERT INTO doctor_location_time_master (dltm_dldm_id, dltm_time_from, dltm_time_to, dltm_discount_offer_flag) VALUES ((?),(?),(?),(?))";
 
 
   for(var wedi=0;wedi<WED.length;wedi++){
@@ -2601,7 +2601,7 @@ function insertthursday(connection,res,req,Dldmid,valuedldm){
   }
 
   var sql1 = "INSERT INTO doctor_location_day_master (dldm_id, dldm_day_number, dldm_dlm_id) VALUES ((?),(?),(?))";
-  var sql2 = "INSERT INTO doctor_location_time_master (dltm_dldm_dlm_id, dltm_time_from, dltm_time_to, dltm_discount_offer_flag) VALUES ((?),(?),(?),(?))";
+  var sql2 = "INSERT INTO doctor_location_time_master (dltm_dldm_id, dltm_time_from, dltm_time_to, dltm_discount_offer_flag) VALUES ((?),(?),(?),(?))";
 
   for(var thui=0;thui<THU.length;thui++){
 
@@ -2783,7 +2783,7 @@ function insertfriday(connection,res,req,Dldmid,valuedldm){
   }
 
   var sql1 = "INSERT INTO doctor_location_day_master (dldm_id, dldm_day_number, dldm_dlm_id) VALUES ((?),(?),(?))";
-  var sql2 = "INSERT INTO doctor_location_time_master (dltm_dldm_dlm_id, dltm_time_from, dltm_time_to, dltm_discount_offer_flag) VALUES ((?),(?),(?),(?))";
+  var sql2 = "INSERT INTO doctor_location_time_master (dltm_dldm_id, dltm_time_from, dltm_time_to, dltm_discount_offer_flag) VALUES ((?),(?),(?),(?))";
 
   for(var frii=0;frii<FRI.length;frii++){
 
@@ -2939,7 +2939,7 @@ function insertsaturday(connection,res,req,Dldmid,valuedldm){
   }
 
   var sql1 = "INSERT INTO doctor_location_day_master (dldm_id, dldm_day_number, dldm_dlm_id) VALUES ((?),(?),(?))";
-  var sql2 = "INSERT INTO doctor_location_time_master (dltm_dldm_dlm_id, dltm_time_from, dltm_time_to, dltm_discount_offer_flag) VALUES ((?),(?),(?),(?))";
+  var sql2 = "INSERT INTO doctor_location_time_master (dltm_dldm_id, dltm_time_from, dltm_time_to, dltm_discount_offer_flag) VALUES ((?),(?),(?),(?))";
 
 
   for(var sati=0;sati<SAT.length;sati++){
@@ -3068,7 +3068,7 @@ function insertsunday(connection,res,req,Dldmid,valuedldm){
   }
 
   var sql1 = "INSERT INTO doctor_location_day_master (dldm_id, dldm_day_number, dldm_dlm_id) VALUES ((?),(?),(?))";
-  var sql2 = "INSERT INTO doctor_location_time_master (dltm_dldm_dlm_id, dltm_time_from, dltm_time_to, dltm_discount_offer_flag) VALUES ((?),(?),(?),(?))";
+  var sql2 = "INSERT INTO doctor_location_time_master (dltm_dldm_id, dltm_time_from, dltm_time_to, dltm_discount_offer_flag) VALUES ((?),(?),(?),(?))";
 
 
   for(var suni=0;suni<SUN.length;suni++){
@@ -3168,7 +3168,7 @@ app.post("/timeinformation",function(req,res){
 
   var sql1 = "SELECT dlm_id, dlm_lm_location_id FROM doctor_location_master WHERE dlm_dm_doctor_id = ?"
 
-  var sql2 = 'SELECT DLDM.dldm_dlm_id, DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLTM.dltm_dldm_dlm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_id = DLTM.dltm_dldm_dlm_id WHERE DLDM.dldm_dlm_id = ?';
+  var sql2 = 'SELECT DLDM.dldm_dlm_id, DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLTM.dltm_dldm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_id = DLTM.dltm_dldm_id WHERE DLDM.dldm_dlm_id = ?';
 
   con.getConnection(function(err,connection){
     if(err){
@@ -3251,32 +3251,32 @@ app.post("/timeinformation",function(req,res){
                       }
 
                       if(resultt[j].dldm_day_number == "MON"){
-                        console.log("in monday id "+resultt[j].dltm_dldm_dlm_id);
-                        INFO.mondayid = resultt[j].dltm_dldm_dlm_id;
+                        console.log("in monday id "+resultt[j].dltm_dldm_id);
+                        INFO.mondayid = resultt[j].dltm_dldm_id;
                         INFO.monday.push(TIMEOBJ);
                       }else if(resultt[j].dldm_day_number == "TUE"){
-                        console.log("in tue id "+resultt[j].dltm_dldm_dlm_id);
-                        INFO.tuesdayid = resultt[j].dltm_dldm_dlm_id;
+                        console.log("in tue id "+resultt[j].dltm_dldm_id);
+                        INFO.tuesdayid = resultt[j].dltm_dldm_id;
                         INFO.tuesday.push(TIMEOBJ);
                       }else if(resultt[j].dldm_day_number == "WED"){
-                        console.log("in wed id "+resultt[j].dltm_dldm_dlm_id);
-                        INFO.wednesdayid = resultt[j].dltm_dldm_dlm_id;
+                        console.log("in wed id "+resultt[j].dltm_dldm_id);
+                        INFO.wednesdayid = resultt[j].dltm_dldm_id;
                         INFO.wednesday.push(TIMEOBJ);
                       }else if(resultt[j].dldm_day_number == "THU"){
-                        console.log("in thu id "+resultt[j].dltm_dldm_dlm_id);
-                        INFO.thursdayid = resultt[j].dltm_dldm_dlm_id;
+                        console.log("in thu id "+resultt[j].dltm_dldm_id);
+                        INFO.thursdayid = resultt[j].dltm_dldm_id;
                         INFO.thursday.push(TIMEOBJ);
                       }else if(resultt[j].dldm_day_number == "FRI"){
-                        console.log("in fri id "+resultt[j].dltm_dldm_dlm_id);
-                        INFO.fridayid = resultt[j].dltm_dldm_dlm_id;
+                        console.log("in fri id "+resultt[j].dltm_dldm_id);
+                        INFO.fridayid = resultt[j].dltm_dldm_id;
                         INFO.friday.push(TIMEOBJ);
                       }else if(resultt[j].dldm_day_number == "SAT"){
-                        console.log("in sat id "+resultt[j].dltm_dldm_dlm_id);
-                        INFO.saturdayid = resultt[j].dltm_dldm_dlm_id;
+                        console.log("in sat id "+resultt[j].dltm_dldm_id);
+                        INFO.saturdayid = resultt[j].dltm_dldm_id;
                         INFO.saturday.push(TIMEOBJ);
                       }else if(resultt[j].dldm_day_number == "SUN"){
-                        console.log("in sun id "+resultt[j].dltm_dldm_dlm_id);
-                        INFO.sundayid = resultt[j].dltm_dldm_dlm_id;
+                        console.log("in sun id "+resultt[j].dltm_dldm_id);
+                        INFO.sundayid = resultt[j].dltm_dldm_id;
                         INFO.sunday.push(TIMEOBJ);
                       }
                       INFO.dlmid = resultt[j].dldm_dlm_id;
@@ -3335,7 +3335,7 @@ app.post("/timeinformationls",function(req,res){
     sunday:[]
   }
 
-  var sql1 = 'SELECT DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLTM.dltm_dldm_dlm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_id = DLTM.dltm_dldm_dlm_id WHERE DLDM.dldm_dlm_id = ?';
+  var sql1 = 'SELECT DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLTM.dltm_dldm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_id = DLTM.dltm_dldm_id WHERE DLDM.dldm_dlm_id = ?';
 
   con.getConnection(function(err,connection){
     if(err){
@@ -3377,25 +3377,25 @@ app.post("/timeinformationls",function(req,res){
               }
 
               if(result[i].dldm_day_number == "MON"){
-                MainObj.mondayid = result[i].dltm_dldm_dlm_id;
+                MainObj.mondayid = result[i].dltm_dldm_id;
                 MainObj.monday.push(TIMEOBJ);
               }else if(result[i].dldm_day_number == "TUE"){
-                MainObj.tuesdayid = result[i].dltm_dldm_dlm_id;
+                MainObj.tuesdayid = result[i].dltm_dldm_id;
                 MainObj.tuesday.push(TIMEOBJ);
               }else if(result[i].dldm_day_number == "WED"){
-                MainObj.wednesdayid = result[i].dltm_dldm_dlm_id;
+                MainObj.wednesdayid = result[i].dltm_dldm_id;
                 MainObj.wednesday.push(TIMEOBJ);
               }else if(result[i].dldm_day_number == "THU"){
-                MainObj.thursdayid = result[i].dltm_dldm_dlm_id;
+                MainObj.thursdayid = result[i].dltm_dldm_id;
                 MainObj.thursday.push(TIMEOBJ);
               }else if(result[i].dldm_day_number == "FRI"){
-                MainObj.fridayid = result[i].dltm_dldm_dlm_id;
+                MainObj.fridayid = result[i].dltm_dldm_id;
                 MainObj.friday.push(TIMEOBJ);
               }else if(result[i].dldm_day_number == "SAT"){
-                MainObj.saturdayid = result[i].dltm_dldm_dlm_id;
+                MainObj.saturdayid = result[i].dltm_dldm_id;
                 MainObj.saturday.push(TIMEOBJ);
               }else if(result[i].dldm_day_number == "SUN"){
-                MainObj.sundayid = result[i].dltm_dldm_dlm_id;
+                MainObj.sundayid = result[i].dltm_dldm_id;
                 MainObj.sunday.push(TIMEOBJ);
               }
               count++;
@@ -3930,7 +3930,7 @@ app.post("/managediscount",function(req,res){
   }
 
 
-  var sql2 = 'SELECT DLDM.dldm_dlm_id, DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLTM.dltm_dldm_dlm_id, DLTM.dltm_id, DLTM.dltm_discount_offer_flag FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_id = DLTM.dltm_dldm_dlm_id WHERE DLDM.dldm_dlm_id = ?';
+  var sql2 = 'SELECT DLDM.dldm_dlm_id, DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLTM.dltm_dldm_id, DLTM.dltm_id, DLTM.dltm_discount_offer_flag FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_id = DLTM.dltm_dldm_id WHERE DLDM.dldm_dlm_id = ?';
 
   con.getConnection(function(err,connection){
     if(err){
@@ -3988,32 +3988,32 @@ app.post("/managediscount",function(req,res){
                 }
 
                 if(resultt[j].dldm_day_number == "MON"){
-                  console.log("in monday id "+resultt[j].dltm_dldm_dlm_id);
-                  MainObj.mondayid = resultt[j].dltm_dldm_dlm_id;
+                  console.log("in monday id "+resultt[j].dltm_dldm_id);
+                  MainObj.mondayid = resultt[j].dltm_dldm_id;
                   MainObj.monday.push(TIMEOBJ);
                 }else if(resultt[j].dldm_day_number == "TUE"){
-                  console.log("in tue id "+resultt[j].dltm_dldm_dlm_id);
-                  MainObj.tuesdayid = resultt[j].dltm_dldm_dlm_id;
+                  console.log("in tue id "+resultt[j].dltm_dldm_id);
+                  MainObj.tuesdayid = resultt[j].dltm_dldm_id;
                   MainObj.tuesday.push(TIMEOBJ);
                 }else if(resultt[j].dldm_day_number == "WED"){
-                  console.log("in wed id "+resultt[j].dltm_dldm_dlm_id);
-                  MainObj.wednesdayid = resultt[j].dltm_dldm_dlm_id;
+                  console.log("in wed id "+resultt[j].dltm_dldm_id);
+                  MainObj.wednesdayid = resultt[j].dltm_dldm_id;
                   MainObj.wednesday.push(TIMEOBJ);
                 }else if(resultt[j].dldm_day_number == "THU"){
-                  console.log("in thu id "+resultt[j].dltm_dldm_dlm_id);
-                  MainObj.thursdayid = resultt[j].dltm_dldm_dlm_id;
+                  console.log("in thu id "+resultt[j].dltm_dldm_id);
+                  MainObj.thursdayid = resultt[j].dltm_dldm_id;
                   MainObj.thursday.push(TIMEOBJ);
                 }else if(resultt[j].dldm_day_number == "FRI"){
-                  console.log("in fri id "+resultt[j].dltm_dldm_dlm_id);
-                  MainObj.fridayid = resultt[j].dltm_dldm_dlm_id;
+                  console.log("in fri id "+resultt[j].dltm_dldm_id);
+                  MainObj.fridayid = resultt[j].dltm_dldm_id;
                   MainObj.friday.push(TIMEOBJ);
                 }else if(resultt[j].dldm_day_number == "SAT"){
-                  console.log("in sat id "+resultt[j].dltm_dldm_dlm_id);
-                  MainObj.saturdayid = resultt[j].dltm_dldm_dlm_id;
+                  console.log("in sat id "+resultt[j].dltm_dldm_id);
+                  MainObj.saturdayid = resultt[j].dltm_dldm_id;
                   MainObj.saturday.push(TIMEOBJ);
                 }else if(resultt[j].dldm_day_number == "SUN"){
-                  console.log("in sun id "+resultt[j].dltm_dldm_dlm_id);
-                  MainObj.sundayid = resultt[j].dltm_dldm_dlm_id;
+                  console.log("in sun id "+resultt[j].dltm_dldm_id);
+                  MainObj.sundayid = resultt[j].dltm_dldm_id;
                   MainObj.sunday.push(TIMEOBJ);
                 }
               }
@@ -4116,7 +4116,7 @@ app.post("/oneviewinfo",function(req,res){
 
 
 
-  var sql1 = 'SELECT DLDM.dldm_dlm_id, DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to, DLTM.dltm_discount_offer_flag FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_id = DLTM.dltm_dldm_dlm_id WHERE DLDM.dldm_dlm_id = ?';
+  var sql1 = 'SELECT DLDM.dldm_dlm_id, DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to, DLTM.dltm_discount_offer_flag FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_id = DLTM.dltm_dldm_id WHERE DLDM.dldm_dlm_id = ?';
   var sql2 = 'SELECT SM.sm_service_name, DCSM.dcsm_normal_amount, DCSM.dcsm_discounted_amount, DCSM.dcsm_discount_flag FROM service_master AS SM INNER JOIN doctor_clinic_services_master AS DCSM ON SM.sm_service_id = DCSM.dcsm_sm_service_id WHERE DCSM.dcsm_dlm_id = ?';
 
   con.getConnection(function(err,connection){
@@ -4274,7 +4274,7 @@ app.post("/alllocdis",function(req,res){
 
   var sql0 = 'UPDATE doctor_master SET dm_overall_discount = ? WHERE dm_doctor_id = ?';
   var sql1 = "UPDATE doctor_location_master SET dlm_currentloc_discount_flag = ? WHERE dlm_dm_doctor_id = ?";
-  var sql2 = "UPDATE doctor_location_time_master,doctor_location_master,doctor_location_day_master INNER JOIN doctor_location_master ON doctor_location_day_master.dldm_dlm_id = doctor_location_master.dlm_id INNER JOIN doctor_location_day_master.dldm_id = doctor_location_time_master.dltm_dldm_dlm_id SET doctor_location_time_master.dltm_discount_offer_flag = ?, doctor_location_master.dlm_currentloc_discount_flag = ? WHERE doctor_location_master.dlm_dm_doctor_id = ?";
+  var sql2 = "UPDATE doctor_location_time_master,doctor_location_master,doctor_location_day_master INNER JOIN doctor_location_master ON doctor_location_day_master.dldm_dlm_id = doctor_location_master.dlm_id INNER JOIN doctor_location_day_master.dldm_id = doctor_location_time_master.dltm_dldm_id SET doctor_location_time_master.dltm_discount_offer_flag = ?, doctor_location_master.dlm_currentloc_discount_flag = ? WHERE doctor_location_master.dlm_dm_doctor_id = ?";
 
   con.getConnection(function(err,connection){
     if(err){
@@ -4372,9 +4372,9 @@ app.post("/currentlocdis",function(req,res){
     status : "SUCCESS"
   }
 
-  // var sql = "UPDATE doctor_location_time_master AS dltm,doctor_location_master AS dlm INNER JOIN doctor_location_master ON dlm.dlm_id = dldm.dldm_dlm_id INNER JOIN doctor_location_day_master AS dldm ON dldm.dldm_id = dltm.dltm_dldm_dlm_id  SET dlm.dlm_currentloc_discount_flag = "Y",dltm.dltm_discount_offer_flag = "Y" WHERE dlm.dlm_lm_location_id = "LOC10172"";
+  // var sql = "UPDATE doctor_location_time_master AS dltm,doctor_location_master AS dlm INNER JOIN doctor_location_master ON dlm.dlm_id = dldm.dldm_dlm_id INNER JOIN doctor_location_day_master AS dldm ON dldm.dldm_id = dltm.dltm_dldm_id  SET dlm.dlm_currentloc_discount_flag = "Y",dltm.dltm_discount_offer_flag = "Y" WHERE dlm.dlm_lm_location_id = "LOC10172"";
 
-  // var sql = "UPDATE doctor_location_time_master AS dltm INNER JOIN doctor_location_day_master AS dldm ON dldm.dldm_id = dltm.dltm_dldm_dlm_id INNER JOIN doctor_location_master AS dlm ON dlm.dlm_id = dldm.dldm_dlm_id   SET dlm.dlm_currentloc_discount_flag = "Y",dltm.dltm_discount_offer_flag = "Y" WHERE dlm.dlm_lm_location_id = "LOC10172"";
+  var sql = "UPDATE doctor_location_time_master AS dltm INNER JOIN doctor_location_day_master AS dldm ON dldm.dldm_id = dltm.dltm_dldm_id INNER JOIN doctor_location_master AS  ON dlm.dlm_id = dldm.dldm_dlm_id   SET dlm.dlm_currentloc_discount_flag = "Y",dltm.dltm_discount_offer_flag = "Y" WHERE dlm.dlm_lm_location_id = "LOC10172"";
 
   con.getConnection(function(err,connection){
     if(err){
@@ -4670,8 +4670,8 @@ app.post("/fettimings2",function(req,res){
   var used = [];
 
 
-    var sql2 = 'SELECT DLDM.dldm_dlm_id, DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLTM.dltm_dldm_dlm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_id = DLTM.dltm_dldm_dlm_id WHERE DLDM.dldm_dlm_id = ?';
-    var sql1 = 'SELECT DLDM.dldm_day_number, DLTM.dltm_dldm_dlm_id, DLTM.dltm_id, DLTM.dltm_time_from, DLTM.dltm_time_to FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_id = DLTM.dltm_dldm_dlm_id WHERE (DLTM.dltm_time_from = ? AND DLTM.dltm_time_to = ?) AND DLDM.dldm_dlm_id = ?';
+    var sql2 = 'SELECT DLDM.dldm_dlm_id, DLDM.dldm_day_number, DLTM.dltm_time_from, DLTM.dltm_time_to , DLTM.dltm_dldm_id, DLTM.dltm_id FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_id = DLTM.dltm_dldm_id WHERE DLDM.dldm_dlm_id = ?';
+    var sql1 = 'SELECT DLDM.dldm_day_number, DLTM.dltm_dldm_id, DLTM.dltm_id, DLTM.dltm_time_from, DLTM.dltm_time_to FROM doctor_location_day_master AS DLDM INNER JOIN doctor_location_time_master AS DLTM ON DLDM.dldm_id = DLTM.dltm_dldm_id WHERE (DLTM.dltm_time_from = ? AND DLTM.dltm_time_to = ?) AND DLDM.dldm_dlm_id = ?';
 
     con.getConnection(function(err,connection){
       if(err){
@@ -4902,7 +4902,7 @@ app.post("/iftimeexist",function(req,res){
 
   var sql0 = "SELECT dlm_id FROM doctor_location_master WHERE dlm_lm_location_id = ?";
   var sql = "SELECT dldm_id FROM doctor_location_day_master WHERE dldm_dlm_id = ?";
-  var sql2 = "SELECT dltm_time_from FROM doctor_location_time_master WHERE dltm_dldm_dlm_id = ?";
+  var sql2 = "SELECT dltm_time_from FROM doctor_location_time_master WHERE dltm_dldm_id = ?";
 
   con.getConnection(function(err,connection){
     if(err){
