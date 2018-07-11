@@ -1193,17 +1193,27 @@ app.post("/timeinsert",function(req,res){
 
   var method = 0;//0 for insert and 1 for select
 
-  var sql0 = "SELECT dldm_dlm_id FROM doctor_location_day_master";
+  var sql0 = "SELECT dldm_dlm_id FROM doctor_location_day_master ";
 
   con.getConnection(function(err,connection2){
     if(err){
-
+      console.log("ERROR IN RUNNING SQL1 FOR DLDMID = "+DlmId+" AND DLDMID ="+Dldmid);
+      console.log("ERROR : "+err);
+      console.log("ERROR CODE : "+err.code);
+      MainObj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(MainObj));
+      return err;
     }else{
       connection2.query(sql0,function(err,row0){
         if(err){
-
+          console.log("ERROR IN RUNNING SQL1 FOR DLDMID = "+DlmId+" AND DLDMID ="+Dldmid);
+          console.log("ERROR : "+err);
+          console.log("ERROR CODE : "+err.code);
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+          return err;
         }else{
-          if(row0 > 0){
+          if(row0.length > 0){
             method = 1;
           }else{
             method = 0;
