@@ -5962,28 +5962,28 @@ app.post("/alllocdis",function(req,res){
                           })
           //
           // connection.query(sql0,[Response,DocId],function(err,result){
-            if(err){
-              console.log("ERROR IN alllocdis IN RUNNING SQL0 TO DATABASE FOR DOCID = "+DocId);
-              console.log("ERROR : "+err);
-              console.log("ERROR CODE : "+err.code);
-              MainObj.status = "CONNECTION ERROR";
-              res.send(JSON.stringify(MainObj));
-              connection.rollback(function(){
-                return err;
-              })
-            }else{
-              if (result.affectedRows > 0) {
-
-
-              }else{
-                console.log("ERROR IN alllocdis IN RUNNING SQL0 0 ROWS RETURNED TO DATABASE FOR DOCID = "+DocId);
-                MainObj.status = "CONNECTION ERROR";
-                res.send(JSON.stringify(MainObj));
-                connection.rollback(function(){
-                })
-              }
-            }
-          })
+          //   if(err){
+          //     console.log("ERROR IN alllocdis IN RUNNING SQL0 TO DATABASE FOR DOCID = "+DocId);
+          //     console.log("ERROR : "+err);
+          //     console.log("ERROR CODE : "+err.code);
+          //     MainObj.status = "CONNECTION ERROR";
+          //     res.send(JSON.stringify(MainObj));
+          //     connection.rollback(function(){
+          //       return err;
+          //     })
+          //   }else{
+          //     if (result.affectedRows > 0) {
+          //
+          //
+          //     }else{
+          //       console.log("ERROR IN alllocdis IN RUNNING SQL0 0 ROWS RETURNED TO DATABASE FOR DOCID = "+DocId);
+          //       MainObj.status = "CONNECTION ERROR";
+          //       res.send(JSON.stringify(MainObj));
+          //       connection.rollback(function(){
+          //       })
+          //     }
+          //   }
+          // })
           connection.release();
         }
       })
