@@ -5898,7 +5898,70 @@ app.post("/alllocdis",function(req,res){
           res.send(JSON.stringify(MainObj));
           return err;
         }else{
-          connection.query(sql0,[Response,DocId],function(err,result){
+
+                          connection.query(sql1,[Response,DocId],function(err,result1){
+                            if(err){
+                              console.log("ERROR IN alllocdis IN RUNNING SQL1 TO DATABASE FOR DOCID = "+DocId);
+                              console.log("ERROR : "+err);
+                              console.log("ERROR CODE : "+err.code);
+                              MainObj.status = "CONNECTION ERROR";
+                              res.send(JSON.stringify(MainObj));
+                              connection.rollback(function(){
+                                return err;
+                              })
+                            }else{
+                              if(result1.affectedRows > 0){
+
+                                connection.query(sql2,[Response,DocId],function(err,result2){
+                                  if(err){
+                                    console.log("ERROR IN alllocdis IN RUNNING SQL2 TO DATABASE FOR DOCID = "+DocId);
+                                    console.log("ERROR : "+err);
+                                    console.log("ERROR CODE : "+err.code);
+                                    MainObj.status = "CONNECTION ERROR";
+                                    res.send(JSON.stringify(MainObj));
+                                    connection.rollback(function(){
+                                      return err;
+                                    })
+                                  }else{
+                                    if(result2.affectedRows > 0){
+
+                                      connection.commit(function(err){
+                                        if(err){
+                                          console.log("ERROR IN alllocdis IN COMMITING TO DATABASE FOR DOCID = "+DocId);
+                                          console.log("ERROR : "+err);
+                                          console.log("ERROR CODE : "+err.code);
+                                          MainObj.status = "CONNECTION ERROR";
+                                          res.send(JSON.stringify(MainObj));
+                                          connection.rollback(function(){
+                                            return err;
+                                          })
+                                        }else{
+                                          MainObj.status = "SUCCESS";
+                                          res.send(JSON.stringify(MainObj));
+                                        }
+                                      })
+
+                                    }else{
+                                      console.log("ERROR IN alllocdis IN RUNNING SQL2 0 ROWS RETURNED TO DATABASE FOR DOCID = "+DocId);
+                                      MainObj.status = "CONNECTION ERROR";
+                                      res.send(JSON.stringify(MainObj));
+                                      connection.rollback(function(){
+                                      })
+                                    }
+                                  }
+                                })
+
+                              }else{
+                                console.log("ERROR IN alllocdis IN RUNNING SQL1 0 ROWS RETURNED TO DATABASE FOR DOCID = "+DocId);
+                                MainObj.status = "CONNECTION ERROR";
+                                res.send(JSON.stringify(MainObj));
+                                connection.rollback(function(){
+                                })
+                              }
+                            }
+                          })
+          // 
+          // connection.query(sql0,[Response,DocId],function(err,result){
             if(err){
               console.log("ERROR IN alllocdis IN RUNNING SQL0 TO DATABASE FOR DOCID = "+DocId);
               console.log("ERROR : "+err);
@@ -5910,68 +5973,6 @@ app.post("/alllocdis",function(req,res){
               })
             }else{
               if (result.affectedRows > 0) {
-
-                connection.query(sql1,[Response,DocId],function(err,result1){
-                  if(err){
-                    console.log("ERROR IN alllocdis IN RUNNING SQL1 TO DATABASE FOR DOCID = "+DocId);
-                    console.log("ERROR : "+err);
-                    console.log("ERROR CODE : "+err.code);
-                    MainObj.status = "CONNECTION ERROR";
-                    res.send(JSON.stringify(MainObj));
-                    connection.rollback(function(){
-                      return err;
-                    })
-                  }else{
-                    if(result1.affectedRows > 0){
-
-                      connection.query(sql2,[Response,DocId],function(err,result2){
-                        if(err){
-                          console.log("ERROR IN alllocdis IN RUNNING SQL2 TO DATABASE FOR DOCID = "+DocId);
-                          console.log("ERROR : "+err);
-                          console.log("ERROR CODE : "+err.code);
-                          MainObj.status = "CONNECTION ERROR";
-                          res.send(JSON.stringify(MainObj));
-                          connection.rollback(function(){
-                            return err;
-                          })
-                        }else{
-                          if(result2.affectedRows > 0){
-
-                            connection.commit(function(err){
-                              if(err){
-                                console.log("ERROR IN alllocdis IN COMMITING TO DATABASE FOR DOCID = "+DocId);
-                                console.log("ERROR : "+err);
-                                console.log("ERROR CODE : "+err.code);
-                                MainObj.status = "CONNECTION ERROR";
-                                res.send(JSON.stringify(MainObj));
-                                connection.rollback(function(){
-                                  return err;
-                                })
-                              }else{
-                                MainObj.status = "SUCCESS";
-                                res.send(JSON.stringify(MainObj));
-                              }
-                            })
-
-                          }else{
-                            console.log("ERROR IN alllocdis IN RUNNING SQL2 0 ROWS RETURNED TO DATABASE FOR DOCID = "+DocId);
-                            MainObj.status = "CONNECTION ERROR";
-                            res.send(JSON.stringify(MainObj));
-                            connection.rollback(function(){
-                            })
-                          }
-                        }
-                      })
-
-                    }else{
-                      console.log("ERROR IN alllocdis IN RUNNING SQL1 0 ROWS RETURNED TO DATABASE FOR DOCID = "+DocId);
-                      MainObj.status = "CONNECTION ERROR";
-                      res.send(JSON.stringify(MainObj));
-                      connection.rollback(function(){
-                      })
-                    }
-                  }
-                })
 
 
               }else{
