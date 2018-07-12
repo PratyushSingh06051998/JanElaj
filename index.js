@@ -5877,7 +5877,7 @@ app.post("/alllocdis",function(req,res){
 
   var sql0 = 'UPDATE doctor_master SET dm_overall_discount = ? WHERE dm_doctor_id = ?';
   var sql1 = "UPDATE doctor_location_master SET dlm_currentloc_discount_flag = ? WHERE dlm_dm_doctor_id = ?";
-  var sql2 = "UPDATE doctor_location_time_master AS dltm INNER JOIN doctor_location_day_master AS dldm ON dltm.dltm_dldm_id = dldm.dldm_id INNER JOIN doctor_location_master AS dlm ON dldm.dldm_dlm_id = dlm.dlm_id SET dltm.dltm_discount_offer_flag = "Y" WHERE dlm.dlm_dm_doctor_id = ?";
+  var sql2 = "UPDATE doctor_location_time_master AS dltm INNER JOIN doctor_location_day_master AS dldm ON dltm.dltm_dldm_id = dldm.dldm_id INNER JOIN doctor_location_master AS dlm ON dldm.dldm_dlm_id = dlm.dlm_id SET dltm.dltm_discount_offer_flag = ? WHERE dlm.dlm_dm_doctor_id = ?";
 
   con.getConnection(function(err,connection){
     if(err){
@@ -5960,7 +5960,7 @@ app.post("/alllocdis",function(req,res){
                               }
                             }
                           })
-          // 
+          //
           // connection.query(sql0,[Response,DocId],function(err,result){
             if(err){
               console.log("ERROR IN alllocdis IN RUNNING SQL0 TO DATABASE FOR DOCID = "+DocId);
