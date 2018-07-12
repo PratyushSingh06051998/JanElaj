@@ -6228,13 +6228,18 @@ app.post("/updateproffesion",function(req,res){
   var VoterIdNumber = "";
   var PassportNumber = "";
 
+  var sql0 = "";
+
   if(Verification == 1){
+    sql0 = "SELECT COUNT(dm_doctor_id) AS cnt FROM doctor_master WHERE dm_aadhar_number = ?";
     AdhaarFlag = "Y";
     AdhaarNumber = Object.number;
   }else if(Verification == 2){
+    sql0 = "SELECT COUNT(dm_doctor_id) AS cnt FROM doctor_master WHERE dm_voter_id_number = ?";
     VoterIdFlag = "Y";
     VoterIdNumber = Object.number;
   }else{
+    sql0 = "SELECT COUNT(dm_doctor_id) AS cnt FROM doctor_master WHERE dm_passport_number = ?";
     PassportFlag = "Y";
     PassportNumber = Object.number;
   }
@@ -6268,22 +6273,15 @@ app.post("/updateproffesion",function(req,res){
           res.send(JSON.stringify(MainObj));
           return err;
         }else{
-          connection.query(sql,[Mbbs,Md,Ms,Diploma,AdhaarFlag,VoterIdFlag,PassportFlag,AdhaarNumber,VoterIdNumber,PassportNumber,DocId],function(err,result){
+          connection.query(sql0,[Object.number],function(err,row0){
             if(err){
-              console.log("ERROR IN updateproffesion IN RUNNING SQL TO DATABASE FOR DOCID = "+DocId);
-              console.log("ERROR : "+err);
-              console.log("ERROR CODE : "+err.code);
-              MainObj.status = "CONNECTION ERROR";
-              res.send(JSON.stringify(MainObj));
-              connection.rollback(function(){
-                return err;
-              })
-            }else{
-              if(result.affectedRows == 1){
 
-                connection.query(sql1,['Y',DocId],function(err,result){
+            }else{
+
+              if(row0[0].cnt == 0){
+                connection.query(sql,[Mbbs,Md,Ms,Diploma,AdhaarFlag,VoterIdFlag,PassportFlag,AdhaarNumber,VoterIdNumber,PassportNumber,DocId],function(err,result){
                   if(err){
-                    console.log("ERROR IN updateproffesion IN RUNNING SQL1 TO DATABASE FOR DOCID = "+DocId);
+                    console.log("ERROR IN updateproffesion IN RUNNING SQL TO DATABASE FOR DOCID = "+DocId);
                     console.log("ERROR : "+err);
                     console.log("ERROR CODE : "+err.code);
                     MainObj.status = "CONNECTION ERROR";
@@ -6293,9 +6291,10 @@ app.post("/updateproffesion",function(req,res){
                     })
                   }else{
                     if(result.affectedRows == 1){
-                      connection.commit(function(err){
+
+                      connection.query(sql1,['Y',DocId],function(err,result){
                         if(err){
-                          console.log("ERROR IN updateproffesion IN COMMITING SQL1 TO DATABASE FOR DOCID = "+DocId);
+                          console.log("ERROR IN updateproffesion IN RUNNING SQL1 TO DATABASE FOR DOCID = "+DocId);
                           console.log("ERROR : "+err);
                           console.log("ERROR CODE : "+err.code);
                           MainObj.status = "CONNECTION ERROR";
@@ -6304,8 +6303,30 @@ app.post("/updateproffesion",function(req,res){
                             return err;
                           })
                         }else{
-                          MainObj.status = "SUCCESS";
-                          res.send(JSON.stringify(MainObj));
+                          if(result.affectedRows == 1){
+                            connection.commit(function(err){
+                              if(err){
+                                console.log("ERROR IN updateproffesion IN COMMITING SQL1 TO DATABASE FOR DOCID = "+DocId);
+                                console.log("ERROR : "+err);
+                                console.log("ERROR CODE : "+err.code);
+                                MainObj.status = "CONNECTION ERROR";
+                                res.send(JSON.stringify(MainObj));
+                                connection.rollback(function(){
+                                  return err;
+                                })
+                              }else{
+                                MainObj.status = "SUCCESS";
+                                res.send(JSON.stringify(MainObj));
+                              }
+                            })
+
+                          }else{
+                            console.log("ERROR IN updateproffesion IN RUNING SQL TO DATABASE FOR DOCID = "+DocId);
+                            MainObj.status = "CONNECTION ERROR";
+                            res.send(JSON.stringify(MainObj));
+                            connection.rollback(function(){
+                            })
+                          }
                         }
                       })
 
@@ -6314,21 +6335,22 @@ app.post("/updateproffesion",function(req,res){
                       MainObj.status = "CONNECTION ERROR";
                       res.send(JSON.stringify(MainObj));
                       connection.rollback(function(){
+                        return err;
                       })
                     }
                   }
                 })
 
               }else{
-                console.log("ERROR IN updateproffesion IN RUNING SQL TO DATABASE FOR DOCID = "+DocId);
+                console.log("NUMBER ALREADY EXIST IN DATABSE DATABASE FOR DOCID = "+DocId);
                 MainObj.status = "CONNECTION ERROR";
                 res.send(JSON.stringify(MainObj));
-                connection.rollback(function(){
-                  return err;
-                })
               }
+
+
             }
           })
+
         }
       })
 
