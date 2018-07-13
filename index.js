@@ -6099,6 +6099,172 @@ app.post("/currentlocdis",function(req,res){
 
 })
 
+app.post("/fpnumberpresent",function(req,res){
+
+  var Object = req.body;
+
+  var phnum = Object.number;
+
+  var MainObj = {
+    status: "",
+    present : "",
+    docid : ""
+  }
+
+  var sql = "SELECT pld_partner_id FROM partner_login_details_master WHERE pld_mobile = ?";
+
+  con.getConnection(function(err){
+    if(err){
+      console.log("ERROR IN fpnumberpresent IN OPENING DATABASE TO DATABASE FOR number = "+phnum);
+      console.log("ERROR : "+err);
+      console.log("ERROR CODE : "+err.code);
+      MainObj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(MainObj));
+      return err;
+    }else{
+      connection.query(sql,[phnum],function(err,row){
+        if(err){
+          console.log("ERROR IN fpnumberpresent IN RUNNING SQL TO DATABASE FOR number = "+phnum);
+          console.log("ERROR : "+err);
+          console.log("ERROR CODE : "+err.code);
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+          return err;
+        }else{
+          if(row.length > 0 ){
+            MainObj.status = "SUCCESS";
+            MainObj.present = "Y";
+            MainObj.docid = row[0].pld_partner_id;
+            res.send(JSON.stringify(MainObj));
+          }else{
+            MainObj.status = "SUCCESS";
+            MainObj.present = "N";
+            res.send(JSON.stringify(MainObj));
+          }
+        }
+      })
+      connection.release();
+    }
+  })
+
+})
+
+app.post("/passwordupdate",function(req,res){
+
+  var Object = req.body;
+
+  var docid = Object.docid;
+  var pass = Object.pass;
+
+  var MainObj = {
+    status: "",
+  }
+
+  var sql = "UPDATE partner_login_details_master SET pld_password = ? WHERE pld_partner_id = ?";
+
+  con.getConnection(function(err){
+    if(err){
+      console.log("ERROR IN passwordupdate IN OPENING DATABASE TO DATABASE FOR docid = "+docid);
+      console.log("ERROR : "+err);
+      console.log("ERROR CODE : "+err.code);
+      MainObj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(MainObj));
+      return err;
+    }else{
+      connection.query(sql,[pass,docid],function(err,row){
+        if(err){
+          console.log("ERROR IN passwordupdate IN RUNNING SQL TO DATABASE FOR docid = "+docid);
+          console.log("ERROR : "+err);
+          console.log("ERROR CODE : "+err.code);
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+          return err;
+        }else{
+          if(row.affectedRows == 1 ){
+            MainObj.status = "SUCCESS";
+            res.send(JSON.stringify(MainObj));
+          }else{
+            console.log("ERROR IN passwordupdate IN RUNNING SQL 0 ROWS AFFECTED TO DATABASE FOR docid = "+docid);
+            MainObj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(MainObj));
+            return err;
+          }
+        }
+      })
+      connection.release();
+    }
+  })
+
+})
+
+app.post("/getdetails",function(req,res){
+
+  var Object = req.body;
+
+  var docid = Object.docid;
+
+  var MainObj = {
+    status: "",
+    aadhar_number : "",
+    voterid_number : "",
+    passport_number : "",
+    passport_flag : "",
+    aadhar_flag : "",
+    voterid_flag : "",
+    mbbs_flag : "",
+    md_flag : "",
+    ms_flag : "",
+    diploma_flag : ""
+  }
+
+  var sql = "SELECT dm_aadhar_number,dm_voter_id_number,dm_passport_number,dm_passport_flag,dm_aadhar_verify_flag,dm_voter_id_verify_flag,dm_doctor_mbbs_flag,dm_doctor_md_flag,dm_doctor_ms_flag,dm_doctor_diploma_flag FROM doctor_master WHERE dm_doctor_id = ?";
+
+  con.getConnection(function(err){
+    if(err){
+      console.log("ERROR IN getdetails IN OPENING DATABASE TO DATABASE FOR docid = "+docid);
+      console.log("ERROR : "+err);
+      console.log("ERROR CODE : "+err.code);
+      MainObj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(MainObj));
+      return err;
+    }else{
+      connection.query(sql,[docid],function(err,row){
+        if(err){
+          console.log("ERROR IN getdetails IN RUNNING SQL TO DATABASE FOR docid = "+docid);
+          console.log("ERROR : "+err);
+          console.log("ERROR CODE : "+err.code);
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+          return err;
+        }else{
+          if(row.length > 0 ){
+            MainObj.status = "SUCCESS";
+            MainObj.aadhar_number = row[0].dm_aadhar_number;
+            MainObj.voterid_number = row[0].dm_voter_id_number;
+            MainObj.passport_number = row[0].dm_passport_number;
+            MainObj.passport_flag = row[0].dm_passport_flag;
+            MainObj.aadhar_flag = row[0].dm_aadhar_verify_flag;
+            MainObj.voterid_flag = row[0].dm_voter_id_verify_flag;
+            MainObj.md_flag = row[0].dm_doctor_md_flag;
+            MainObj.mbbs_flag = row[0].dm_doctor_mbbs_flag;
+            MainObj.ms_flag = row[0].dm_doctor_ms_flag;
+            MainObj.diploma_flag = row[0].dm_doctor_diploma_flag;
+            res.send(JSON.stringify(MainObj));
+          }else{
+            console.log("ERROR IN getdetails IN RUNNING SQL 0 ROWS RETURNED TO DATABASE FOR docid = "+docid);
+            MainObj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(MainObj));
+            return err;
+          }
+        }
+      })
+      connection.release();
+    }
+  })
+
+
+})
+
 app.post("/updatediscount",function(req,res){
 
 
