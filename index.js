@@ -6009,8 +6009,9 @@ app.post("/currentlocdis",function(req,res){
 
   // var sql = "UPDATE doctor_location_time_master AS dltm INNER JOIN doctor_location_day_master AS dldm ON dldm.dldm_id = dltm.dltm_dldm_id INNER JOIN doctor_location_master AS  ON dlm.dlm_id = dldm.dldm_dlm_id   SET dlm.dlm_currentloc_discount_flag = "Y",dltm.dltm_discount_offer_flag = "Y" WHERE dlm.dlm_lm_location_id = "LOC10172"";
 
-  var sql0 = "UPDATE doctor_location_master SET dlm_currentloc_discount_flag WHERE dlm_lm_location_id = ?";
+  var sql0 = "UPDATE doctor_location_master SET dlm_currentloc_discount_flag = ? WHERE dlm_lm_location_id = ?";
   var sql1 = "UPDATE doctor_location_time_master AS dltm INNER JOIN doctor_location_day_master AS dldm ON dldm.dldm_id = dltm.dltm_dldm_id INNER JOIN doctor_location_master AS dlm ON dlm.dlm_id = dldm.dldm_dlm_id SET dltm.dltm_discount_offer_flag = ? WHERE dlm.dlm_lm_location_id = ?";
+  // var sql1 = "UPDATE doctor_location_time_master AS dltm INNER JOIN doctor_location_day_master AS dldm ON dltm.dltm_dldm_id = dldm.dldm_id INNER JOIN doctor_location_master AS dlm ON dldm.dldm_dlm_id = dlm.dlm_id SET dltm.dltm_discount_offer_flag = ? WHERE dlm.dlm_dm_doctor_id = ?"
 
   con.getConnection(function(err,connection){
     if(err){
