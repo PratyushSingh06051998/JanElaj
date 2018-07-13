@@ -6113,7 +6113,7 @@ app.post("/fpnumberpresent",function(req,res){
 
   var sql = "SELECT pld_partner_id FROM partner_login_details_master WHERE pld_mobile = ?";
 
-  con.getConnection(function(err){
+  con.getConnection(function(err,connection){
     if(err){
       console.log("ERROR IN fpnumberpresent IN OPENING DATABASE TO DATABASE FOR number = "+phnum);
       console.log("ERROR : "+err);
@@ -6162,7 +6162,7 @@ app.post("/passwordupdate",function(req,res){
 
   var sql = "UPDATE partner_login_details_master SET pld_password = ? WHERE pld_partner_id = ?";
 
-  con.getConnection(function(err){
+  con.getConnection(function(err,connection){
     if(err){
       console.log("ERROR IN passwordupdate IN OPENING DATABASE TO DATABASE FOR docid = "+docid);
       console.log("ERROR : "+err);
@@ -6219,7 +6219,7 @@ app.post("/getdetails",function(req,res){
 
   var sql = "SELECT dm_aadhar_number,dm_voter_id_number,dm_passport_number,dm_passport_flag,dm_aadhar_verify_flag,dm_voter_id_verify_flag,dm_doctor_mbbs_flag,dm_doctor_md_flag,dm_doctor_ms_flag,dm_doctor_diploma_flag FROM doctor_master WHERE dm_doctor_id = ?";
 
-  con.getConnection(function(err){
+  con.getConnection(function(err,connection){
     if(err){
       console.log("ERROR IN getdetails IN OPENING DATABASE TO DATABASE FOR docid = "+docid);
       console.log("ERROR : "+err);
