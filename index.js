@@ -6202,6 +6202,7 @@ app.post("/getdetails",function(req,res){
   var Object = req.body;
 
   var docid = Object.docid;
+  console.log(docid);
 
   var MainObj = {
     status: "",
@@ -6249,6 +6250,7 @@ app.post("/getdetails",function(req,res){
             MainObj.mbbs_flag = row[0].dm_doctor_mbbs_flag;
             MainObj.ms_flag = row[0].dm_doctor_ms_flag;
             MainObj.diploma_flag = row[0].dm_doctor_diploma_flag;
+            console.log(MainObj);
             res.send(JSON.stringify(MainObj));
           }else{
             console.log("ERROR IN getdetails IN RUNNING SQL 0 ROWS RETURNED TO DATABASE FOR docid = "+docid);
