@@ -6151,10 +6151,13 @@ app.post("/fpnumberpresent",function(req,res){
 
 app.post("/passwordupdate",function(req,res){
 
+
   var Object = req.body;
 
   var docid = Object.docid;
   var pass = Object.pass;
+  console.log(docid);
+  console.log(pass);
 
   var MainObj = {
     status: "",
