@@ -6977,11 +6977,7 @@ function VitalInsertFinalValue(req,res,id){
     var PINCODE = Object.pincode;
     var DISTRICT = Object.district;
     var ADDHAARNUMBER = Object.adnumber;
-    // var SPECIALITY_ID =  parseInt(Object.specialityid);
-    // var REGISTRATION_NUMBER =  Object.registernumber;
-    // var REGISTRATION_COUNCIL =  Object.registercouncil;
-    // var REGISTRATION_YEAR =  Object.registeryear;
-    // var EXPERIENCE =  parseInt(Object.experience);
+
     var REGISTERDATE="";
     console.log(ID);
     console.log(PLD_ROLE);
@@ -6991,11 +6987,11 @@ function VitalInsertFinalValue(req,res,id){
     console.log(EMAIL);
     console.log(PASSWORD);
     console.log(MOBILE);
-    // console.log(SPECIALITY_ID);
-    // console.log(REGISTRATION_NUMBER);
-    // console.log(REGISTRATION_COUNCIL);
-    // console.log(REGISTRATION_YEAR);
-    // console.log(EXPERIENCE);
+    console.log(ADDRESSLINE1);
+    console.log(CITY);
+    console.log(STATE);
+    console.log(PINCODE);
+    console.log(ADDHAARNUMBER);
     console.log("has been hit in insertfinvalue");
 
 
