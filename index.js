@@ -24,6 +24,8 @@ app.get("/q",function(req,res){
 
 app.post("/updatetime",function(req,res){
 
+  console.log("----------updatetime----------");
+
   var Object = req.body;
 
   var TimeId =  Object.tid;
@@ -163,7 +165,7 @@ app.post("/numberverify",function(req,res){
     status : "SUCCESS"
   }
 
-  var sql = 'SELECT COUNT(*) AS namesCount FROM partner_login_details_master WHERE pld_role = ? AND  pld_mobile = ?';
+  var sql = 'SELECT COUNT(*) AS namesCount FROM partner_login_details_master WHERE (pld_role = ? AND  pld_mobile = ?) AND dm_role = ?';
 
   con.getConnection(function(err, connection) {
 
@@ -176,7 +178,7 @@ app.post("/numberverify",function(req,res){
         return err;
       }else{
 
-        connection.query(sql,[PLD_ROLE,MOBILE], function(err, result) {
+        connection.query(sql,[PLD_ROLE,MOBILE,"DOC"], function(err, result) {
 
           if(err){
             console.log("ERROR IN NUMBER VRTIFY IN RUNNING QUERY FOR PLD_ROLE = "+PLD_ROLE+" AND FOR PLD_MOBILE = "+MOBILE);
@@ -205,6 +207,83 @@ app.post("/numberverify",function(req,res){
 
 
 });
+
+app.post("/vitalregiteruser",function(req,res){
+
+  var Object = req.body;
+
+  var ID="";
+  var PLD_ROLE = Object.pldrole;
+  var ADHAARNUMBER =  Object.adnumber;
+  console.log("has been hit in registeuser");
+
+  var obj = {
+    status : "SUCCESS",
+    id : ""
+  }
+
+  var sql = 'SELECT COUNT(*) AS namesCount FROM doctor_master WHERE dm_aadhar_number = ? AND  dm_ready_live_flag = ?';
+
+
+  con.getConnection(function(err, connection) {
+
+    if(err){
+      console.log("ERROR IN OPENING DATABASE IN vitalregiteruser FUNCTION FOR ADHAARNUMBER ="+ADHAARNUMBER);
+      console.log(err);
+      obj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(obj));
+      return err;
+    }else{
+
+      connection.query(sql,[ADHAARNUMBER,'Y'], function(err, result) {
+
+        if(err){
+          console.log("ERROR IN RUNNING SQL IN vitalregiteruser FUNCTION FOR ADHAARNUMBER ="+ADHAARNUMBER);
+          console.log(err);
+          obj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(obj));
+          return err;
+        }else{
+
+          if(result[0].namesCount == 0){
+
+            var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
+            var Mydata = [];
+            var csvStream = csv.parse().on("data", function(data){
+
+                  var value=0;
+
+                  if(data[0] == PLD_ROLE){
+
+                    value = parseInt(data[1]);
+                    ID = PLD_ROLE+""+data[1];
+                    value++;
+                    data[1]=value.toString();
+                  }
+                  Mydata.push(data);
+                })
+                .on("end", function(){
+                     var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
+                     csv.write(Mydata, {headers: true}).pipe(ws);
+                     VitalInsertFinalValue(req,res,ID);
+                });
+            stream.pipe(csvStream);
+          }else{
+            obj.status = "USER ALREADY REGISTERED";
+            res.send(JSON.stringify(obj));
+          }
+        }
+
+          connection.release();
+      });
+
+    }
+  });
+
+
+
+
+})
 
 app.post("/registeruser",function(req,res){
 
@@ -6871,6 +6950,179 @@ app.post("/iftimeexist",function(req,res){
 
 })
 
+function VitalInsertFinalValue(req,res,id){
+
+
+
+    var obj = {
+      status : "SUCCESS",
+      id : ""
+    }
+
+    var Object = req.body;
+
+
+    var ID=id;
+    var PLD_ROLE = Object.pldrole;
+    var NAME =  Object.name;
+    var DOB =  Object.dob;
+    var GENDER =  Object.gender;
+    var EMAIL =  Object.email;
+    var PASSWORD =  Object.password;
+    var MOBILE =  Object.mobile;
+    var ADDRESSLINE1 = Object.address1;
+    var ADDRESSLINE2 = Object.address2;
+    var CITY = Object.city;
+    var STATE = Object.state;
+    var PINCODE = Object.pincode;
+    var DISTRICT = Object.district;
+    var ADDHAARNUMBER = Object.adnumber;
+    // var SPECIALITY_ID =  parseInt(Object.specialityid);
+    // var REGISTRATION_NUMBER =  Object.registernumber;
+    // var REGISTRATION_COUNCIL =  Object.registercouncil;
+    // var REGISTRATION_YEAR =  Object.registeryear;
+    // var EXPERIENCE =  parseInt(Object.experience);
+    var REGISTERDATE="";
+    console.log(ID);
+    console.log(PLD_ROLE);
+    console.log(NAME);
+    console.log(DOB);
+    console.log(GENDER);
+    console.log(EMAIL);
+    console.log(PASSWORD);
+    console.log(MOBILE);
+    // console.log(SPECIALITY_ID);
+    // console.log(REGISTRATION_NUMBER);
+    // console.log(REGISTRATION_COUNCIL);
+    // console.log(REGISTRATION_YEAR);
+    // console.log(EXPERIENCE);
+    console.log("has been hit in insertfinvalue");
+
+
+    var sql0 = "SELECT STR_TO_DATE((?), '%d %m %Y') AS datee";
+    var sql = "INSERT INTO doctor_master (dm_doctor_id, dm_doctor_name, dm_dob, dm_gender, dm_doctor_contact_mobile, dm_doctor_email, dm_address_line1, dm_address_line2, dm_city, dm_district, dm_state, dm_pincode, dm_reg_date,dm_role,dm_aadhar_number) VALUES((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),SYSDATE(),(?),(?))";
+    var sql1 = "INSERT INTO partner_login_details_master (pld_role, pld_username, pld_password, pld_partner_id, pld_mobile) VALUES ((?),(?),(?),(?),(?))";
+
+
+    con.getConnection(function(err, connection) {
+
+      if(err){
+        console.log("ERROR IN VitalInsertFinalValue IN OPENING DATABASE IN INSERFINVALUE FUNCTION FOR ID ="+id);
+        console.log(err);
+        obj.status = "CONNECTION ERROR";
+        res.send(JSON.stringify(obj));
+        return err;
+      }else{
+
+        connection.beginTransaction(function(err){
+
+          if(err){
+            console.log("ERROR IN VitalInsertFinalValue IN OPENING DATABASE IN BEGINING TRANSACTION FUNCTION FOR ID ="+id);
+            console.log(err);
+            obj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(obj));
+            return err;
+          }else{
+
+
+            connection.query(sql0,[DOB],function(err,row0){
+              if(err){
+                console.log("ERROR IN VitalInsertFinalValue IN RUNNING SQL0 FUNCTION FOR ID ="+id);
+                console.log(err);
+                obj.status = "CONNECTION ERROR";
+                res.send(JSON.stringify(obj));
+                connection.rollback(function(){
+                  return err;
+                })
+              }else{
+
+                connection.query(sql,[ID,NAME,row0[0].datee,GENDER,MOBILE,EMAIL,ADDRESSLINE1,ADDRESSLINE2,CITY,DISTRICT,STATE,PINCODE,PLD_ROLE,ADDHAARNUMBER], function(err, result) {
+
+                    if(err){
+                      console.log("ERROR IN VitalInsertFinalValue IN RUNNING SQL FUNCTION FOR ID ="+id);
+                      console.log(err);
+                      obj.status = "CONNECTION ERROR";
+                      res.send(JSON.stringify(obj));
+                      connection.rollback(function(){
+                        return err;
+                      })
+                    }else{
+
+                      if(result.affectedRows == 1){
+
+                        connection.query(sql1,[PLD_ROLE,EMAIL,PASSWORD,ID,MOBILE],function(err1,result1){
+
+
+                          if(err1){
+                            console.log("ERROR IN VitalInsertFinalValue IN RUNNING SQL1 FUNCTION FOR ID ="+id);
+                            console.log(err);
+                            obj.status = "CONNECTION ERROR";
+                            res.send(JSON.stringify(obj));
+                            connection.rollback(function(){
+                              return err;
+                            })
+                          }else{
+
+                            if(result1.affectedRows == 1){
+
+                              connection.commit(function(err){
+                                if(err){
+                                  console.log("ERROR IN VitalInsertFinalValue IN COMMITING FUNCTION FOR ID ="+id);
+                                  console.log(err);
+                                  obj.status = "CONNECTION ERROR";
+                                  res.send(JSON.stringify(obj));
+                                  connection.rollback(function(){
+                                    return err;
+                                  })
+                                }else{
+                                  obj.status = "SUCCESS";
+                                  obj.id = ID;
+                                  res.send(JSON.stringify(obj));
+                                }
+                              })
+                            }else{
+                              console.log("ERROR IN VitalInsertFinalValue IN RUNNING SQL1 0 ROWS AFFECTED UNCTION FOR ID ="+id);
+                              console.log(err);
+                              obj.status = "CONNECTION ERROR";
+                              res.send(JSON.stringify(obj));
+                              connection.rollback(function(){
+                              })
+                            }
+
+                          }
+
+                        });
+
+
+                      }else{
+                        console.log("ERROR IN VitalInsertFinalValue IN RUNNING SQL 0 ROWS AFFECTED UNCTION FOR ID ="+id);
+                        console.log(err);
+                        obj.status = "CONNECTION ERROR";
+                        res.send(JSON.stringify(obj));
+                        connection.rollback(function(){
+                        })
+                      }
+                    }
+
+                  });
+
+              }
+            })
+
+
+
+          }
+
+          connection.release();
+
+
+        });
+
+      }
+    });
+
+}
+
 function InsertFinalValue(req,res,id){
 
 
@@ -6913,7 +7165,7 @@ function InsertFinalValue(req,res,id){
 
 
   var sql0 = "SELECT STR_TO_DATE((?), '%d %m %Y') AS datee";
-  var sql = "INSERT INTO doctor_master (dm_doctor_id, dm_doctor_name, dm_dob, dm_gender, dm_doctor_contact_mobile, dm_doctor_speciality_id, dm_doctor_email, dm_medical_registration_number, dm_registration_council, dm_registration_year, dm_doctor_experience, dm_reg_date) VALUES((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),SYSDATE())";
+  var sql = "INSERT INTO doctor_master (dm_doctor_id, dm_doctor_name, dm_dob, dm_gender, dm_doctor_contact_mobile, dm_doctor_speciality_id, dm_doctor_email, dm_medical_registration_number, dm_registration_council, dm_registration_year, dm_doctor_experience, dm_reg_date,dm_role) VALUES((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),SYSDATE(),(?))";
   var sql1 = "INSERT INTO partner_login_details_master (pld_role, pld_username, pld_password, pld_partner_id, pld_mobile) VALUES ((?),(?),(?),(?),(?))";
 
 
@@ -6921,7 +7173,8 @@ function InsertFinalValue(req,res,id){
 
     if(err){
       console.log("ERROR IN OPENING DATABASE IN INSERFINVALUE FUNCTION FOR ID ="+id);
-      obj.status = "COONECTION ERROR";
+      console.log(err);
+      obj.status = "CONNECTION ERROR";
       res.send(JSON.stringify(obj));
       return err;
     }else{
@@ -6929,8 +7182,9 @@ function InsertFinalValue(req,res,id){
       connection.beginTransaction(function(err){
 
         if(err){
-          console.log("in 1");
-          obj.status = "FAIL";
+          console.log("ERROR IN OPENING DATABASE IN BEGINING TRANSACTION FUNCTION FOR ID ="+id);
+          console.log(err);
+          obj.status = "CONNECTION ERROR";
           res.send(JSON.stringify(obj));
           return err;
         }else{
@@ -6947,7 +7201,7 @@ function InsertFinalValue(req,res,id){
               })
             }else{
 
-              connection.query(sql,[ID,NAME,row0[0].datee,GENDER,MOBILE,SPECIALITY_ID,EMAIL,REGISTRATION_NUMBER,REGISTRATION_COUNCIL,REGISTRATION_YEAR,EXPERIENCE], function(err, result) {
+              connection.query(sql,[ID,NAME,row0[0].datee,GENDER,MOBILE,SPECIALITY_ID,EMAIL,REGISTRATION_NUMBER,REGISTRATION_COUNCIL,REGISTRATION_YEAR,EXPERIENCE,PLD_ROLE], function(err, result) {
 
                   if(err){
                     console.log(err);
