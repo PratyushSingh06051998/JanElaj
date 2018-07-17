@@ -576,17 +576,24 @@ app.post("/fetchcheckpoint",function(req,res){
                 res.send(JSON.stringify(obj));
                 return err;
               }else{
-                if(ress[0].dm_profiling_complete == 'Y'){
-                  console.log("in checkpoint 3");
-                  obj.status = "SUCCESS";
-                  obj.checkpoint = 3;// go to dashboard screen
-                  res.send(JSON.stringify(obj));
+                if(ress.lenght >0){
+                  if(ress[0].dm_profiling_complete == 'Y'){
+                    console.log("in checkpoint 3");
+                    obj.status = "SUCCESS";
+                    obj.checkpoint = 3;// go to dashboard screen
+                    res.send(JSON.stringify(obj));
+                  }else{
+                    console.log("in checkpoint 2");
+                    obj.status = "SUCCESS";
+                    obj.checkpoint = 2;// go to manage location screen
+                    res.send(JSON.stringify(obj));
+                  }
                 }else{
-                  console.log("in checkpoint 2");
-                  obj.status = "SUCCESS";
-                  obj.checkpoint = 2;// go to manage location screen
+                  console.log("ERROR IN fetchcheckpoint in RUNNING SQL3 0 ROWS RETURNED IN SIGNIN FOR DocId = "+DocId);
+                  obj.status = "CONNECTION ERROR";
                   res.send(JSON.stringify(obj));
                 }
+
               }
             })
 
