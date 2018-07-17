@@ -6530,7 +6530,7 @@ app.post("/vitalprofilingcomple",function(req,res){
       res.send(JSON.stringify(MainObj));
       return err;
     }else{
-      connection.query(sql,[DocId],function(err,row){
+      connection.query(sql,["Y",DocId],function(err,row){
         if(err){
           console.log("ERROR IN vitalprofilingcomple IN RUNNING SQL FOR DOCID = "+DocId);
           console.log("ERROR : "+err);
