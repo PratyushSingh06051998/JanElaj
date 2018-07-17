@@ -6515,7 +6515,46 @@ app.post("/vitalprofilingcomple",function(req,res){
   var Object = req.body;
   var DocId = req.docid;
 
+  var MainObj = {
+    status : "SUCCESS"
+  }
 
+  var sql = 'UPDATE doctor_master SET dm_profiling_complete = ? WHERE dm_doctor_id = ?';
+
+  con.getConnection(function(err,connection){
+    if(err){
+      console.log("ERROR IN vitalprofilingcomple IN CONNECTING TO DATABASE FOR DOCID = "+DocId);
+      console.log("ERROR : "+err);
+      console.log("ERROR CODE : "+err.code);
+      MainObj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(MainObj));
+      return err;
+    }else{
+      connection.query(sql,[DocId],function(err,row){
+        if(err){
+          console.log("ERROR IN vitalprofilingcomple IN RUNNING SQL FOR DOCID = "+DocId);
+          console.log("ERROR : "+err);
+          console.log("ERROR CODE : "+err.code);
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+          return err;
+        }else{
+          if(row.affectedRows == 1){
+            MainObj.status = "SUCCESS";
+            res.send(JSON.stringify(MainObj));
+          }else{
+            console.log("ERROR IN vitalprofilingcomple IN RUNNNING SQL 0 ROWS RETURDN TO DATABASE FOR DOCID = "+DocId);
+            console.log("ERROR : "+err);
+            console.log("ERROR CODE : "+err.code);
+            MainObj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(MainObj));
+            return err;
+          }
+        }
+      })
+      connection.release();
+    }
+  })
 
 })
 
