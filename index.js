@@ -482,12 +482,12 @@ app.post("/signin",function(req,res){
             if(result[0].pld_password == Password){
 
               for(var i=0;i<result.length;i++){
-                var obj = {
+                var objj = {
                   role : result[i].pld_role,
                   roleid : result[i].pld_partner_id
                 }
                 console.log(obj.role);
-                obj.role.push(obj);
+                obj.role.push(objj);
               }
 
               obj.status = "SUCCESS";
