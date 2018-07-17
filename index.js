@@ -7039,7 +7039,7 @@ function VitalInsertFinalValue(req,res,id){
                     if(err){
                       console.log("ERROR IN VitalInsertFinalValue IN RUNNING SQL FUNCTION FOR ID ="+id);
                       console.log(err);
-                      obj.status = "CONNECTION ERROR";
+                      obj.status = err.code;
                       res.send(JSON.stringify(obj));
                       connection.rollback(function(){
                         return err;
