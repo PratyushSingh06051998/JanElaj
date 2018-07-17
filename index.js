@@ -486,9 +486,9 @@ app.post("/signin",function(req,res){
                   role : result[i].pld_role,
                   roleid : result[i].pld_partner_id
                 }
-                console.log(obj.role);
                 obj.role.push(objj);
               }
+              console.log(obj.role);
 
               obj.status = "SUCCESS";
               res.send(JSON.stringify(obj));
