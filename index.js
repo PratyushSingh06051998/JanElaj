@@ -173,16 +173,18 @@ app.post("/numberverify",function(req,res){
       if(err){
         console.log("ERROR IN NUMBER VRTIFY IN BUILDING CONNECTION FOR PLD_ROLE = "+PLD_ROLE+" AND FOR PLD_MOBILE = "+MOBILE);
         console.log("ERROR CODE :"+err.code);
+        console.log(err);
         obj.status = "CONNECTION ERROR";
         res.send(JSON.stringify(obj));
         return err;
       }else{
 
-        connection.query(sql,[PLD_ROLE,MOBILE,"DOC"], function(err, result) {
+        connection.query(sql,[PLD_ROLE,MOBILE,PLD_ROLE], function(err, result) {
 
           if(err){
             console.log("ERROR IN NUMBER VRTIFY IN RUNNING QUERY FOR PLD_ROLE = "+PLD_ROLE+" AND FOR PLD_MOBILE = "+MOBILE);
             console.log("ERROR CODE "+err.code);
+            console.log(err);
             obj.status = "CONNECTION ERROR";
             res.send(JSON.stringify(obj));
             return err;
