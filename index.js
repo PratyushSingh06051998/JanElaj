@@ -165,7 +165,7 @@ app.post("/numberverify",function(req,res){
     status : "SUCCESS"
   }
 
-  var sql = 'SELECT COUNT(*) AS namesCount FROM partner_login_details_master WHERE (pld_role = ? AND  pld_mobile = ?) AND dm_role = ?';
+  var sql = 'SELECT COUNT(*) AS namesCount FROM partner_login_details_master WHERE (pld_role = ? AND  pld_mobile = ?) AND pld_role = ?';
 
   con.getConnection(function(err, connection) {
 
