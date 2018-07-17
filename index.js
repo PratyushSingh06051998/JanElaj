@@ -441,8 +441,7 @@ app.post("/signin",function(req,res){
 
   var obj = {
     status : "SUCCESS",
-    docid : "",
-    checkpoint : 0
+    role : []
   }
 
   var Object = req.body;
@@ -453,10 +452,7 @@ app.post("/signin",function(req,res){
   console.log(Email);
   console.log(Password);
 
-  var sql = 'SELECT pld_password, pld_partner_id FROM partner_login_details_master WHERE pld_username = ?';
-  var sql4 = 'SELECT dm_doctor_name, dm_dob, dm_gender, dm_doctor_speciality_id FROM doctor_master WHERE dm_doctor_id = ?';
-  var sql2 = 'SELECT COUNT(*) AS exist FROM doctor_location_master WHERE dlm_dm_doctor_id = ?';
-  var sql3 = 'SELECT dm_profiling_complete from doctor_master WHERE dm_doctor_email = ?';
+  var sql = 'SELECT pld_password, pld_partner_id, pld_role FROM partner_login_details_master WHERE pld_username = ?';
 
   con.getConnection(function(err,connection){
 
@@ -485,63 +481,18 @@ app.post("/signin",function(req,res){
           }else{
             if(result[0].pld_password == Password){
 
-              DocId = result[0].pld_partner_id;
-              obj.docid = DocId;
-              console.log("i am here "+DocId);
-
-              connection.query(sql2,[DocId],function(err,resul){
-
-                if(err){
-                  console.log("ERROR IN RUNNING SQL2 IN SIGNIN FOR Email = "+Email);
-                  console.log("ERROR : "+err.code);
-                  console.log(err);
-                  obj.status = "CONNECTION ERROR";
-                  res.send(JSON.stringify(obj));
-                  return err;
-                }else{
-
-                  console.log(DocId);
-                  console.log(resul[0].exist);
-
-                  if(resul[0].exist == 0){
-                    console.log("in checkpoint 1");
-                    obj.status = "SUCCESS";
-                    obj.checkpoint = 1;//Go to add location screen
-                    res.send(JSON.stringify(obj));
-
-                  }else{
-                    console.log("in checkpoint 2");
-                    obj.status = "SUCCESS";
-                    obj.checkpoint = 2;// go to manage location screen
-                    // res.send(JSON.stringify(obj));
-                    connection.query(sql3,[Email],function(err,ress){
-                      if(err){
-                        console.log("ERROR IN RUNNING SQL3 IN SIGNIN FOR Email = "+Email);
-                        console.log("ERROR : "+err.code);
-                        console.log(err);
-                        obj.status = "CONNECTION ERROR";
-                        res.send(JSON.stringify(obj));
-                        return err;
-                      }else{
-                        if(ress[0].dm_profiling_complete == 'Y'){
-                          console.log("in checkpoint 3");
-                          obj.status = "SUCCESS";
-                          obj.checkpoint = 3;// go to dashboard screen
-                          res.send(JSON.stringify(obj));
-                        }else{
-                          console.log("in checkpoint 2");
-                          obj.status = "SUCCESS";
-                          obj.checkpoint = 2;// go to manage location screen
-                          res.send(JSON.stringify(obj));
-                        }
-                      }
-                    })
-
-                  }
-
+              for(var i=0;i<result.length;i++){
+                var obj = {
+                  role : result[i].pld_role,
+                  roleid : result[i].pld_partner_id
                 }
+                console.log(obj.role);
+                obj.role.push(obj);
+              }
 
-              })
+              obj.status = "SUCCESS";
+              res.send(JSON.stringify(obj));
+
 
 
             }else{
@@ -561,6 +512,97 @@ app.post("/signin",function(req,res){
   })
 
 });
+
+app.post("/fetchcheckpoint",function(req,res){
+
+  var obj = {
+    status : "SUCCESS",
+    checkpoint : 0
+  }
+
+  var Object = req.body;
+
+  var DocId= Object.docid;
+  console.log(DocId);
+
+  var sql4 = 'SELECT dm_doctor_name, dm_dob, dm_gender, dm_doctor_speciality_id FROM doctor_master WHERE dm_doctor_id = ?';
+  var sql2 = 'SELECT COUNT(*) AS exist FROM doctor_location_master WHERE dlm_dm_doctor_id = ?';
+  var sql3 = 'SELECT dm_profiling_complete from doctor_master WHERE dm_doctor_email = ?';
+
+  con.getConnection(function(err,connection){
+
+    if(err){
+
+      console.log("ERROR IN fetchcheckpoint in CONNECTING TO THE DATABASE IN SIGNIN FOR DocId = "+DocId);
+      console.log("ERROR : "+err.code);
+      console.log(err);
+      obj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(obj));
+      return err;
+
+    }else{
+
+      connection.query(sql2,[DocId],function(err,resul){
+
+        if(err){
+          console.log("ERROR IN  fetchcheckpoint in RUNNING SQL2 IN SIGNIN FOR DocId = "+DocId);
+          console.log("ERROR : "+err.code);
+          console.log(err);
+          obj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(obj));
+          return err;
+        }else{
+
+          console.log(DocId);
+          console.log(resul[0].exist);
+
+          if(resul[0].exist == 0){
+            console.log("in checkpoint 1");
+            obj.status = "SUCCESS";
+            obj.checkpoint = 1;//Go to add location screen
+            res.send(JSON.stringify(obj));
+
+          }else{
+            console.log("in checkpoint 2");
+            obj.status = "SUCCESS";
+            obj.checkpoint = 2;// go to manage location screen
+            // res.send(JSON.stringify(obj));
+            connection.query(sql3,[Email],function(err,ress){
+              if(err){
+                console.log("ERROR IN fetchcheckpoint in RUNNING SQL3 IN SIGNIN FOR DocId = "+DocId);
+                console.log("ERROR : "+err.code);
+                console.log(err);
+                obj.status = "CONNECTION ERROR";
+                res.send(JSON.stringify(obj));
+                return err;
+              }else{
+                if(ress[0].dm_profiling_complete == 'Y'){
+                  console.log("in checkpoint 3");
+                  obj.status = "SUCCESS";
+                  obj.checkpoint = 3;// go to dashboard screen
+                  res.send(JSON.stringify(obj));
+                }else{
+                  console.log("in checkpoint 2");
+                  obj.status = "SUCCESS";
+                  obj.checkpoint = 2;// go to manage location screen
+                  res.send(JSON.stringify(obj));
+                }
+              }
+            })
+
+          }
+
+        }
+
+      })
+
+      connection.release();
+
+    }
+
+  })
+
+})
 
 app.post("/allinformation",function(req,res){
 
@@ -7192,7 +7234,7 @@ function InsertFinalValue(req,res,id){
             if(err){
               console.log(err);
               console.log("in 0");
-              obj.status = "FAIL";
+              obj.status = err.code;
               res.send(JSON.stringify(obj));
               connection.rollback(function(){
                 return err;
@@ -7204,7 +7246,7 @@ function InsertFinalValue(req,res,id){
                   if(err){
                     console.log(err);
                     console.log("in 2");
-                    obj.status = "FAIL";
+                    obj.status = err.code;
                     res.send(JSON.stringify(obj));
                     connection.rollback(function(){
                       return err;
