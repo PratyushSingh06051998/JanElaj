@@ -6513,7 +6513,7 @@ app.post("/updatediscount",function(req,res){
 app.post("/vitalprofilingcomple",function(req,res){
 
   var Object = req.body;
-  var DocId = req.docid;
+  var DocId = Object.docid;
 
   var MainObj = {
     status : "SUCCESS"
