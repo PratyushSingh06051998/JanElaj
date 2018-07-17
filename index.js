@@ -527,7 +527,7 @@ app.post("/fetchcheckpoint",function(req,res){
 
   var sql4 = 'SELECT dm_doctor_name, dm_dob, dm_gender, dm_doctor_speciality_id FROM doctor_master WHERE dm_doctor_id = ?';
   var sql2 = 'SELECT COUNT(*) AS exist FROM doctor_location_master WHERE dlm_dm_doctor_id = ?';
-  var sql3 = 'SELECT dm_profiling_complete from doctor_master WHERE dm_doctor_email = ?';
+  var sql3 = 'SELECT dm_profiling_complete from doctor_master WHERE dm_doctor_id = ?';
 
   con.getConnection(function(err,connection){
 
@@ -567,7 +567,7 @@ app.post("/fetchcheckpoint",function(req,res){
             obj.status = "SUCCESS";
             obj.checkpoint = 2;// go to manage location screen
             // res.send(JSON.stringify(obj));
-            connection.query(sql3,[Email],function(err,ress){
+            connection.query(sql3,[DocId],function(err,ress){
               if(err){
                 console.log("ERROR IN fetchcheckpoint in RUNNING SQL3 IN SIGNIN FOR DocId = "+DocId);
                 console.log("ERROR : "+err.code);
