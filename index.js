@@ -5213,6 +5213,68 @@ app.post("/timecheck",function(req,res){
 
 })
 
+app.post("/vitalservicesinfo",function(req,res){
+
+
+  var obj = {
+    status : "SUCCESS",
+    info : []
+  }
+
+
+  var sql = 'SELECT sm_service_id, sm_service_name FROM service_master WHERE sm_service_type = ?';
+
+  con.getConnection(function(err, connection) {
+
+    if(err){
+      console.log("ERROR IN vitalservicesinfo IN GETTING CONNECTION");
+      console.log(err.code);
+      console.log(err);
+      obj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(obj));
+      return err;
+    }else{
+
+      connection.query(sql, function(err, result,"VT") {
+
+        if(err){
+          console.log("ERROR IN vitalservicesinfo IN RUNNING SQL");
+          console.log(err.code);
+          console.log(err);
+          obj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(obj));
+          return err;
+        }else{
+
+          if(result.length == 0){
+
+            obj.status="SUCCESS";
+            res.send(JSON.stringify(obj));
+
+          }else{
+
+            for(var i=0;i<result.length;i++){
+              var INFO = {
+                sid:result[i].sm_service_id,
+                sname:result[i].sm_service_name
+              }
+              obj.info.push(INFO);
+            }
+            obj.status="SUCCESS";
+            res.send(JSON.stringify(obj));
+          }
+        }
+
+          connection.release();
+      });
+
+    }
+  });
+
+
+
+})
+
 app.post("/serviceinfo",function(req,res){
 
 
@@ -5222,12 +5284,12 @@ app.post("/serviceinfo",function(req,res){
   }
 
 
-  var sql = 'SELECT sm_service_id, sm_service_name FROM service_master';
+  var sql = 'SELECT sm_service_id, sm_service_name FROM service_master WHERE sm_service_type = ?';
 
   con.getConnection(function(err, connection) {
 
     if(err){
-      console.log("ERROR IN SERVICEINFO IN GETTING CONNECTION FOR DLMID = "+DlmId);
+      console.log("ERROR IN SERVICEINFO IN GETTING CONNECTION");
       console.log(err.code);
       console.log(err);
       obj.status = "CONNECTION ERROR";
@@ -5235,10 +5297,10 @@ app.post("/serviceinfo",function(req,res){
       return err;
     }else{
 
-      connection.query(sql, function(err, result) {
+      connection.query(sql, function(err, result,"CL") {
 
         if(err){
-          console.log("ERROR IN SERVICEINFO IN RUNNING SQL FOR DLMID = "+DlmId);
+          console.log("ERROR IN SERVICEINFO IN RUNNING SQL");
           console.log(err.code);
           console.log(err);
           obj.status = "CONNECTION ERROR";
