@@ -730,11 +730,11 @@ app.post("/vitalsignupinfo",function(req,res){
             MainObj.name = row[0].dm_doctor_name;
             MainObj.password = row[0].pld_password;
             MainObj.flag = "Y";
-            res.send(JSON.strigify(MainObj));
+            res.send(JSON.stringify(MainObj));
           }else{
             MainObj.status = "SUCCESS";
             MainObj.flag = "N";
-            res.send(JSON.strigify(MainObj));
+            res.send(JSON.stringify(MainObj));
           }
         }
       })
