@@ -686,6 +686,65 @@ app.post("/allinformation",function(req,res){
 
 })
 
+aap.post("/vitalsignupinfo",function(req,res){
+
+  var Object = req.body;
+  var phnumber = Object.number;
+  console.log(phnumber);
+
+  var MainObj = {
+    status : "SUCCESS",
+    name : "",
+    dob : "",
+    gender : "",
+    email : "",
+    password : ""
+  }
+
+  var sql = "SELECT dm.dm_doctor_name, dm.dm_dob, dm.dm_gender, dm.dm_doctor_email, pldm.pld_password FROM doctor_master AS dm INNER JOIN partner_login_details_master AS pldm ON dm.dm_doctor_id = pldm.pld_partner_id WHERE pldm.pld_mobile = ?";
+
+  con.getConnection(function(err,connection){
+    if(err){
+      console.log("ERROR IN GETTING CONNECTION IN vitalsignupinfo FOR phnumber = "+phnumber);
+      console.log(err);
+      console.log("ERROR : "+err.code);
+      MainObj.status = "CONNECTION ERROR";
+      res.send(JSON.stringify(MainObj));
+      return err;
+    }else{
+      connection.query(sql,[phnumber],function(err,row){
+        if(err){
+          console.log("ERROR IN RUNNING SQL IN vitalsignupinfo FOR phnumber = "+phnumber);
+          console.log(err);
+          console.log("ERROR : "+err.code);
+          MainObj.status = "CONNECTION ERROR";
+          res.send(JSON.stringify(MainObj));
+          return err;
+        }else{
+          if(row.length>0){
+            MainObj.status = "SUCCESS";
+            MainObj.name = row[0].dm_doctor_name;
+            MainObj.dob = row[0].dm_dob;
+            MainObj.email = row[0].dm_doctor_email;
+            MainObj.name = row[0].dm_doctor_name;
+            res.send(JSON.strigify(MainObj));
+          }else{
+            console.log("ERROR IN RUNNING SQL 0 ROWS RETURNED IN vitalsignupinfo FOR phnumber = "+phnumber);
+            console.log(err);
+            console.log("ERROR : "+err.code);
+            MainObj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(MainObj));
+            return err;
+          }
+        }
+      })
+      connection.release();
+    }
+  })
+
+
+})
+
 app.post("/updateintroduction",function(req,res){
 
   var Object = req.body;
