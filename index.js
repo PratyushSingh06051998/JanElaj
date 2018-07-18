@@ -698,7 +698,8 @@ app.post("/vitalsignupinfo",function(req,res){
     dob : "",
     gender : "",
     email : "",
-    password : ""
+    password : "",
+    flag : ""
   }
 
   var sql = "SELECT dm.dm_doctor_name, dm.dm_dob, dm.dm_gender, dm.dm_doctor_email, pldm.pld_password FROM doctor_master AS dm INNER JOIN partner_login_details_master AS pldm ON dm.dm_doctor_id = pldm.pld_partner_id WHERE pldm.pld_mobile = ?";
@@ -728,14 +729,12 @@ app.post("/vitalsignupinfo",function(req,res){
             MainObj.email = row[0].dm_doctor_email;
             MainObj.name = row[0].dm_doctor_name;
             MainObj.password = row[0].pld_password;
+            MainObj.flag = "Y";
             res.send(JSON.strigify(MainObj));
           }else{
-            console.log("ERROR IN RUNNING SQL 0 ROWS RETURNED IN vitalsignupinfo FOR phnumber = "+phnumber);
-            console.log(err);
-            console.log("ERROR : "+err.code);
-            MainObj.status = "CONNECTION ERROR";
-            res.send(JSON.stringify(MainObj));
-            return err;
+            MainObj.status = "SUCCESS";
+            MainObj.flag = "Y";
+            res.send(JSON.strigify(MainObj));
           }
         }
       })
