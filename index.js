@@ -727,6 +727,7 @@ app.post("/vitalsignupinfo",function(req,res){
             MainObj.dob = row[0].dm_dob;
             MainObj.email = row[0].dm_doctor_email;
             MainObj.name = row[0].dm_doctor_name;
+            MainObj.password = row[0].pld_password;
             res.send(JSON.strigify(MainObj));
           }else{
             console.log("ERROR IN RUNNING SQL 0 ROWS RETURNED IN vitalsignupinfo FOR phnumber = "+phnumber);
