@@ -727,8 +727,8 @@ app.post("/vitalsignupinfo",function(req,res){
             MainObj.name = row[0].dm_doctor_name;
             MainObj.dob = row[0].dm_dob;
             MainObj.email = row[0].dm_doctor_email;
-            MainObj.name = row[0].dm_doctor_name;
             MainObj.password = row[0].pld_password;
+            MainObj.gender = row[0].dm_gender;
             MainObj.flag = "Y";
             res.send(JSON.stringify(MainObj));
           }else{
