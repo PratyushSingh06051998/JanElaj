@@ -686,7 +686,7 @@ app.post("/allinformation",function(req,res){
 
 })
 
-aap.post("/vitalsignupinfo",function(req,res){
+app.post("/vitalsignupinfo",function(req,res){
 
   var Object = req.body;
   var phnumber = Object.number;
