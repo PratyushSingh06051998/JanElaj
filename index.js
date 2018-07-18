@@ -733,7 +733,7 @@ app.post("/vitalsignupinfo",function(req,res){
             res.send(JSON.strigify(MainObj));
           }else{
             MainObj.status = "SUCCESS";
-            MainObj.flag = "Y";
+            MainObj.flag = "N";
             res.send(JSON.strigify(MainObj));
           }
         }
