@@ -5235,7 +5235,7 @@ app.post("/vitalservicesinfo",function(req,res){
       return err;
     }else{
 
-      connection.query(sql, function(err, result,"VT") {
+      connection.query(sql,["VT"], function(err, result) {
 
         if(err){
           console.log("ERROR IN vitalservicesinfo IN RUNNING SQL");
@@ -5297,7 +5297,7 @@ app.post("/serviceinfo",function(req,res){
       return err;
     }else{
 
-      connection.query(sql, function(err, result,"CL") {
+      connection.query(sql,["CL"], function(err, result) {
 
         if(err){
           console.log("ERROR IN SERVICEINFO IN RUNNING SQL");
