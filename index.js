@@ -703,6 +703,7 @@ app.post("/vitalsignupinfo",function(req,res){
   }
 
   var sql = "SELECT dm.dm_doctor_name, dm.dm_dob, dm.dm_gender, dm.dm_doctor_email, pldm.pld_password FROM doctor_master AS dm INNER JOIN partner_login_details_master AS pldm ON dm.dm_doctor_id = pldm.pld_partner_id WHERE pldm.pld_mobile = ?";
+  var sql1 = "select date_format((?),'%d-%m-%Y') AS ddd";
 
   con.getConnection(function(err,connection){
     if(err){
@@ -729,8 +730,28 @@ app.post("/vitalsignupinfo",function(req,res){
             MainObj.email = row[0].dm_doctor_email;
             MainObj.password = row[0].pld_password;
             MainObj.gender = row[0].dm_gender;
-            MainObj.flag = "Y";
-            res.send(JSON.stringify(MainObj));
+            connection.query(sql1,[row[0].dm_dob],function(err,row1){
+              if(err){
+                console.log("ERROR IN RUNNING SQL1 IN vitalsignupinfo FOR phnumber = "+phnumber);
+                console.log(err);
+                console.log("ERROR : "+err.code);
+                MainObj.status = "CONNECTION ERROR";
+                res.send(JSON.stringify(MainObj));
+                return err;
+              }else{
+                if(row1.length > 0){
+                  MainObj.dob = row1[0].ddd;
+                  MainObj.flag = "Y";
+                  res.send(JSON.stringify(MainObj));
+                  console.log(MainObj);
+                }else{
+                  console.log("ERROR IN RUNNING SQL1 IN vitalsignupinfo 0 ROWS RETURNEDFOR phnumber = "+phnumber);
+                  MainObj.status = "CONNECTION ERROR";
+                  res.send(JSON.stringify(MainObj));
+                }
+
+              }
+            })
           }else{
             MainObj.status = "SUCCESS";
             MainObj.flag = "N";
@@ -7215,7 +7236,7 @@ function VitalInsertFinalValue(req,res,id){
     console.log("has been hit in insertfinvalue");
 
 
-    var sql0 = "SELECT DATE_FORMAT((?), '%d %m %Y') AS datee";
+    var sql0 = "SELECT STR_TO_DATE((?), '%d %m %Y') AS datee";
     var sql = "INSERT INTO doctor_master (dm_doctor_id, dm_doctor_name, dm_dob, dm_gender, dm_doctor_contact_mobile, dm_doctor_email, dm_address_line1, dm_address_line2, dm_city, dm_district, dm_state, dm_pincode, dm_reg_date,dm_role,dm_aadhar_number) VALUES((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),SYSDATE(),(?),(?))";
     var sql1 = "INSERT INTO partner_login_details_master (pld_role, pld_username, pld_password, pld_partner_id, pld_mobile) VALUES ((?),(?),(?),(?),(?))";
 
