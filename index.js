@@ -7215,7 +7215,7 @@ function VitalInsertFinalValue(req,res,id){
     console.log("has been hit in insertfinvalue");
 
 
-    var sql0 = "SELECT STR_TO_DATE((?), '%d %m %Y') AS datee";
+    var sql0 = "SELECT DATE_FORMAT((?), '%d %m %Y') AS datee";
     var sql = "INSERT INTO doctor_master (dm_doctor_id, dm_doctor_name, dm_dob, dm_gender, dm_doctor_contact_mobile, dm_doctor_email, dm_address_line1, dm_address_line2, dm_city, dm_district, dm_state, dm_pincode, dm_reg_date,dm_role,dm_aadhar_number) VALUES((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),SYSDATE(),(?),(?))";
     var sql1 = "INSERT INTO partner_login_details_master (pld_role, pld_username, pld_password, pld_partner_id, pld_mobile) VALUES ((?),(?),(?),(?),(?))";
 
