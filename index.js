@@ -5,10 +5,14 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var csv = require('fast-csv');
 
-app.use(bodyParser({
-  json: {limit: '50mb', extended: true},
-  urlencoded: {limit: '50mb', extended: true}
-}));
+// app.use(bodyParser({
+//   json: {limit: '50mb', extended: true},
+//   urlencoded: {limit: '50mb', extended: true}
+// }));
+
+app.use(bodyParser());
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
 var port = process.env.PORT || 3000;
 
