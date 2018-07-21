@@ -674,7 +674,11 @@ app.post("/allinformation",function(req,res){
             obj.md = result1[0].dm_doctor_md_flag;
             obj.ms = result1[0].dm_doctor_ms_flag;
             obj.diploma = result1[0].dm_doctor_diploma_flag;
-            obj.image = result1[0].dm_doctor_photo.toString();
+            if(result1[0].dm_doctor_photo == null){
+              obj.image = "";
+            }else{
+              obj.image = result1[0].dm_doctor_photo.toString();
+            }
             console.log(obj);
             res.send(JSON.stringify(obj));
 
@@ -740,7 +744,11 @@ app.post("/vitalsignupinfo",function(req,res){
             MainObj.email = row[0].dm_doctor_email;
             MainObj.password = row[0].pld_password;
             MainObj.gender = row[0].dm_gender;
-            MainObj.image = row[0].dm_doctor_photo.toString();
+            if(row[0].dm_doctor_photo == null){
+              MainObj.image = "";
+            }else{
+              MainObj.image = result1[0].dm_doctor_photo.toString();
+            }
             connection.query(sql1,[row[0].dm_dob],function(err,row1){
               if(err){
                 console.log("ERROR IN RUNNING SQL1 IN vitalsignupinfo FOR phnumber = "+phnumber);
