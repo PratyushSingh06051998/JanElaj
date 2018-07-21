@@ -674,7 +674,7 @@ app.post("/allinformation",function(req,res){
             obj.md = result1[0].dm_doctor_md_flag;
             obj.ms = result1[0].dm_doctor_ms_flag;
             obj.diploma = result1[0].dm_doctor_diploma_flag;
-            obj.image = result1[0].dm_doctor_photo;
+            obj.image = result1[0].dm_doctor_photo.toString();
             console.log(obj);
             res.send(JSON.stringify(obj));
 
@@ -7230,7 +7230,7 @@ function VitalInsertFinalValue(req,res,id){
     var PINCODE = Object.pincode;
     var DISTRICT = Object.district;
     var ADDHAARNUMBER = Object.adnumber;
-    var IMAGE = Object.image;
+    var IMAGE = Object.image.toString();
 
     var REGISTERDATE="";
     console.log(ID);
@@ -7397,7 +7397,7 @@ function InsertFinalValue(req,res,id){
   var REGISTRATION_COUNCIL =  Object.registercouncil;
   var REGISTRATION_YEAR =  Object.registeryear;
   var EXPERIENCE =  parseInt(Object.experience);
-  var IMAGE = Object.image;
+  var IMAGE = Object.image.toString();
   var REGISTERDATE="";
   console.log(ID);
   console.log(PLD_ROLE);
