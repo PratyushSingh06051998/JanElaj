@@ -625,13 +625,14 @@ app.post("/allinformation",function(req,res){
     md : "",
     ms : "",
     diploma :"",
-    age : 0
+    age : 0,
+    image : ""
     }
 
   var Object = req.body;
   var DocId = Object.docid;
 
-  var sql4 = 'SELECT dm_doctor_name, dm_dob, dm_gender,dm_doctor_mbbs_flag,dm_doctor_md_flag,dm_doctor_ms_flag,dm_doctor_diploma_flag, dm_doctor_speciality_id, dm_introduction, dm_doctor_experience, round((to_days(sysdate())-to_days(dm_dob))/365) as AGE FROM doctor_master WHERE dm_doctor_id = ?';
+  var sql4 = 'SELECT dm_doctor_name, dm_dob, dm_gender,dm_doctor_mbbs_flag,dm_doctor_md_flag,dm_doctor_ms_flag,dm_doctor_diploma_flag, dm_doctor_speciality_id, dm_doctor_photo, dm_introduction, dm_doctor_experience, round((to_days(sysdate())-to_days(dm_dob))/365) as AGE FROM doctor_master WHERE dm_doctor_id = ?';
 
   con.getConnection(function(err,connection){
     if(err){
@@ -666,6 +667,7 @@ app.post("/allinformation",function(req,res){
             obj.md = result1[0].dm_doctor_md_flag;
             obj.ms = result1[0].dm_doctor_ms_flag;
             obj.diploma = result1[0].dm_doctor_diploma_flag;
+            obj.image = result1[0].dm_doctor_photo;
             console.log(obj);
             res.send(JSON.stringify(obj));
 
@@ -699,10 +701,11 @@ app.post("/vitalsignupinfo",function(req,res){
     gender : "",
     email : "",
     password : "",
-    flag : ""
+    flag : "",
+    image : ""
   }
 
-  var sql = "SELECT dm.dm_doctor_name, dm.dm_dob, dm.dm_gender, dm.dm_doctor_email, pldm.pld_password FROM doctor_master AS dm INNER JOIN partner_login_details_master AS pldm ON dm.dm_doctor_id = pldm.pld_partner_id WHERE pldm.pld_mobile = ?";
+  var sql = "SELECT dm.dm_doctor_name, dm.dm_dob, dm.dm_gender,dm.dm_doctor_photo, dm.dm_doctor_email, pldm.pld_password FROM doctor_master AS dm INNER JOIN partner_login_details_master AS pldm ON dm.dm_doctor_id = pldm.pld_partner_id WHERE pldm.pld_mobile = ?";
   var sql1 = "select date_format((?),'%d-%m-%Y') AS ddd";
 
   con.getConnection(function(err,connection){
@@ -730,6 +733,7 @@ app.post("/vitalsignupinfo",function(req,res){
             MainObj.email = row[0].dm_doctor_email;
             MainObj.password = row[0].pld_password;
             MainObj.gender = row[0].dm_gender;
+            MainObj.image = row[0].dm_doctor_photo;
             connection.query(sql1,[row[0].dm_dob],function(err,row1){
               if(err){
                 console.log("ERROR IN RUNNING SQL1 IN vitalsignupinfo FOR phnumber = "+phnumber);
