@@ -6706,6 +6706,7 @@ app.post("/updateproffesion",function(req,res){
   var Object = req.body;
 
   var DocId = Object.docid;
+  var Image = Object.image;
   var Mbbs = Object.MBBS;
   var Md = Object.MD;
   var Ms = Object.MS;
@@ -7218,6 +7219,7 @@ function VitalInsertFinalValue(req,res,id){
     var PINCODE = Object.pincode;
     var DISTRICT = Object.district;
     var ADDHAARNUMBER = Object.adnumber;
+    var IMAGE = Object.image;
 
     var REGISTERDATE="";
     console.log(ID);
@@ -7237,7 +7239,7 @@ function VitalInsertFinalValue(req,res,id){
 
 
     var sql0 = "SELECT STR_TO_DATE((?), '%d %m %Y') AS datee";
-    var sql = "INSERT INTO doctor_master (dm_doctor_id, dm_doctor_name, dm_dob, dm_gender, dm_doctor_contact_mobile, dm_doctor_email, dm_address_line1, dm_address_line2, dm_city, dm_district, dm_state, dm_pincode, dm_reg_date,dm_role,dm_aadhar_number) VALUES((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),SYSDATE(),(?),(?))";
+    var sql = "INSERT INTO doctor_master (dm_doctor_id, dm_doctor_name, dm_dob, dm_gender, dm_doctor_contact_mobile, dm_doctor_email, dm_address_line1, dm_address_line2, dm_city, dm_district, dm_state, dm_pincode, dm_reg_date,dm_role,dm_aadhar_number,dm_doctor_photo) VALUES((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),SYSDATE(),(?),(?),(?))";
     var sql1 = "INSERT INTO partner_login_details_master (pld_role, pld_username, pld_password, pld_partner_id, pld_mobile) VALUES ((?),(?),(?),(?),(?))";
 
 
@@ -7273,7 +7275,7 @@ function VitalInsertFinalValue(req,res,id){
                 })
               }else{
 
-                connection.query(sql,[ID,NAME,row0[0].datee,GENDER,MOBILE,EMAIL,ADDRESSLINE1,ADDRESSLINE2,CITY,DISTRICT,STATE,PINCODE,PLD_ROLE,ADDHAARNUMBER], function(err, result) {
+                connection.query(sql,[ID,NAME,row0[0].datee,GENDER,MOBILE,EMAIL,ADDRESSLINE1,ADDRESSLINE2,CITY,DISTRICT,STATE,PINCODE,PLD_ROLE,ADDHAARNUMBER,IMAGE], function(err, result) {
 
                     if(err){
                       console.log("ERROR IN VitalInsertFinalValue IN RUNNING SQL FUNCTION FOR ID ="+id);
@@ -7384,6 +7386,7 @@ function InsertFinalValue(req,res,id){
   var REGISTRATION_COUNCIL =  Object.registercouncil;
   var REGISTRATION_YEAR =  Object.registeryear;
   var EXPERIENCE =  parseInt(Object.experience);
+  var IMAGE = Object.image;
   var REGISTERDATE="";
   console.log(ID);
   console.log(PLD_ROLE);
@@ -7402,7 +7405,7 @@ function InsertFinalValue(req,res,id){
 
 
   var sql0 = "SELECT STR_TO_DATE((?), '%d %m %Y') AS datee";
-  var sql = "INSERT INTO doctor_master (dm_doctor_id, dm_doctor_name, dm_dob, dm_gender, dm_doctor_contact_mobile, dm_doctor_speciality_id, dm_doctor_email, dm_medical_registration_number, dm_registration_council, dm_registration_year, dm_doctor_experience, dm_reg_date,dm_role) VALUES((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),SYSDATE(),(?))";
+  var sql = "INSERT INTO doctor_master (dm_doctor_id, dm_doctor_name, dm_dob, dm_gender, dm_doctor_contact_mobile, dm_doctor_speciality_id, dm_doctor_email, dm_medical_registration_number, dm_registration_council, dm_registration_year, dm_doctor_experience, dm_reg_date,dm_role,dm_doctor_photo) VALUES((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),SYSDATE(),(?),(?))";
   var sql1 = "INSERT INTO partner_login_details_master (pld_role, pld_username, pld_password, pld_partner_id, pld_mobile) VALUES ((?),(?),(?),(?),(?))";
 
 
@@ -7438,7 +7441,7 @@ function InsertFinalValue(req,res,id){
               })
             }else{
 
-              connection.query(sql,[ID,NAME,row0[0].datee,GENDER,MOBILE,SPECIALITY_ID,EMAIL,REGISTRATION_NUMBER,REGISTRATION_COUNCIL,REGISTRATION_YEAR,EXPERIENCE,PLD_ROLE], function(err, result) {
+              connection.query(sql,[ID,NAME,row0[0].datee,GENDER,MOBILE,SPECIALITY_ID,EMAIL,REGISTRATION_NUMBER,REGISTRATION_COUNCIL,REGISTRATION_YEAR,EXPERIENCE,PLD_ROLE,IMAGE], function(err, result) {
 
                   if(err){
                     console.log(err);
