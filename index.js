@@ -740,7 +740,7 @@ app.post("/vitalsignupinfo",function(req,res){
             MainObj.email = row[0].dm_doctor_email;
             MainObj.password = row[0].pld_password;
             MainObj.gender = row[0].dm_gender;
-            MainObj.image = row[0].dm_doctor_photo;
+            MainObj.image = row[0].dm_doctor_photo.toString();
             connection.query(sql1,[row[0].dm_dob],function(err,row1){
               if(err){
                 console.log("ERROR IN RUNNING SQL1 IN vitalsignupinfo FOR phnumber = "+phnumber);
