@@ -747,7 +747,7 @@ app.post("/vitalsignupinfo",function(req,res){
             if(row[0].dm_doctor_photo == null){
               MainObj.image = "";
             }else{
-              MainObj.image = result1[0].dm_doctor_photo.toString();
+              MainObj.image = row[0].dm_doctor_photo.toString();
             }
             connection.query(sql1,[row[0].dm_dob],function(err,row1){
               if(err){
