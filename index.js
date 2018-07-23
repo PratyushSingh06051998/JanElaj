@@ -785,12 +785,12 @@ app.post("/vitalsignupinfo",function(req,res){
 
 })
 
-app.post("/updateintroduction",function(req,res){
+
+app.post("/updatepicture",function(req,res){{
 
   var Object = req.body;
 
   var DocId =  Object.docid;
-  var Introduction = Object.introduction;
   var Image = Object.image.toString();
   console.log(DocId);
 
@@ -798,7 +798,63 @@ app.post("/updateintroduction",function(req,res){
     status : "SUCCESS"
   }
 
-  var sql = 'UPDATE doctor_master SET dm_introduction = ?,dm_doctor_photo = ? WHERE dm_doctor_id = ?';
+  var sql = 'UPDATE doctor_master SET dm_doctor_photo = ? WHERE dm_doctor_id = ?';
+
+  con.getConnection(function(err, connection) {
+
+
+      if(err){
+        console.log("ERROR IN updatepicture IN BUILDING CONNECTION FOR DOCID = "+DocId);
+        console.log("ERROR CODE :"+err.code);
+        obj.status = "CONNECTION ERROR";
+        res.send(JSON.stringify(obj));
+        return err;
+      }else{
+
+        connection.query(sql,[Image,DocId], function(err, result) {
+
+          if(err){
+            console.log("ERROR IN updatepicture IN RUNNING QUERY FOR DOCID = "+DocId);
+            console.log("ERROR CODE "+err.code);
+            obj.status = "CONNECTION ERROR";
+            res.send(JSON.stringify(obj));
+            return err;
+          }else{
+
+            if(result.affectedRows == 1){
+              console.log("Success");
+              obj.status = "SUCCESS";
+              res.send(JSON.stringify(obj));
+            }else{
+              obj.status = "CONNECTION ERROR";
+              res.send(JSON.stringify(obj));
+            }
+          }
+
+            connection.release();
+        });
+
+      }
+
+
+  });
+
+}})
+
+app.post("/updateintroduction",function(req,res){
+
+  var Object = req.body;
+
+  var DocId =  Object.docid;
+  var Introduction = Object.introduction;
+  // var Image = Object.image.toString();
+  console.log(DocId);
+
+  var obj = {
+    status : "SUCCESS"
+  }
+
+  var sql = 'UPDATE doctor_master SET dm_introduction = ? WHERE dm_doctor_id = ?';
 
   con.getConnection(function(err, connection) {
 
@@ -811,7 +867,7 @@ app.post("/updateintroduction",function(req,res){
         return err;
       }else{
 
-        connection.query(sql,[Introduction,Image,DocId], function(err, result) {
+        connection.query(sql,[Introduction,DocId], function(err, result) {
 
           if(err){
             console.log("ERROR IN updateintroduction IN RUNNING QUERY FOR DOCID = "+DocId);
