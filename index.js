@@ -4,6 +4,9 @@ var mysql = require('mysql');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var csv = require('fast-csv');
+var date = require('date-and-time');
+var now = new Date();
+
 
 // app.use(bodyParser({
 //   json: {limit: '50mb', extended: true},
@@ -26,7 +29,8 @@ var con = mysql.createPool({
 
 
 app.get("/q",function(req,res){
-  res.send("hi from server");
+  console.log(date.format(now, 'YYYY/MM/DD HH:mm:ss'));
+  res.send(date.format(now, 'YYYY/MM/DD HH:mm:ss'));
 })
 
 app.post("/updatetime",function(req,res){
@@ -785,7 +789,6 @@ app.post("/vitalsignupinfo",function(req,res){
 
 })
 
-
 app.post("/updatepicture",function(req,res){{
 
   var Object = req.body;
@@ -1421,8 +1424,6 @@ app.post("/managelocation",function(req,res){
 
 })
 
-
-
 app.post("/timeinsert",function(req,res){
 
   var Object = req.body;
@@ -1459,7 +1460,6 @@ app.post("/timeinsert",function(req,res){
   SAT = Object.saturday;
   SUN = Object.sunday;
 
-  console.log("abtomaiyahaaaagya");
 
   console.log("mon");
   console.log(MON);
@@ -5015,7 +5015,6 @@ function insertsunday2(connection,res,req,Dldmid,valuedldm){
 //
 // }
 
-
 app.post("/timeinformation",function(req,res){
 
   var Object = req.body;
@@ -7606,11 +7605,8 @@ function InsertFinalValue(req,res,id){
 }
 
 app.listen(port,function(err1){
-  for(var i=0;i<10;i++){
-    console.log(i);
-    if(i==6){
-      break;
-    }
+  for(var i=0;i<1;i++){
+  console.log(date.format(now, 'YYYY/MM/DD HH:mm:ss'));
   }
   console.log("Listening on the port 3000");
 });
