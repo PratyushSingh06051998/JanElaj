@@ -5,7 +5,6 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var csv = require('fast-csv');
 var date = require('date-and-time');
-var now = new Date();
 
 
 // app.use(bodyParser({
@@ -30,6 +29,7 @@ var con = mysql.createPool({
 
 app.get("/q",function(req,res){
   console.log(date.format(now, 'YYYY/MM/DD HH:mm:ss'));
+  var now = new Date();
   res.send(date.format(now, 'YYYY/MM/DD HH:mm:ss'));
 })
 
@@ -7606,6 +7606,7 @@ function InsertFinalValue(req,res,id){
 
 app.listen(port,function(err1){
   for(var i=0;i<1;i++){
+    var now = new Date();
   console.log(date.format(now, 'YYYY/MM/DD HH:mm:ss'));
   }
   console.log("Listening on the port 3000");
