@@ -28,7 +28,7 @@ var con = mysql.createPool({
 
 
 app.get("/q",function(req,res){
-  console.log(date.format(now, 'YYYY/MM/DD HH:mm:ss'));
+  // console.log(date.format(now, 'YYYY/MM/DD HH:mm:ss'));
   var now = new Date();
   res.send(date.format(now, 'YYYY/MM/DD HH:mm:ss'));
 })
