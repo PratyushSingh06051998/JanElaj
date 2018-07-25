@@ -32,11 +32,17 @@ app.get("/q",function(req,res){
   res.send(date.format(now, 'YYYY/MM/DD HH:mm:ss'));
 })
 
-app.post("/patientnumber",function(req,res){
+app.post("/patientnumberinfo",function(req,res){
 
   var obj = {
     status:"",
-    present : ""
+    present : "",
+    fname : "",
+    lname : "",
+    dob : "",
+    gender : "",
+    mobile : "",
+    email : ""
   }
 
   var Object = req.body;
@@ -44,16 +50,6 @@ app.post("/patientnumber",function(req,res){
   var number = Object.number;
 
   var sql = "SELECT * FROM patient_master WHERE  pm_contact_mobile = ?";
-
-
-  // var fname = Object.fname;
-  // var lname = Object.lname;
-  // var dob = Object.dob;
-  // var gender = Object.gender;
-  // var email = Object.email;
-  // var phone = Object.phone;
-  //
-  // var sql0 = "INSERT INTO patient_master (pm_patient_fname,pm_patient_lname,pm_dob,pm_gender,pm_contact_mobile,pm_patient_email) VALUES ((?),(?),(?),(?),(?),(?))";
 
   con.getConnection(function(err,connection){
     if(err){
@@ -66,6 +62,12 @@ app.post("/patientnumber",function(req,res){
           if(row.length >0){
             obj.status = "SUCCESS";
             obj.present = "Y"
+            obj.fname = row[0].pm_patient_fname;
+            obj.lname = row[0].pm_patient_lname;
+            obj.dob = row[0].pm_dob;
+            obj.gender = row[0].pm_gender;
+            obj.mobile = row[0].pm_contact_mobile;
+            obj.email = row[0].pm_patient_email;
             res.send(JSON.stringify(obj));
           }else{
             obj.status = "SUCCESS";
