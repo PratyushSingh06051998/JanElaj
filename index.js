@@ -32,36 +32,45 @@ app.get("/q",function(req,res){
   res.send(date.format(now, 'YYYY/MM/DD HH:mm:ss'));
 })
 
-app.post("/vitalsignup",function(req,res){
+app.post("/patientnumber",function(req,res){
 
   var obj = {
-    status:""
+    status:"",
+    present : ""
   }
 
   var Object = req.body;
 
-  var fname = Object.fname;
-  var lname = Object.lname;
-  var dob = Object.dob;
-  var gender = Object.gender;
-  var email = Object.email;
-  var phone = Object.phone;
+  var number = Object.number;
 
-  var sql0 = "INSERT INTO patient_master (pm_patient_fname,pm_patient_lname,pm_dob,pm_gender,pm_contact_mobile,pm_patient_email) VALUES ((?),(?),(?),(?),(?),(?))";
+  var sql = "SELECT * FROM patient_master WHERE  pm_contact_mobile = ?";
+
+
+  // var fname = Object.fname;
+  // var lname = Object.lname;
+  // var dob = Object.dob;
+  // var gender = Object.gender;
+  // var email = Object.email;
+  // var phone = Object.phone;
+  //
+  // var sql0 = "INSERT INTO patient_master (pm_patient_fname,pm_patient_lname,pm_dob,pm_gender,pm_contact_mobile,pm_patient_email) VALUES ((?),(?),(?),(?),(?),(?))";
 
   con.getConnection(function(err,connection){
     if(err){
 
     }else{
-      connection.query(sql0,[fname,lname,dob,gender,phone,email],function(err,row){
+      connection.query(sql,[phone],function(err,row){
         if(err){
 
         }else{
-          if(row.affectedRows ==1){
+          if(row.length >0){
             obj.status = "SUCCESS";
+            obj.present = "Y"
             res.send(JSON.stringify(obj));
           }else{
-
+            obj.status = "SUCCESS";
+            obj.present = "N"
+            res.send(JSON.stringify(obj));
           }
         }
       })
