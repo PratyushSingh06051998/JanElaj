@@ -6926,11 +6926,8 @@ app.post("/vitalprofilingcomple",function(req,res){
             res.send(JSON.stringify(MainObj));
           }else{
             console.log("ERROR IN vitalprofilingcomple IN RUNNNING SQL 0 ROWS RETURDN TO DATABASE FOR DOCID = "+DocId);
-            console.log("ERROR : "+err);
-            console.log("ERROR CODE : "+err.code);
             MainObj.status = "CONNECTION ERROR";
             res.send(JSON.stringify(MainObj));
-            return err;
           }
         }
       })
