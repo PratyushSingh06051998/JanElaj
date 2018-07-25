@@ -53,17 +53,19 @@ app.post("/vitalsignup",function(req,res){
     if(err){
 
     }else{
-      connection.query(sql0,[fname,lname,dob,gender,phone,email],function(err,row))
-      if(err){
+      connection.query(sql0,[fname,lname,dob,gender,phone,email],function(err,row){
+        if(err){
 
-      }else{
-        if(row.affectedRows ==1){
-          obj.status = "SUCCESS";
-          res.send(JSON.stringify(obj));
         }else{
+          if(row.affectedRows ==1){
+            obj.status = "SUCCESS";
+            res.send(JSON.stringify(obj));
+          }else{
 
+          }
         }
-      }
+      })
+
     }
   })
 
