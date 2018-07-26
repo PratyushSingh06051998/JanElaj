@@ -32,7 +32,7 @@ app.get("/q",function(req,res){
   res.send(date.format(now, 'YYYY/MM/DD HH:mm:ss'));
 })
 
-app.("/patientidinfo",function(req,res){
+app.get("/patientidinfo",function(req,res){
 
   var now = new Date();
   console.log("START----------patientidinfo----------"+now);
