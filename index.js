@@ -34,6 +34,9 @@ app.get("/q",function(req,res){
 
 app.post("/patientnumberinfo",function(req,res){
 
+  var now = new Date();
+  console.log("START----------patientnumberinfo----------"+now);
+
   var obj = {
     status:"",
     present : "",
@@ -48,16 +51,28 @@ app.post("/patientnumberinfo",function(req,res){
   var Object = req.body;
 
   var number = Object.number;
+  console.log("number="+number);
 
   var sql = "SELECT * FROM patient_master WHERE  pm_contact_mobile = ?";
 
   con.getConnection(function(err,connection){
     if(err){
-
+      console.log("ERROR IN patientnumberinfo IN BUILDING CONNECTION FOR number = "+number);
+      console.log("ERROR CODE :"+err.code);
+      obj.status = "CONNECTION ERROR";
+      console.log("RESPONSE="+JSON.stringify(obj));
+      console.log("END----------patientnumberinfo----------"+now);
+      res.send(JSON.stringify(obj));
+      return err;
     }else{
       connection.query(sql,[phone],function(err,row){
         if(err){
-
+          console.log("ERROR IN patientnumberinfo IN RUNNING SQL FOR number = "+number);
+          console.log("ERROR CODE :"+err.code);
+          obj.status = "CONNECTION ERROR";
+          console.log("RESPONSE="+JSON.stringify(obj));
+          console.log("END----------patientnumberinfo----------"+now);
+          res.send(JSON.stringify(obj));
         }else{
           if(row.length >0){
             obj.status = "SUCCESS";
@@ -68,10 +83,14 @@ app.post("/patientnumberinfo",function(req,res){
             obj.gender = row[0].pm_gender;
             obj.mobile = row[0].pm_contact_mobile;
             obj.email = row[0].pm_patient_email;
+            console.log("RESPONSE="+JSON.stringify(obj));
+            console.log("END----------patientnumberinfo----------"+now);
             res.send(JSON.stringify(obj));
           }else{
             obj.status = "SUCCESS";
             obj.present = "N"
+            console.log("RESPONSE="+JSON.stringify(obj));
+            console.log("END----------patientnumberinfo----------"+now);
             res.send(JSON.stringify(obj));
           }
         }
