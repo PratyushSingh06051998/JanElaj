@@ -43,7 +43,7 @@ app.post("/getpatientid",function(req,res){
     status : "",
     id : ""
   }
-  var sql =  "INSERT INTO patient_master ('pm_patient_id','pm_patient_email','pm_contact_mobile') VALUES ((?),(?),(?))";
+  var sql =  "INSERT INTO patient_master (pm_patient_id,pm_patient_email,pm_contact_mobile) VALUES ((?),(?),(?))";
 
   var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
   var Mydata = [];
