@@ -45,7 +45,8 @@ app.post("/patientnumberinfo",function(req,res){
     dob : "",
     gender : "",
     mobile : "",
-    email : ""
+    email : "",
+    photo : ""
   }
 
   var Object = req.body;
@@ -83,6 +84,7 @@ app.post("/patientnumberinfo",function(req,res){
             obj.gender = row[0].pm_gender;
             obj.mobile = row[0].pm_contact_mobile;
             obj.email = row[0].pm_patient_email;
+            obj.photo = row[0].pm_patient_photo.toString();
             console.log("RESPONSE="+JSON.stringify(obj));
             console.log("END----------patientnumberinfo----------"+now);
             res.send(JSON.stringify(obj));
@@ -128,8 +130,8 @@ app.post("/updatetime",function(req,res){
         console.log("ERROR IN updatetime IN BUILDING CONNECTION FOR TIMEID = "+TimeId);
         console.log("ERROR CODE :"+err.code);
         obj.status = "CONNECTION ERROR";
+        console.log("RESPONSE="+JSON.stringify(obj));
         console.log("END----------updatetime----------"+now);
-        console.log("RESPONSE="+obj);
         res.send(JSON.stringify(obj));
         return err;
       }else{
@@ -140,8 +142,8 @@ app.post("/updatetime",function(req,res){
             console.log("ERROR IN updatetime IN RUNNING QUERY FOR TIMEID = "+TimeId);
             console.log("ERROR CODE "+err.code);
             obj.status = "CONNECTION ERROR";
+            console.log("RESPONSE="+JSON.stringify(obj));
             console.log("END----------updatetime----------"+now);
-            console.log("RESPONSE="+obj);
             res.send(JSON.stringify(obj));
             return err;
           }else{
@@ -150,8 +152,8 @@ app.post("/updatetime",function(req,res){
               res.send(JSON.stringify(obj));
             }else{
               obj.status = "CONNECTION ERROR";
+              console.log("RESPONSE="+JSON.stringify(obj));
               console.log("END----------updatetime----------"+now);
-              console.log("RESPONSE="+obj);
               res.send(JSON.stringify(obj));
             }
           }
@@ -192,6 +194,8 @@ app.post("/deletetime",function(req,res){
         console.log("ERROR IN deletetime IN BUILDING CONNECTION FOR TIMEID ");
         console.log("ERROR CODE :"+err.code);
         obj.status = "CONNECTION ERROR";
+        console.log("RESPONSE="+JSON.stringify(obj));
+        console.log("END----------deletetime----------"+now);
         res.send(JSON.stringify(obj));
         return err;
       }else{
@@ -206,8 +210,8 @@ app.post("/deletetime",function(req,res){
               console.log("ERROR CODE "+err.code);
               if(sent == 0){
                 obj.status = "CONNECTION ERROR";
+                console.log("RESPONSE="+JSON.stringify(obj));
                 console.log("END----------deletetime----------"+now);
-                console.log("RESPONSE="+obj);
                 res.send(JSON.stringify(obj));
                 sent=1;
               }
@@ -217,16 +221,16 @@ app.post("/deletetime",function(req,res){
               count++;
               if(result.affectedRows == 1){
                 if(count == arr.length && sent==0){
+                  console.log("RESPONSE="+JSON.stringify(obj));
                   console.log("END----------deletetime----------"+now);
-                  console.log("RESPONSE="+obj);
                   res.send(JSON.stringify(obj));
                   sent=1;
                 }
               }else{
                 if(sent ==0){
                   obj.status = "CONNECTION ERROR";
+                  console.log("RESPONSE="+JSON.stringify(obj));
                   console.log("END----------deletetime----------"+now);
-                  console.log("RESPONSE="+obj);
                   res.send(JSON.stringify(obj));
                   sent=1;
                 }
@@ -274,7 +278,7 @@ app.post("/numberverify",function(req,res){
         console.log("ERROR CODE :"+err.code);
         console.log(err);
         obj.status = "CONNECTION ERROR";
-        console.log("RESPONSE="+obj);
+        console.log("RESPONSE="+JSON.stringify(obj));
         console.log("END----------numberverify----------"+now);
         res.send(JSON.stringify(obj));
         return err;
@@ -287,19 +291,19 @@ app.post("/numberverify",function(req,res){
             console.log("ERROR CODE "+err.code);
             console.log(err);
             obj.status = "CONNECTION ERROR";
-            console.log("RESPONSE="+obj);
+            console.log("RESPONSE="+JSON.stringify(obj));
             console.log("END----------numberverify----------"+now);
             res.send(JSON.stringify(obj));
             return err;
           }else{
 
             if(result[0].namesCount == 0){
-              console.log("RESPONSE="+obj);
+              console.log("RESPONSE="+JSON.stringify(obj));
               console.log("END----------numberverify----------"+now);
               res.send(JSON.stringify(obj));
             }else{
               obj.status = "FAIL";
-              console.log("RESPONSE="+obj);
+              console.log("RESPONSE="+JSON.stringify(obj));
               console.log("END----------numberverify----------"+now);
               res.send(JSON.stringify(obj));
             }
@@ -343,7 +347,7 @@ app.post("/vitalregiteruser",function(req,res){
       console.log("ERROR IN OPENING DATABASE IN vitalregiteruser FUNCTION FOR ADHAARNUMBER ="+ADHAARNUMBER);
       console.log(err);
       obj.status = "CONNECTION ERROR";
-      console.log("RESPONSE="+obj);
+      console.log("RESPONSE="+JSON.stringify(obj));
       console.log("END----------vitalregiteruser----------"+now);
       res.send(JSON.stringify(obj));
       return err;
@@ -355,7 +359,7 @@ app.post("/vitalregiteruser",function(req,res){
           console.log("ERROR IN RUNNING SQL IN vitalregiteruser FUNCTION FOR ADHAARNUMBER ="+ADHAARNUMBER);
           console.log(err);
           obj.status = "CONNECTION ERROR";
-          console.log("RESPONSE="+obj);
+          console.log("RESPONSE="+JSON.stringify(obj));
           console.log("END----------vitalregiteruser----------"+now);
           res.send(JSON.stringify(obj));
           return err;
@@ -381,14 +385,14 @@ app.post("/vitalregiteruser",function(req,res){
                 .on("end", function(){
                      var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
                      csv.write(Mydata, {headers: true}).pipe(ws);
-                     console.log("RESPONSE="+obj);
+                     console.log("RESPONSE="+JSON.stringify(obj));
                      console.log("END----------vitalregiteruser----------"+now);
                      VitalInsertFinalValue(req,res,ID);
                 });
             stream.pipe(csvStream);
           }else{
             obj.status = "USER ALREADY REGISTERED";
-            console.log("RESPONSE="+obj);
+            console.log("RESPONSE="+JSON.stringify(obj));
             console.log("END----------vitalregiteruser----------"+now);
             res.send(JSON.stringify(obj));
           }
@@ -428,7 +432,11 @@ app.post("/registeruser",function(req,res){
   con.getConnection(function(err, connection) {
 
     if(err){
-      obj.status = "FAIL";
+      console.log("ERROR IN registeruser IN GETTING CONNECTION FOR REGISTRATION NUMBER ="+REGISTRATION_NUMBER);
+      console.log(err);
+      obj.status = "CONNECTION ERROR";
+      console.log("RESPONSE="+JSON.stringify(obj));
+      console.log("END----------registeruser----------"+now);
       res.send(JSON.stringify(obj));
       return err;
     }else{
@@ -436,8 +444,10 @@ app.post("/registeruser",function(req,res){
       connection.query(sql,[REGISTRATION_NUMBER,'Y'], function(err, result) {
 
         if(err){
-          obj.status = "FAIL";
-          console.log("RESPONSE="+obj);
+          console.log("ERROR IN registeruser IN RUNNING SQL FOR REGISTRATION NUMBER ="+REGISTRATION_NUMBER);
+          console.log(err);
+          obj.status = "CONNECTION ERROR";
+          console.log("RESPONSE="+JSON.stringify(obj));
           console.log("END----------registeruser----------"+now);
           res.send(JSON.stringify(obj));
           return err;
@@ -463,14 +473,15 @@ app.post("/registeruser",function(req,res){
                 .on("end", function(){
                      var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
                      csv.write(Mydata, {headers: true}).pipe(ws);
-                     console.log("RESPONSE="+obj);
+                     console.log("RESPONSE="+JSON.stringify(obj));
                      console.log("END----------registeruser----------"+now);
                      InsertFinalValue(req,res,ID);
                 });
             stream.pipe(csvStream);
           }else{
-            obj.status = "FAIL";
-            console.log("RESPONSE="+obj);
+            console.log("ERROR IN registeruser IN RUNNING SQL 0 FOR REGISTRATION NUMBER ="+REGISTRATION_NUMBER);
+            obj.status = "CONNECTION ERROR";
+            console.log("RESPONSE="+JSON.stringify(obj));
             console.log("END----------registeruser----------"+now);
             res.send(JSON.stringify(obj));
           }
@@ -511,7 +522,7 @@ app.post("/checkpoint",function(req,res){
       console.log(err.code);
       console.log(err);
       obj.status = "CONNECTION ERROR";
-      console.log("RESPONSE="+obj);
+      console.log("RESPONSE="+JSON.stringify(obj));
       console.log("END----------checkpoint----------"+now);
       res.send(JSON.stringify(obj));
       return err;
@@ -524,7 +535,7 @@ app.post("/checkpoint",function(req,res){
           console.log(err.code);
           console.log(err);
           obj.status = "CONNECTION ERROR";
-          console.log("RESPONSE="+obj);
+          console.log("RESPONSE="+JSON.stringify(obj));
           console.log("END----------checkpoint----------"+now);
           res.send(JSON.stringify(obj));
           return err;
@@ -534,7 +545,7 @@ app.post("/checkpoint",function(req,res){
 
             obj.progress=0;//He has not inserted time
             obj.status="SUCCESS";
-            console.log("RESPONSE="+obj);
+            console.log("RESPONSE="+JSON.stringify(obj));
             console.log("END----------checkpoint----------"+now);
             res.send(JSON.stringify(obj));
 
@@ -545,7 +556,7 @@ app.post("/checkpoint",function(req,res){
                 console.log(err.code);
                 console.log(err);
                 obj.status = "CONNECTION ERROR";
-                console.log("RESPONSE="+obj);
+                console.log("RESPONSE="+JSON.stringify(obj));
                 console.log("END----------checkpoint----------"+now);
                 res.send(JSON.stringify(obj));
                 return err;
@@ -553,13 +564,13 @@ app.post("/checkpoint",function(req,res){
                 if(resultt[0].service == 0){
                   obj.progress=1;//He has not inserted service but inserted time
                   obj.status="SUCCESS";
-                  console.log("RESPONSE="+obj);
+                  console.log("RESPONSE="+JSON.stringify(obj));
                   console.log("END----------checkpoint----------"+now);
                   res.send(JSON.stringify(obj));
                 }else{
                   obj.progress=2;//He has inserted every value
                   obj.status="SUCCESS";
-                  console.log("RESPONSE="+obj);
+                  console.log("RESPONSE="+JSON.stringify(obj));
                   console.log("END----------checkpoint----------"+now);
                   res.send(JSON.stringify(obj));
                 }
@@ -604,7 +615,7 @@ app.post("/signin",function(req,res){
       console.log("ERROR IN CONNECTING TO THE DATABASE IN SIGNIN FOR Email = "+Email);
       console.log("ERROR : "+err.code);
       obj.status = "CONNECTION ERROR";
-      console.log("RESPONSE="+obj);
+      console.log("RESPONSE="+JSON.stringify(obj));
       console.log("END----------signin----------"+now);
       res.send(JSON.stringify(obj));
       return err;
@@ -617,14 +628,14 @@ app.post("/signin",function(req,res){
           console.log("ERROR IN RUNNING SQL IN SIGNIN FOR Email = "+Email);
           console.log("ERROR : "+err.code);
           obj.status = "CONNECTION ERROR";
-          console.log("RESPONSE="+obj);
+          console.log("RESPONSE="+JSON.stringify(obj));
           console.log("END----------signin----------"+now);
           res.send(JSON.stringify(obj));
           return err;
         }else{
           if(result.length==0){
             obj.status = "YOU ARE NOT REGISTERED/ INVALID USERNAME";
-            console.log("RESPONSE="+obj);
+            console.log("RESPONSE="+JSON.stringify(obj));
             console.log("END----------signin----------"+now);
             res.send(JSON.stringify(obj));
           }else{
@@ -640,7 +651,7 @@ app.post("/signin",function(req,res){
               console.log(obj.role);
 
               obj.status = "SUCCESS";
-              console.log("RESPONSE="+obj);
+              console.log("RESPONSE="+JSON.stringify(obj));
               console.log("END----------signin----------"+now);
               res.send(JSON.stringify(obj));
 
@@ -648,7 +659,7 @@ app.post("/signin",function(req,res){
 
             }else{
               obj.status = "YOU PASSWORD IS INCORRECT";
-              console.log("RESPONSE="+obj);
+              console.log("RESPONSE="+JSON.stringify(obj));
               console.log("END----------signin----------"+now);
               res.send(JSON.stringify(obj));
             }
@@ -690,10 +701,9 @@ app.post("/fetchcheckpoint",function(req,res){
     if(err){
 
       console.log("ERROR IN fetchcheckpoint in CONNECTING TO THE DATABASE IN SIGNIN FOR DocId = "+DocId);
-      console.log("ERROR : "+err.code);
       console.log(err);
       obj.status = "CONNECTION ERROR";
-      console.log("RESPONSE="+obj);
+      console.log("RESPONSE="+JSON.stringify(obj));
       console.log("END----------fetchcheckpoint----------"+now);
       res.send(JSON.stringify(obj));
       return err;
@@ -704,63 +714,48 @@ app.post("/fetchcheckpoint",function(req,res){
 
         if(err){
           console.log("ERROR IN  fetchcheckpoint in RUNNING SQL2 IN SIGNIN FOR DocId = "+DocId);
-          console.log("ERROR : "+err.code);
           console.log(err);
           obj.status = "CONNECTION ERROR";
-          console.log("RESPONSE="+obj);
+          console.log("RESPONSE="+JSON.stringify(obj));
           console.log("END----------fetchcheckpoint----------"+now);
           res.send(JSON.stringify(obj));
           return err;
         }else{
 
-          console.log(DocId);
-          console.log(resul[0].exist);
-
           if(resul[0].exist == 0){
-            console.log("in checkpoint 1");
             obj.status = "SUCCESS";
             obj.checkpoint = 1;//Go to add location screen
-            console.log("RESPONSE="+obj);
+            console.log("RESPONSE="+JSON.stringify(obj));
             console.log("END----------fetchcheckpoint----------"+now);
             res.send(JSON.stringify(obj));
 
           }else{
-            console.log("in checkpoint 2");
             obj.status = "SUCCESS";
             obj.checkpoint = 2;// go to manage location screen
-            // res.send(JSON.stringify(obj));
             connection.query(sql3,[DocId],function(err,ress){
               if(err){
                 console.log("ERROR IN fetchcheckpoint in RUNNING SQL3 IN SIGNIN FOR DocId = "+DocId);
-                console.log("ERROR : "+err.code);
                 console.log(err);
                 obj.status = "CONNECTION ERROR";
-                console.log("RESPONSE="+obj);
+                console.log("RESPONSE="+JSON.stringify(obj));
                 console.log("END----------fetchcheckpoint----------"+now);
                 res.send(JSON.stringify(obj));
                 return err;
               }else{
-                // if(ress.lenght >0){
                   if(ress[0].dm_profiling_complete == 'Y'){
-                    console.log("in checkpoint 3");
                     obj.status = "SUCCESS";
                     obj.checkpoint = 3;// go to dashboard screen
-                    console.log("RESPONSE="+obj);
+                    console.log("RESPONSE="+JSON.stringify(obj));
                     console.log("END----------fetchcheckpoint----------"+now);
                     res.send(JSON.stringify(obj));
                   }else{
-                    console.log("in checkpoint 2");
                     obj.status = "SUCCESS";
                     obj.checkpoint = 2;// go to manage location screen
-                    console.log("RESPONSE="+obj);
+                    console.log("RESPONSE="+JSON.stringify(obj));
                     console.log("END----------fetchcheckpoint----------"+now);
                     res.send(JSON.stringify(obj));
                   }
-                // }else{
-                //   console.log("ERROR IN fetchcheckpoint in RUNNING SQL3 0 ROWS RETURNED IN SIGNIN FOR DocId = "+DocId);
-                //   obj.status = "CONNECTION ERROR";
-                //   res.send(JSON.stringify(obj));
-                // }
+
 
               }
             })
@@ -810,9 +805,8 @@ app.post("/allinformation",function(req,res){
     if(err){
       console.log("ERROR IN RUNNING SQL1 IN allinformation FOR DocId = "+DocId);
       console.log(err);
-      console.log("ERROR : "+err.code);
       obj.status = "CONNECTION ERROR";
-      console.log("RESPONSE="+obj);
+      console.log("RESPONSE="+JSON.stringify(obj));
       console.log("END----------allinformation----------"+now);
       res.send(JSON.stringify(obj));
       return err;
@@ -822,9 +816,8 @@ app.post("/allinformation",function(req,res){
         if(err){
           console.log("ERROR IN RUNNING SQL1 IN allinformation FOR DocId = "+DocId);
           console.log(err);
-          console.log("ERROR : "+err.code);
           obj.status = "CONNECTION ERROR";
-          console.log("RESPONSE="+obj);
+          console.log("RESPONSE="+JSON.stringify(obj));
           console.log("END----------allinformation----------"+now);
           res.send(JSON.stringify(obj));
           return err;
@@ -848,14 +841,14 @@ app.post("/allinformation",function(req,res){
             }else{
               obj.image = result1[0].dm_doctor_photo.toString();
             }
-            console.log("RESPONSE="+obj);
+            console.log("RESPONSE="+JSON.stringify(obj));
             console.log("END----------allinformation----------"+now);
             res.send(JSON.stringify(obj));
 
           }else{
             console.log("ERROR IN RUNNING SQL1 0 ROWS RETURNED IN allinformation FOR DocId = "+DocId);
             obj.status = "CONNECTION ERROR";
-            console.log("RESPONSE="+obj);
+            console.log("RESPONSE="+JSON.stringify(obj));
             console.log("END----------allinformation----------"+now);
             res.send(JSON.stringify(obj));
           }
