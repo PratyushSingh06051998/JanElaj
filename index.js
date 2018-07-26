@@ -220,7 +220,7 @@ app.post("/patientnumberidinfo",function(req,res){
       res.send(JSON.stringify(obj));
       return err;
     }else{
-      connection.query(sql,[number],function(err,row){
+      connection.query(sql,[number,number,number],function(err,row){
         if(err){
           console.log("ERROR IN patientnumberinfo IN RUNNING SQL FOR number = "+number);
           console.log("ERROR CODE :"+err);
