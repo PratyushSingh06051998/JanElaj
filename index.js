@@ -32,7 +32,9 @@ app.get("/q",function(req,res){
   res.send(date.format(now, 'YYYY/MM/DD HH:mm:ss'));
 })
 
-app.get("/patientidinfo",function(req,res){
+
+
+app.post("/patientidinfo",function(req,res){
 
   var now = new Date();
   console.log("START----------patientidinfo----------"+now);
@@ -104,6 +106,7 @@ app.get("/patientidinfo",function(req,res){
 
 })
 
+
 app.post("/getpatientid",function(req,res){
   var now = new Date();
   console.log("START----------getpatientid----------"+now);
@@ -115,7 +118,6 @@ app.post("/getpatientid",function(req,res){
     status : "",
     id : ""
   }
-  var sql =  "INSERT INTO patient_master (pm_patient_id,pm_patient_email,pm_contact_mobile) VALUES ((?),(?),(?))";
 
   var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
   var Mydata = [];
@@ -183,13 +185,14 @@ app.post("/getpatientid",function(req,res){
 
 })
 
-app.post("/patientnumberinfo",function(req,res){
+app.post("/patientnumberidinfo",function(req,res){
 
   var now = new Date();
-  console.log("START----------patientnumberinfo----------"+now);
+  console.log("START----------patientnumberidinfo----------"+now);
 
   var obj = {
     status:"",
+    id:"",
     present : "",
     uname : "",
     mname : "",
@@ -205,7 +208,7 @@ app.post("/patientnumberinfo",function(req,res){
   var number = Object.number;
   console.log("number="+number);
 
-  var sql = "SELECT * FROM patient_master WHERE  pm_contact_mobile = ?";
+  var sql = "SELECT * FROM patient_master WHERE  pm_contact_mobile = ? OR pm_patient_id = ?";
 
   con.getConnection(function(err,connection){
     if(err){
@@ -213,7 +216,7 @@ app.post("/patientnumberinfo",function(req,res){
       console.log("ERROR CODE :"+err.code);
       obj.status = "CONNECTION ERROR";
       console.log("RESPONSE="+JSON.stringify(obj));
-      console.log("END----------patientnumberinfo----------"+now);
+      console.log("END----------patientnumberidinfo----------"+now);
       res.send(JSON.stringify(obj));
       return err;
     }else{
@@ -223,12 +226,13 @@ app.post("/patientnumberinfo",function(req,res){
           console.log("ERROR CODE :"+err.code);
           obj.status = "CONNECTION ERROR";
           console.log("RESPONSE="+JSON.stringify(obj));
-          console.log("END----------patientnumberinfo----------"+now);
+          console.log("END----------patientnumberidinfo----------"+now);
           res.send(JSON.stringify(obj));
         }else{
           if(row.length >0){
             obj.status = "SUCCESS";
             obj.present = "Y"
+            obj.id = row[0].pm_patient_id;
             obj.uname = row[0].pm_patient_name;
             obj.mname = row[0].pm_mothers_first_name;
             obj.dob = row[0].pm_dob;
@@ -237,14 +241,37 @@ app.post("/patientnumberinfo",function(req,res){
             obj.email = row[0].pm_patient_email;
             obj.photo = row[0].pm_patient_photo.toString();
             console.log("RESPONSE="+JSON.stringify(obj));
-            console.log("END----------patientnumberinfo----------"+now);
+            console.log("END----------patientnumberidinfo----------"+now);
             res.send(JSON.stringify(obj));
           }else{
-            obj.status = "SUCCESS";
-            obj.present = "N"
-            console.log("RESPONSE="+JSON.stringify(obj));
-            console.log("END----------patientnumberinfo----------"+now);
-            res.send(JSON.stringify(obj));
+            var Id="";
+            var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
+            var Mydata = [];
+            var csvStream = csv.parse().on("data", function(data){
+
+                  var value=0;
+
+                  if(data[0] == "VIU"){
+
+                    value = parseInt(data[1]);
+                    Id = "VIU"+""+data[1];
+                    value++;
+                    data[1]=value.toString();
+                  }
+                  Mydata.push(data);
+                })
+                .on("end", function(){
+                     var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
+                     csv.write(Mydata, {headers: true}).pipe(ws);
+                     obj.status = "SUCCESS";
+                     obj.present = "N"
+                     obj.id = Id;
+                     console.log("RESPONSE="+JSON.stringify(obj));
+                     console.log("END----------patientnumberidinfo----------"+now);
+                     res.send(JSON.stringify(obj));
+                });
+            stream.pipe(csvStream);
+
           }
         }
       })
