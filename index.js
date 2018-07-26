@@ -32,6 +32,80 @@ app.get("/q",function(req,res){
   res.send(date.format(now, 'YYYY/MM/DD HH:mm:ss'));
 })
 
+app.post("/getpatientid",function(req,res){
+  var now = new Date();
+  console.log("START----------getpatientid----------"+now);
+
+  var Object = req.body;
+  var number = Object.number;
+  var Id = "";
+  var obj = {
+    status : "",
+    id : ""
+  }
+  var sql =  "INSERT INTO patient_master ('pm_patient_id','pm_patient_email','pm_contact_mobile') VALUES ((?),(?),(?))";
+
+  var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
+  var Mydata = [];
+  var csvStream = csv.parse().on("data", function(data){
+
+        var value=0;
+
+        if(data[0] == "VIU"){
+
+          value = parseInt(data[1]);
+          Id = "VIU"+""+data[1];
+          value++;
+          data[1]=value.toString();
+        }
+        Mydata.push(data);
+      })
+      .on("end", function(){
+           var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
+           csv.write(Mydata, {headers: true}).pipe(ws);
+           con.getConnection(function(err,connection){
+             if(err){
+               console.log("ERROR IN OPENING CONNECTION IN getpatientid FOR number = "+number);
+               console.log(err);
+               obj.status = "CONNECTION ERROR";
+               console.log("RESPONSE="+JSON.stringify(obj));
+               console.log("END----------getpatientid----------"+now);
+               res.send(JSON.stringify(obj));
+             }else{
+               connection.query(sql,[Id,Id,number],function(err,row){
+                 if(err){
+                   console.log("ERROR IN RUNNING SQL IN getpatientid FOR number = "+number);
+                   console.log(err);
+                   obj.status = "CONNECTION ERROR";
+                   console.log("RESPONSE="+JSON.stringify(obj));
+                   console.log("END----------getpatientid----------"+now);
+                   res.send(JSON.stringify(obj));
+                 }else{
+                   if(row.affectedRows == 1){
+                     obj.status = "SUCCESS";
+                     obj.id = Id;
+                     console.log("RESPONSE="+JSON.stringify(obj));
+                     console.log("END----------getpatientid----------"+now);
+                     res.send(JSON.stringify(obj));
+                   }else{
+                     console.log("ERROR IN RUNNING SQL 0 ROWS AFFECTED IN getpatientid FOR number = "+number);
+                     obj.status = "CONNECTION ERROR";
+                     console.log("RESPONSE="+JSON.stringify(obj));
+                     console.log("END----------getpatientid----------"+now);
+                     res.send(JSON.stringify(obj));
+                   }
+                 }
+               })
+               connection.release();
+             }
+           })
+      });
+  stream.pipe(csvStream);
+
+
+
+})
+
 app.post("/patientnumberinfo",function(req,res){
 
   var now = new Date();
