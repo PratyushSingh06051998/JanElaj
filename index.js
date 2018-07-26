@@ -37,8 +37,8 @@ app.post("/patientnumberinfo",function(req,res){
   var obj = {
     status:"",
     present : "",
-    fname : "",
-    lname : "",
+    uname : "",
+    mname : "",
     dob : "",
     gender : "",
     mobile : "",
@@ -62,8 +62,8 @@ app.post("/patientnumberinfo",function(req,res){
           if(row.length >0){
             obj.status = "SUCCESS";
             obj.present = "Y"
-            obj.fname = row[0].pm_patient_fname;
-            obj.lname = row[0].pm_patient_lname;
+            obj.uname = row[0].pm_patient_name;
+            obj.mname = row[0].pm_mothers_first_name;
             obj.dob = row[0].pm_dob;
             obj.gender = row[0].pm_gender;
             obj.mobile = row[0].pm_contact_mobile;
@@ -573,8 +573,8 @@ app.post("/signin",function(req,res){
   var Email = Object.email;
   var Password = Object.password;
   var DocId="";
-  console.log(Email);
-  console.log(Password);
+  console.log("Email="+Email);
+  console.log("Password="+Password);
 
   var sql = 'SELECT pld_password, pld_partner_id, pld_role FROM partner_login_details_master WHERE pld_username = ?';
 
@@ -954,11 +954,14 @@ app.post("/vitalsignupinfo",function(req,res){
 
 app.post("/updatepicture",function(req,res){{
 
+  var now = new Date();
+  console.log("START----------updatepicture----------"+now);
+
   var Object = req.body;
 
   var DocId =  Object.docid;
   var Image = Object.image.toString();
-  console.log(DocId);
+  console.log("DocId="+DocId);
 
   var obj = {
     status : "SUCCESS"
@@ -973,6 +976,8 @@ app.post("/updatepicture",function(req,res){{
         console.log("ERROR IN updatepicture IN BUILDING CONNECTION FOR DOCID = "+DocId);
         console.log("ERROR CODE :"+err.code);
         obj.status = "CONNECTION ERROR";
+        console.log("RESPONSE="+obj);
+        console.log("END----------updatepicture----------"+now);
         res.send(JSON.stringify(obj));
         return err;
       }else{
@@ -983,6 +988,8 @@ app.post("/updatepicture",function(req,res){{
             console.log("ERROR IN updatepicture IN RUNNING QUERY FOR DOCID = "+DocId);
             console.log("ERROR CODE "+err.code);
             obj.status = "CONNECTION ERROR";
+            console.log("RESPONSE="+obj);
+            console.log("END----------updatepicture----------"+now);
             res.send(JSON.stringify(obj));
             return err;
           }else{
@@ -990,9 +997,13 @@ app.post("/updatepicture",function(req,res){{
             if(result.affectedRows == 1){
               console.log("Success");
               obj.status = "SUCCESS";
+              console.log("RESPONSE="+obj);
+              console.log("END----------updatepicture----------"+now);
               res.send(JSON.stringify(obj));
             }else{
               obj.status = "CONNECTION ERROR";
+              console.log("RESPONSE="+obj);
+              console.log("END----------updatepicture----------"+now);
               res.send(JSON.stringify(obj));
             }
           }
