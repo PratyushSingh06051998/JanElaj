@@ -63,42 +63,47 @@ app.post("/getpatientid",function(req,res){
       .on("end", function(){
            var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
            csv.write(Mydata, {headers: true}).pipe(ws);
-           con.getConnection(function(err,connection){
-             if(err){
-               console.log("ERROR IN OPENING CONNECTION IN getpatientid FOR number = "+number);
-               console.log(err);
-               obj.status = "CONNECTION ERROR";
-               console.log("RESPONSE="+JSON.stringify(obj));
-               console.log("END----------getpatientid----------"+now);
-               res.send(JSON.stringify(obj));
-             }else{
-               connection.query(sql,[Id,Id,number],function(err,row){
-                 if(err){
-                   console.log("ERROR IN RUNNING SQL IN getpatientid FOR number = "+number);
-                   console.log(err);
-                   obj.status = "CONNECTION ERROR";
-                   console.log("RESPONSE="+JSON.stringify(obj));
-                   console.log("END----------getpatientid----------"+now);
-                   res.send(JSON.stringify(obj));
-                 }else{
-                   if(row.affectedRows == 1){
-                     obj.status = "SUCCESS";
-                     obj.id = Id;
-                     console.log("RESPONSE="+JSON.stringify(obj));
-                     console.log("END----------getpatientid----------"+now);
-                     res.send(JSON.stringify(obj));
-                   }else{
-                     console.log("ERROR IN RUNNING SQL 0 ROWS AFFECTED IN getpatientid FOR number = "+number);
-                     obj.status = "CONNECTION ERROR";
-                     console.log("RESPONSE="+JSON.stringify(obj));
-                     console.log("END----------getpatientid----------"+now);
-                     res.send(JSON.stringify(obj));
-                   }
-                 }
-               })
-               connection.release();
-             }
-           })
+           obj.status = "SUCCESS";
+           obj.id = Id;
+           console.log("RESPONSE="+JSON.stringify(obj));
+           console.log("END----------getpatientid----------"+now);
+           res.send(JSON.stringify(obj));
+           // con.getConnection(function(err,connection){
+           //   if(err){
+           //     console.log("ERROR IN OPENING CONNECTION IN getpatientid FOR number = "+number);
+           //     console.log(err);
+           //     obj.status = "CONNECTION ERROR";
+           //     console.log("RESPONSE="+JSON.stringify(obj));
+           //     console.log("END----------getpatientid----------"+now);
+           //     res.send(JSON.stringify(obj));
+           //   }else{
+           //     connection.query(sql,[Id,Id,number],function(err,row){
+           //       if(err){
+           //         console.log("ERROR IN RUNNING SQL IN getpatientid FOR number = "+number);
+           //         console.log(err);
+           //         obj.status = "CONNECTION ERROR";
+           //         console.log("RESPONSE="+JSON.stringify(obj));
+           //         console.log("END----------getpatientid----------"+now);
+           //         res.send(JSON.stringify(obj));
+           //       }else{
+           //         if(row.affectedRows == 1){
+           //           obj.status = "SUCCESS";
+           //           obj.id = Id;
+           //           console.log("RESPONSE="+JSON.stringify(obj));
+           //           console.log("END----------getpatientid----------"+now);
+           //           res.send(JSON.stringify(obj));
+           //         }else{
+           //           console.log("ERROR IN RUNNING SQL 0 ROWS AFFECTED IN getpatientid FOR number = "+number);
+           //           obj.status = "CONNECTION ERROR";
+           //           console.log("RESPONSE="+JSON.stringify(obj));
+           //           console.log("END----------getpatientid----------"+now);
+           //           res.send(JSON.stringify(obj));
+           //         }
+           //       }
+           //     })
+           //     connection.release();
+           //   }
+           // })
       });
   stream.pipe(csvStream);
 
