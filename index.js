@@ -97,6 +97,7 @@ app.post("/patientnumberinfo",function(req,res){
           }
         }
       })
+      connection.release();
 
     }
   })
@@ -891,9 +892,8 @@ app.post("/vitalsignupinfo",function(req,res){
     if(err){
       console.log("ERROR IN GETTING CONNECTION IN vitalsignupinfo FOR phnumber = "+phnumber);
       console.log(err);
-      console.log("ERROR : "+err.code);
       MainObj.status = "CONNECTION ERROR";
-      console.log("RSPONSE="+MainObj);
+      console.log("RSPONSE="+JSON.stringify(MainObj));
       console.log("END----------vitalsignupinfo----------"+now);
       res.send(JSON.stringify(MainObj));
       return err;
@@ -902,9 +902,8 @@ app.post("/vitalsignupinfo",function(req,res){
         if(err){
           console.log("ERROR IN RUNNING SQL IN vitalsignupinfo FOR phnumber = "+phnumber);
           console.log(err);
-          console.log("ERROR : "+err.code);
           MainObj.status = "CONNECTION ERROR";
-          console.log("RSPONSE="+MainObj);
+          console.log("RSPONSE="+JSON.stringify(MainObj));
           console.log("END----------vitalsignupinfo----------"+now);
           res.send(JSON.stringify(MainObj));
           return err;
@@ -925,9 +924,8 @@ app.post("/vitalsignupinfo",function(req,res){
               if(err){
                 console.log("ERROR IN RUNNING SQL1 IN vitalsignupinfo FOR phnumber = "+phnumber);
                 console.log(err);
-                console.log("ERROR : "+err.code);
                 MainObj.status = "CONNECTION ERROR";
-                console.log("RSPONSE="+MainObj);
+                console.log("RSPONSE="+JSON.stringify(MainObj));
                 console.log("END----------vitalsignupinfo----------"+now);
                 res.send(JSON.stringify(MainObj));
                 return err;
@@ -935,13 +933,13 @@ app.post("/vitalsignupinfo",function(req,res){
                 if(row1.length > 0){
                   MainObj.dob = row1[0].ddd;
                   MainObj.flag = "Y";
-                  console.log("RSPONSE="+MainObj);
+                  console.log("RSPONSE="+JSON.stringify(MainObj));
                   console.log("END----------vitalsignupinfo----------"+now);
                   res.send(JSON.stringify(MainObj));
                 }else{
                   console.log("ERROR IN RUNNING SQL1 IN vitalsignupinfo 0 ROWS RETURNEDFOR phnumber = "+phnumber);
                   MainObj.status = "CONNECTION ERROR";
-                  console.log("RSPONSE="+MainObj);
+                  console.log("RSPONSE="+JSON.stringify(MainObj));
                   console.log("END----------vitalsignupinfo----------"+now);
                   res.send(JSON.stringify(MainObj));
                 }
@@ -951,7 +949,7 @@ app.post("/vitalsignupinfo",function(req,res){
           }else{
             MainObj.status = "SUCCESS";
             MainObj.flag = "N";
-            console.log("RSPONSE="+MainObj);
+            console.log("RSPONSE="+JSON.stringify(MainObj));
             console.log("END----------vitalsignupinfo----------"+now);
             res.send(JSON.stringify(MainObj));
           }
@@ -974,6 +972,7 @@ app.post("/updatepicture",function(req,res){{
   var DocId =  Object.docid;
   var Image = Object.image.toString();
   console.log("DocId="+DocId);
+  console.log("Image="+Image);
 
   var obj = {
     status : "SUCCESS"
@@ -986,9 +985,8 @@ app.post("/updatepicture",function(req,res){{
 
       if(err){
         console.log("ERROR IN updatepicture IN BUILDING CONNECTION FOR DOCID = "+DocId);
-        console.log("ERROR CODE :"+err.code);
         obj.status = "CONNECTION ERROR";
-        console.log("RESPONSE="+obj);
+        console.log("RESPONSE="+JSON.stringify(obj));
         console.log("END----------updatepicture----------"+now);
         res.send(JSON.stringify(obj));
         return err;
@@ -998,9 +996,8 @@ app.post("/updatepicture",function(req,res){{
 
           if(err){
             console.log("ERROR IN updatepicture IN RUNNING QUERY FOR DOCID = "+DocId);
-            console.log("ERROR CODE "+err.code);
             obj.status = "CONNECTION ERROR";
-            console.log("RESPONSE="+obj);
+            console.log("RESPONSE="+JSON.stringify(obj));
             console.log("END----------updatepicture----------"+now);
             res.send(JSON.stringify(obj));
             return err;
@@ -1009,12 +1006,12 @@ app.post("/updatepicture",function(req,res){{
             if(result.affectedRows == 1){
               console.log("Success");
               obj.status = "SUCCESS";
-              console.log("RESPONSE="+obj);
+              console.log("RESPONSE="+JSON.stringify(obj));
               console.log("END----------updatepicture----------"+now);
               res.send(JSON.stringify(obj));
             }else{
               obj.status = "CONNECTION ERROR";
-              console.log("RESPONSE="+obj);
+              console.log("RESPONSE="+JSON.stringify(obj));
               console.log("END----------updatepicture----------"+now);
               res.send(JSON.stringify(obj));
             }
@@ -1032,12 +1029,15 @@ app.post("/updatepicture",function(req,res){{
 
 app.post("/updateintroduction",function(req,res){
 
+  var now = new Date();
+  console.log("START----------updateintroduction----------"+now);
+
   var Object = req.body;
 
   var DocId =  Object.docid;
   var Introduction = Object.introduction;
-  // var Image = Object.image.toString();
-  console.log(DocId);
+  console.log("DocId="+DocId);
+  console.log("Introduction="+Introduction);
 
   var obj = {
     status : "SUCCESS"
@@ -1050,8 +1050,9 @@ app.post("/updateintroduction",function(req,res){
 
       if(err){
         console.log("ERROR IN updateintroduction IN BUILDING CONNECTION FOR DOCID = "+DocId);
-        console.log("ERROR CODE :"+err.code);
         obj.status = "CONNECTION ERROR";
+        console.log("RESPONSE="+JSON.stringify(obj));
+        console.log("END----------updateintroduction----------"+now);
         res.send(JSON.stringify(obj));
         return err;
       }else{
@@ -1060,18 +1061,22 @@ app.post("/updateintroduction",function(req,res){
 
           if(err){
             console.log("ERROR IN updateintroduction IN RUNNING QUERY FOR DOCID = "+DocId);
-            console.log("ERROR CODE "+err.code);
             obj.status = "CONNECTION ERROR";
+            console.log("RESPONSE="+JSON.stringify(obj));
+            console.log("END----------updateintroduction----------"+now);
             res.send(JSON.stringify(obj));
             return err;
           }else{
 
             if(result.affectedRows == 1){
-              console.log("Success");
               obj.status = "SUCCESS";
+              console.log("RESPONSE="+JSON.stringify(obj));
+              console.log("END----------updateintroduction----------"+now);
               res.send(JSON.stringify(obj));
             }else{
               obj.status = "CONNECTION ERROR";
+              console.log("RESPONSE="+JSON.stringify(obj));
+              console.log("END----------updateintroduction----------"+now);
               res.send(JSON.stringify(obj));
             }
           }
@@ -1247,6 +1252,9 @@ app.post("/hvisitaddlocation",function(req,res){
 
 app.post("/updatelocation",function(req,res){
 
+  var now = new Date();
+  console.log("START----------updatelocation----------"+now);
+
   var Object = req.body;
 
   var obj = {
@@ -1261,33 +1269,47 @@ app.post("/updatelocation",function(req,res){
   var State = Object.state;
   var Pin = Object.pin;
   var LocId=Object.locid;
+  console.log("Name="+Name);
+  console.log("AddressLine1="+AddressLine1);
+  console.log("AddressLine2="+AddressLine2);
+  console.log("City="+City);
+  console.log("District="+District);
+  console.log("State="+State);
+  console.log("Pin="+Pin);
+  console.log("LocId="+LocId);
 
   var sql = "UPDATE location_master SET lm_name = ?, lm_address_line1 = ?, lm_address_line2 = ?, lm_city = ?, lm_district = ?, lm_state = ?, lm_pincode = ? WHERE lm_location_id = ?";
 
   con.getConnection(function(err,connection){
     if(err){
       console.log("ERROR IN updatelocation IN BUILDING CONNECTION FOR DOCID = "+LocId);
-      console.log("ERROR CODE :"+err.code);
       console.log(err);
       obj.status = "CONNECTION ERROR";
+      console.log("RESPONSE="+JSON.stringify(obj));
+      console.log("END----------updatelocation----------"+now);
       res.send(JSON.stringify(obj));
       return err;
     }else{
       connection.query(sql,[Name,AddressLine1,AddressLine2,City,District,State,Pin,LocId],function(err,result){
         if(err){
           console.log("ERROR IN updatelocation IN RUNNING SQL FOR DOCID = "+LocId);
-          console.log("ERROR CODE :"+err.code);
           console.log(err);
           obj.status = "CONNECTION ERROR";
+          console.log("RESPONSE="+JSON.stringify(obj));
+          console.log("END----------updatelocation----------"+now);
           res.send(JSON.stringify(obj));
           return err;
         }else{
           if(result.affectedRows == 1){
             obj.status = "SUCCESS";
+            console.log("RESPONSE="+JSON.stringify(obj));
+            console.log("END----------updatelocation----------"+now);
             res.send(JSON.stringify(obj));
           }else{
             console.log("ERROR IN updatelocation IN SQL 0 ROWS AFFESCTED FOR DOCID = "+LocId);
             obj.status = "CONNECTION ERROR";
+            console.log("RESPONSE="+JSON.stringify(obj));
+            console.log("END----------updatelocation----------"+now);
             res.send(JSON.stringify(obj));
           }
         }
@@ -1299,6 +1321,9 @@ app.post("/updatelocation",function(req,res){
 })
 
 app.post("/clinicaddlocation",function(req,res){
+
+  var now = new Date();
+  console.log("START----------clinicaddlocation----------"+now);
 
   var Object = req.body;
 
@@ -1313,7 +1338,15 @@ app.post("/clinicaddlocation",function(req,res){
   var Options = Object.option;
   var LocId="";
   var DlmId="";
-  console.log("Has been hit");
+  console.log("Name="+Name);
+  console.log("AddressLine1="+AddressLine1);
+  console.log("AddressLine2="+AddressLine2);
+  console.log("City="+City);
+  console.log("District="+District);
+  console.log("State="+State);
+  console.log("Pin="+Pin);
+  console.log("Did="+Did);
+  console.log("Options="+Options);
 
 
   var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
@@ -1351,9 +1384,10 @@ app.post("/clinicaddlocation",function(req,res){
 
              if(err){
                console.log("ERROR IN CONNECTION TO DATABASE IN CLINICADDLOCATION DOCID = "+Did);
-               console.log("ERROR:"+err);
-               console.log("ERROR CODE:"+err.code);
+               console.log(err);
                obj.status = "FAIL";
+               console.log("RESPONSE="+JSON.stringify(obj));
+               console.log("END----------clinicaddlocation----------"+now);
                res.send(JSON.stringify(obj));
                return err;
              }else{
@@ -1362,9 +1396,10 @@ app.post("/clinicaddlocation",function(req,res){
 
                  if(err){
                    console.log("ERROR IN BEGINING TRANSACTION DATABASE IN CLINICADDLOCATION DOCID = "+Did);
-                   console.log("ERROR:"+err);
-                   console.log("ERROR CODE:"+err.code);
+                   console.log(err);
                    obj.status = "FAIL";
+                   console.log("RESPONSE="+JSON.stringify(obj));
+                   console.log("END----------clinicaddlocation----------"+now);
                    res.send(JSON.stringify(obj));
                    return err;
                  }else{
@@ -1374,8 +1409,9 @@ app.post("/clinicaddlocation",function(req,res){
                      if(err){
                        console.log("ERROR IN RUNNING SQL1 IN CLINICADDLOCATION DOCID = "+Did);
                        console.log("ERROR:"+err);
-                       console.log("ERROR CODE:"+err.code);
                        obj.status = "FAIL";
+                       console.log("RESPONSE="+JSON.stringify(obj));
+                       console.log("END----------clinicaddlocation----------"+now);
                        res.send(JSON.stringify(obj));
                        connection.rollback(function(){
                          return err;
