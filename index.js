@@ -208,7 +208,7 @@ app.post("/patientnumberidinfo",function(req,res){
   var number = Object.number;
   console.log("number="+number);
 
-  var sql = "SELECT * FROM patient_master WHERE  ((pm_contact_mobile = ? OR pm_patient_id = ?) OR pm_patient_email = ?)";
+  var sql = "SELECT * FROM patient_master WHERE  (pm_contact_mobile = ? OR pm_patient_id = ?) OR pm_patient_email = ?";
 
   con.getConnection(function(err,connection){
     if(err){
