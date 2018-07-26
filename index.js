@@ -208,12 +208,12 @@ app.post("/patientnumberidinfo",function(req,res){
   var number = Object.number;
   console.log("number="+number);
 
-  var sql = "SELECT * FROM patient_master WHERE  pm_contact_mobile = ? OR pm_patient_id = ?";
+  var sql = "SELECT * FROM patient_master WHERE  ((pm_contact_mobile = ? OR pm_patient_id = ?) OR pm_patient_email = ?)";
 
   con.getConnection(function(err,connection){
     if(err){
       console.log("ERROR IN patientnumberinfo IN BUILDING CONNECTION FOR number = "+number);
-      console.log("ERROR CODE :"+err.code);
+      console.log("ERROR CODE :"+err);
       obj.status = "CONNECTION ERROR";
       console.log("RESPONSE="+JSON.stringify(obj));
       console.log("END----------patientnumberidinfo----------"+now);
@@ -223,7 +223,7 @@ app.post("/patientnumberidinfo",function(req,res){
       connection.query(sql,[number],function(err,row){
         if(err){
           console.log("ERROR IN patientnumberinfo IN RUNNING SQL FOR number = "+number);
-          console.log("ERROR CODE :"+err.code);
+          console.log("ERROR CODE :"+err);
           obj.status = "CONNECTION ERROR";
           console.log("RESPONSE="+JSON.stringify(obj));
           console.log("END----------patientnumberidinfo----------"+now);
