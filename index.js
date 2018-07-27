@@ -169,6 +169,8 @@ app.post("/registerpatientdep",function(req,res){
                 return err;
               }else{
 
+                console.log("oahfuaebauebkablabksrbvksrj vkjrsbvkhsr"+row2[0].datee);
+
                 connection.query(sql0,[pid,pname,row2[0].datee,pgender,pmobile,pemail,pphoto,pmothername],function(err,row0){
                   if(err){
                     console.log("ERROR IN registerpatientdep IN RUNING SQL0 FOR PID = "+pid);
