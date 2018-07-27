@@ -95,6 +95,106 @@ app.post("/patientdependent",function(req,res){
 
 })
 
+app.post("/registerpatientdep",function(req,res){
+
+  var now = new Date();
+  console.log("START----------registerpatientdep----------"+now);
+
+  var Object = req.body;
+  var flag = parseInt(Object.flag);
+  var pid = Object.pid;
+  var pname = Object.pname;
+  var pdob = Object.pdob;
+  var pgender = Object.pgender;
+  var pmobile = Object.pmobile;
+  var pemail = Object.pemail;
+  var pphoto = Object.pphoto.toString();
+  var pmothername = Object.mname;
+  var dname = Objct.dname;
+  var ddob = Object.ddob;
+  var dgender = Object.dgender;
+  var dphoto = Object.dphoto.toString();
+  var demail = Object.demail;
+  var dmobile = Object.dmobile;
+
+  console.log("flag="+flag);
+  console.log("pid="+pid);
+  console.log("pname="+pname);
+  console.log("pdob="+pdob);
+  console.log("pgender="+pgender);
+  console.log("pmobile="+pmobile);
+  console.log("pemail="+pemail);
+  // console.log("pphoto="+pphoto);
+  console.log("pmothername="+pmothername);
+  console.log("dname="+dname);
+  console.log("ddob="+ddob);
+  console.log("dgender="+dgender);
+  // console.log("dphoto="+dphoto);
+  console.log("demail="+demail);
+  console.log("dmobile="+dmobile);
+
+  var obj = {
+    status : "SUCCESS"
+  }
+
+  var sql0 = "INSERT INTO patient_master (pm_patient_id,pm_patient_name,pm_dob,pm_gender,pm_contact_mobile,pm_patient_email,pm_patient_photo,pm_mothers_first_name) VALUES ((?),(?),(?),(?),(?),(?),(?),(?))";
+
+  con.getConnection(function(err,connection){
+    if(err){
+      console.log("ERROR IN registerpatientdep IN GETTING CONNECTION FOR PID = "+pid);
+      console.log(err);
+      obj.status = "CONNECTION ERROR";
+      console.log("RESPONSE="+JSON.stringify(obj));
+      console.log("END----------registerpatientdep----------"+now);
+      res.send(JSON.stringify(obj));
+    }else{
+      if(flag == 1){
+
+        connection.query(sql0,[pid,pname,pdob,pgender,pmobile,pemail,pphoto,pmothername],function(err,row0){
+          if(err){
+            console.log("ERROR IN registerpatientdep IN RUNING SQL0 FOR PID = "+pid);
+            console.log(err);
+            obj.status = "CONNECTION ERROR";
+            console.log("RESPONSE="+JSON.stringify(obj));
+            console.log("END----------registerpatientdep----------"+now);
+            res.send(JSON.stringify(obj));
+          }else{
+            if(row0.affectedRows == 1){
+              obj.status = "SUCCESS";
+              console.log("RESPONSE="+JSON.stringify(obj));
+              console.log("END----------registerpatientdep----------"+now);
+              res.send(JSON.stringify(obj));
+            }else{
+              console.log("ERROR IN registerpatientdep IN RUNING SQL0 0 ROWS AFFFECTED FOR PID = "+pid);
+              obj.status = "CONNECTION ERROR";
+              console.log("RESPONSE="+JSON.stringify(obj));
+              console.log("END----------registerpatientdep----------"+now);
+              res.send(JSON.stringify(obj));
+            }
+          }
+        })
+
+      }else if(flag == 2){
+
+      }else if(flag == 3){
+
+      }else{
+        console.log("ERROR IN registerpatientdep WRONG VALUE OF FLAG");
+        obj.status = "CONNECTION ERROR";
+        console.log("RESPONSE="+JSON.stringify(obj));
+        console.log("END----------registerpatientdep----------"+now);
+        res.send(JSON.stringify(obj));
+      }
+      connection.release();
+
+    }
+  })
+
+
+
+
+})
+
 // app.post("/patientidinfo",function(req,res){
 //
 //   var now = new Date();
