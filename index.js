@@ -138,6 +138,7 @@ app.post("/registerpatientdep",function(req,res){
   }
 
   var sql0 = "INSERT INTO patient_master (pm_patient_id,pm_patient_name,pm_dob,pm_gender,pm_contact_mobile,pm_patient_email,pm_patient_photo,pm_mothers_first_name) VALUES ((?),(?),(?),(?),(?),(?),(?),(?))";
+  var sql1 = "INSERT INTO patient_login_details_master (pldm_username,pldm_password,pldm_patient_id,pldm_mobile) VALUES ((?),(?),(?),(?))";
 
   con.getConnection(function(err,connection){
     if(err){
@@ -147,30 +148,91 @@ app.post("/registerpatientdep",function(req,res){
       console.log("RESPONSE="+JSON.stringify(obj));
       console.log("END----------registerpatientdep----------"+now);
       res.send(JSON.stringify(obj));
+      return err;
     }else{
       if(flag == 1){
 
-        connection.query(sql0,[pid,pname,pdob,pgender,pmobile,pemail,pphoto,pmothername],function(err,row0){
+        connection.beginTransaction(function(err){
           if(err){
-            console.log("ERROR IN registerpatientdep IN RUNING SQL0 FOR PID = "+pid);
+            console.log("ERROR IN registerpatientdep IN BEGINING TRANSACTION FOR PID = "+pid);
             console.log(err);
             obj.status = "CONNECTION ERROR";
             console.log("RESPONSE="+JSON.stringify(obj));
             console.log("END----------registerpatientdep----------"+now);
             res.send(JSON.stringify(obj));
+            return err;
           }else{
-            if(row0.affectedRows == 1){
-              obj.status = "SUCCESS";
-              console.log("RESPONSE="+JSON.stringify(obj));
-              console.log("END----------registerpatientdep----------"+now);
-              res.send(JSON.stringify(obj));
-            }else{
-              console.log("ERROR IN registerpatientdep IN RUNING SQL0 0 ROWS AFFFECTED FOR PID = "+pid);
-              obj.status = "CONNECTION ERROR";
-              console.log("RESPONSE="+JSON.stringify(obj));
-              console.log("END----------registerpatientdep----------"+now);
-              res.send(JSON.stringify(obj));
-            }
+
+            connection.query(sql0,[pid,pname,pdob,pgender,pmobile,pemail,pphoto,pmothername],function(err,row0){
+              if(err){
+                console.log("ERROR IN registerpatientdep IN RUNING SQL0 FOR PID = "+pid);
+                console.log(err);
+                obj.status = "CONNECTION ERROR";
+                console.log("RESPONSE="+JSON.stringify(obj));
+                console.log("END----------registerpatientdep----------"+now);
+                res.send(JSON.stringify(obj));
+                connection.rollback(function(){
+                  return err;
+                })
+              }else{
+                if(row0.affectedRows == 1){
+                  connection.query(sql1,[pemail,"55555",pid,pmobile],function(err,row1){
+                    if(err){
+                      console.log("ERROR IN registerpatientdep IN RUNING SQL1 FOR PID = "+pid);
+                      console.log(err);
+                      obj.status = "CONNECTION ERROR";
+                      console.log("RESPONSE="+JSON.stringify(obj));
+                      console.log("END----------registerpatientdep----------"+now);
+                      res.send(JSON.stringify(obj));
+                      connection.rollback(function(){
+                        return err;
+                      })
+                    }else{
+                      if(row1.affectedRows == 1){
+                        connection.commit(function(err){
+                          if(err){
+                            console.log("ERROR IN registerpatientdep IN COMMITING FOR PID = "+pid);
+                            console.log(err);
+                            obj.status = "CONNECTION ERROR";
+                            console.log("RESPONSE="+JSON.stringify(obj));
+                            console.log("END----------registerpatientdep----------"+now);
+                            res.send(JSON.stringify(obj));
+                            connection.rollback(function(){
+                              return err;
+                            })
+                          }else{
+                            obj.status = "SUCCESS";
+                            console.log("RESPONSE="+JSON.stringify(obj));
+                            console.log("END----------registerpatientdep----------"+now);
+                            res.send(JSON.stringify(obj));
+                          }
+                        })
+                      }else{
+                        console.log("ERROR IN registerpatientdep IN RUNING SQL1 0 ROWS AFFFECTED FOR PID = "+pid);
+                        obj.status = "CONNECTION ERROR";
+                        console.log("RESPONSE="+JSON.stringify(obj));
+                        console.log("END----------registerpatientdep----------"+now);
+                        res.send(JSON.stringify(obj));
+                        connection.rollback(function(){
+
+                        })
+                      }
+                    }
+                  })
+
+                }else{
+                  console.log("ERROR IN registerpatientdep IN RUNING SQL0 0 ROWS AFFFECTED FOR PID = "+pid);
+                  obj.status = "CONNECTION ERROR";
+                  console.log("RESPONSE="+JSON.stringify(obj));
+                  console.log("END----------registerpatientdep----------"+now);
+                  res.send(JSON.stringify(obj));
+                  connection.rollback(function(){
+
+                  })
+                }
+              }
+            })
+
           }
         })
 
