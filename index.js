@@ -32,7 +32,62 @@ app.get("/q",function(req,res){
   res.send(date.format(now, 'YYYY/MM/DD HH:mm:ss'));
 })
 
+app.post("/patientdependent",function(req,res){
 
+  var now = new Date();
+  console.log("START----------patientdependent----------"+now);
+
+  var Object = req.body;
+  var pid = Object.pid;
+  var obj = {
+    status : "",
+    dependents : []
+  }
+  var sql = "SELECT * FROM patient_dependent_master AS pdm INNER JOIN patient_master AS pm ON pdm.pdm_patient_id = pm.pm_patient_id WHERE pm.pm_patient_id = ?";
+
+  con.getConnection(function(err,connection){
+    if(err){
+      console.log("ERROR IN patientdependent IN CONNECTING TO DATABASE FOR PID ="+pid);
+      console.log(err);
+      obj.status = "CONNECTION ERROR";
+      console.log("REPONSE="+JSON.stringify(obj));
+      console.log("END----------patientdependent----------"+now);
+      res.send(JSON.stringify(obj));
+    }else{
+      connection.query(sql,[pid],function(err,row){
+        if(err){
+          console.log("ERROR IN patientdependent IN RUNNING SQL TO DATABASE FOR PID ="+pid);
+          console.log(err);
+          obj.status = "CONNECTION ERROR";
+          console.log("REPONSE="+JSON.stringify(obj));
+          console.log("END----------patientdependent----------"+now);
+          res.send(JSON.stringify(obj));
+        }else{
+          for(var i=0;i<row.length;i++){
+            var oo = {
+              pdmid : row[i].pdm_id,
+              patientid : row[i].pdm_patient_id,
+              dependentid : row[i].pdm_dependent_id,
+              name : row[i].pdm_dependent_name,
+              dob : row[i].pdm_dob,
+              gender : row[i].pdm_gender,
+              photo : row[i].pdm_dependent_photo,
+              email : row[i].pdm_dependent_email,
+              mobile : row[i].pdm_dependent_mobile
+            }
+            obj.dependents.push(oo);
+          }
+          obj.status = "SUCCESS";
+          console.log("REPONSE="+JSON.stringify(obj));
+          console.log("END----------patientdependent----------"+now);
+          res.send(JSON.stringify(obj));
+        }
+      })
+      connection.release();
+    }
+  })
+
+})
 
 app.post("/patientidinfo",function(req,res){
 
@@ -106,13 +161,12 @@ app.post("/patientidinfo",function(req,res){
 
 })
 
-
 app.post("/getpatientid",function(req,res){
   var now = new Date();
   console.log("START----------getpatientid----------"+now);
 
-  var Object = req.body;
-  var number = Object.number;
+  // var Object = req.body;
+  // var number = Object.number;
   var Id = "";
   var obj = {
     status : "",
