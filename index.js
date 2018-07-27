@@ -110,7 +110,7 @@ app.post("/registerpatientdep",function(req,res){
   var pemail = Object.pemail;
   var pphoto = Object.pphoto.toString();
   var pmothername = Object.mname;
-  var dname = Objct.dname;
+  var dname = Object.dname;
   var ddob = Object.ddob;
   var dgender = Object.dgender;
   var dphoto = Object.dphoto.toString();
