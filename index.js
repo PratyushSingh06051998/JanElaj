@@ -64,6 +64,7 @@ app.post("/patientdependent",function(req,res){
           res.send(JSON.stringify(obj));
         }else{
           for(var i=0;i<row.length;i++){
+
             var oo = {
               pdmid : row[i].pdm_id,
               patientid : row[i].pdm_patient_id,
@@ -71,13 +72,14 @@ app.post("/patientdependent",function(req,res){
               name : row[i].pdm_dependent_name,
               dob : row[i].pdm_dob,
               gender : row[i].pdm_gender,
-              if(row[i].pdm_dependent_photo == null){
-                photo : "",
-              }else {
-                photo : row[i].pdm_dependent_photo.toString(),
-              }
+              photo :"",
               email : row[i].pdm_dependent_email,
               mobile : row[i].pdm_dependent_mobile
+            }
+            if(row[i].pdm_dependent_photo == null){
+              oo.photo = "";
+            }else {
+              oo.photo = row[i].pdm_dependent_photo.toString();
             }
             obj.dependents.push(oo);
           }
