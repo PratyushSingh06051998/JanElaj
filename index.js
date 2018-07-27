@@ -71,7 +71,7 @@ app.post("/patientdependent",function(req,res){
               name : row[i].pdm_dependent_name,
               dob : row[i].pdm_dob,
               gender : row[i].pdm_gender,
-              photo : row[i].pdm_dependent_photo,
+              photo : row[i].pdm_dependent_photo.toString(),
               email : row[i].pdm_dependent_email,
               mobile : row[i].pdm_dependent_mobile
             }
