@@ -140,7 +140,10 @@ app.post("/registerpatientdep",function(req,res){
   }
 
   var obj = {
-    status : "SUCCESS"
+    status : "SUCCESS",
+    pid : "",
+    pdmid : "",
+    pdid : ""
   }
 
   var sql0 = "INSERT INTO patient_master (pm_patient_id,pm_patient_name,pm_dob,pm_gender,pm_contact_mobile,pm_patient_email,pm_patient_photo,pm_mothers_first_name) VALUES ((?),(?),(?),(?),(?),(?),(?),(?))";
@@ -226,6 +229,7 @@ app.post("/registerpatientdep",function(req,res){
                                   })
                                 }else{
                                   obj.status = "SUCCESS";
+                                  obj.pid = pid;
                                   console.log("RESPONSE="+JSON.stringify(obj));
                                   console.log("END----------registerpatientdep----------"+now);
                                   res.send(JSON.stringify(obj));
@@ -291,10 +295,10 @@ app.post("/registerpatientdep",function(req,res){
 
                   var value=0;
 
-                  if(data[0] == "PDMID"){
+                  if(data[0] == "PDID"){
 
                     value = parseInt(data[1]);
-                    pdmid = "PDMID"+""+data[1];
+                    pdmid = "PDID"+""+data[1];
                     value++;
                     data[1]=value.toString();
                   }
@@ -347,6 +351,9 @@ app.post("/registerpatientdep",function(req,res){
                                      })
                                    }else{
                                      obj.status = "SUCCESS";
+                                     obj.pid = pid;
+                                     obj.pdmid = row3.insertId;
+                                     obj.pdid = pdmid;
                                      console.log("RESPONSE="+JSON.stringify(obj));
                                      console.log("END----------registerpatientdep----------"+now);
                                      res.send(JSON.stringify(obj));
@@ -451,10 +458,10 @@ app.post("/registerpatientdep",function(req,res){
 
                                     var value=0;
 
-                                    if(data[0] == "PDM"){
+                                    if(data[0] == "PDID"){
 
                                       value = parseInt(data[1]);
-                                      pdmid = "PDM"+""+data[1];
+                                      pdmid = "PDID"+""+data[1];
                                       value++;
                                       data[1]=value.toString();
                                     }
@@ -504,6 +511,9 @@ app.post("/registerpatientdep",function(req,res){
                                                          return err;
                                                        })
                                                      }else{
+                                                       obj.pid = pid;
+                                                       obj.pdmid = row3.insertId;
+                                                       obj.pdid = pdmid;
                                                        obj.status = "SUCCESS";
                                                        console.log("RESPONSE="+JSON.stringify(obj));
                                                        console.log("END----------registerpatientdep----------"+now);
@@ -598,78 +608,6 @@ app.post("/registerpatientdep",function(req,res){
 
 
 })
-
-// app.post("/patientidinfo",function(req,res){
-//
-//   var now = new Date();
-//   console.log("START----------patientidinfo----------"+now);
-//
-//   var obj = {
-//     status:"",
-//     present : "",
-//     uname : "",
-//     mname : "",
-//     dob : "",
-//     gender : "",
-//     mobile : "",
-//     email : "",
-//     photo : ""
-//   }
-//
-//   var Object = req.body;
-//
-//   var pm_patient_id = Object.pid;
-//   console.log("pm_patient_id="+pm_patient_id);
-//
-//   var sql = "SELECT * FROM patient_master WHERE  pm_contact_mobile = ?";
-//
-//   con.getConnection(function(err,connection){
-//     if(err){
-//       console.log("ERROR IN patientidinfo IN BUILDING CONNECTION FOR pm_patient_id = "+pm_patient_id);
-//       console.log("ERROR CODE :"+err.code);
-//       obj.status = "CONNECTION ERROR";
-//       console.log("RESPONSE="+JSON.stringify(obj));
-//       console.log("END----------patientidinfo----------"+now);
-//       res.send(JSON.stringify(obj));
-//       return err;
-//     }else{
-//       connection.query(sql,[pm_patient_id],function(err,row){
-//         if(err){
-//           console.log("ERROR IN patientidinfo IN RUNNING SQL FOR pm_patient_id = "+pm_patient_id);
-//           console.log("ERROR CODE :"+err.code);
-//           obj.status = "CONNECTION ERROR";
-//           console.log("RESPONSE="+JSON.stringify(obj));
-//           console.log("END----------patientidinfo----------"+now);
-//           res.send(JSON.stringify(obj));
-//         }else{
-//           if(row.length >0){
-//             obj.status = "SUCCESS";
-//             obj.present = "Y"
-//             obj.uname = row[0].pm_patient_name;
-//             obj.mname = row[0].pm_mothers_first_name;
-//             obj.dob = row[0].pm_dob;
-//             obj.gender = row[0].pm_gender;
-//             obj.mobile = row[0].pm_contact_mobile;
-//             obj.email = row[0].pm_patient_email;
-//             obj.photo = row[0].pm_patient_photo.toString();
-//             console.log("RESPONSE="+JSON.stringify(obj));
-//             console.log("END----------patientidinfo----------"+now);
-//             res.send(JSON.stringify(obj));
-//           }else{
-//             obj.status = "SUCCESS";
-//             obj.present = "N"
-//             console.log("RESPONSE="+JSON.stringify(obj));
-//             console.log("END----------patientidinfo----------"+now);
-//             res.send(JSON.stringify(obj));
-//           }
-//         }
-//       })
-//       connection.release();
-//
-//     }
-//   })
-//
-// })
 
 app.post("/getpatientid",function(req,res){
   var now = new Date();
