@@ -116,6 +116,7 @@ app.post("/registerpatientdep",function(req,res){
   var dphoto = Object.dphoto.toString();
   var demail = Object.demail;
   var dmobile = Object.dmobile;
+  var phonetype = parseInt(Object.phonetype);
 
   console.log("flag="+flag);
   console.log("pid="+pid);
@@ -132,6 +133,11 @@ app.post("/registerpatientdep",function(req,res){
   // console.log("dphoto="+dphoto);
   console.log("demail="+demail);
   console.log("dmobile="+dmobile);
+  console.log("phonetype="+phonetype);
+
+  if(phonetype == 2){
+    pemail = pid;
+  }
 
   var obj = {
     status : "SUCCESS"
@@ -169,7 +175,6 @@ app.post("/registerpatientdep",function(req,res){
                 return err;
               }else{
 
-                console.log("oahfuaebauebkablabksrbvksrj vkjrsbvkhsr"+row2[0].datee);
 
                 connection.query(sql0,[pid,pname,row2[0].datee,pgender,pmobile,pemail,pphoto,pmothername],function(err,row0){
                   if(err){
