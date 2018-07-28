@@ -146,7 +146,7 @@ app.post("/registerpatientdep",function(req,res){
     pdid : ""
   }
 
-  var sql0 = "INSERT INTO patient_master (pm_patient_id,pm_patient_name,pm_dob,pm_gender,pm_contact_mobile,pm_patient_email,pm_patient_photo,pm_mothers_first_name,pm_dependent_flag) VALUES ((?),(?),(?),(?),(?),(?),(?),(?),(?))";
+  var sql0 = "INSERT INTO patient_master (pm_patient_id,pm_patient_name,pm_dob,pm_gender,pm_contact_mobile,pm_patient_email,pm_patient_photo,pm_mothers_first_name,pm_dependent_flag,pm_reg_date) VALUES ((?),(?),(?),(?),(?),(?),(?),(?),(?),SYSDATE())";
   var sql1 = "INSERT INTO patient_login_details_master (pldm_username,pldm_password,pldm_patient_id,pldm_mobile) VALUES ((?),(?),(?),(?))";
   var sql3 = "INSERT INTO patient_dependent_master (pdm_patient_id,pdm_dependent_id,pdm_dependent_name,pdm_dob,pdm_gender,pdm_dependent_photo,pdm_dependent_email,pdm_dependent_mobile,pdm_dependent_reg_date) VALUES ((?),(?),(?),(?),(?),(?),(?),(?),SYSDATE())";
   var sql2 = "SELECT STR_TO_DATE((?), '%d %m %Y') AS datee";
