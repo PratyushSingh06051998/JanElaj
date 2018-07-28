@@ -377,6 +377,190 @@ app.post("/registerpatientdep",function(req,res){
 
       }else if(flag == 3){
 
+
+        connection.query(sql2,[pdob],function(err,row2){
+          if(err){
+            console.log("ERROR IN registerpatientdep IN RUNNING SQL2 FOR PID = "+pid);
+            console.log(err);
+            obj.status = "CONNECTION ERROR";
+            console.log("RESPONSE="+JSON.stringify(obj));
+            console.log("END----------registerpatientdep----------"+now);
+            res.send(JSON.stringify(obj));
+            return err;
+          }else{
+
+            if(row2.length>0){
+              connection.beginTransaction(function(err){
+                if(err){
+                  console.log("ERROR IN registerpatientdep IN BEGINING TRANSACTION FOR PID = "+pid);
+                  console.log(err);
+                  obj.status = "CONNECTION ERROR";
+                  console.log("RESPONSE="+JSON.stringify(obj));
+                  console.log("END----------registerpatientdep----------"+now);
+                  res.send(JSON.stringify(obj));
+                  return err;
+                }else{
+
+                  if(phonetype == 2){
+                    pemail = pid;
+                  }
+
+                  connection.query(sql0,[pid,pname,row2[0].datee,pgender,pmobile,pemail,pphoto,pmothername],function(err,row0){
+                    if(err){
+                      console.log("ERROR IN registerpatientdep IN RUNING SQL0 FOR PID = "+pid);
+                      console.log(err);
+                      obj.status = "CONNECTION ERROR";
+                      console.log("RESPONSE="+JSON.stringify(obj));
+                      console.log("END----------registerpatientdep----------"+now);
+                      res.send(JSON.stringify(obj));
+                      connection.rollback(function(){
+                        return err;
+                      })
+                    }else{
+                      if(row0.affectedRows == 1){
+                        connection.query(sql1,[pemail,"55555",pid,pmobile],function(err,row1){
+                          if(err){
+                            console.log("ERROR IN registerpatientdep IN RUNING SQL1 FOR PID = "+pid);
+                            console.log(err);
+                            obj.status = "CONNECTION ERROR";
+                            console.log("RESPONSE="+JSON.stringify(obj));
+                            console.log("END----------registerpatientdep----------"+now);
+                            res.send(JSON.stringify(obj));
+                            connection.rollback(function(){
+                              return err;
+                            })
+                          }else{
+                            if(row1.affectedRows == 1){
+
+                              var pdmid="";
+                              var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
+                              var Mydata = [];
+                              var csvStream = csv.parse().on("data", function(data){
+
+                                    var value=0;
+
+                                    if(data[0] == "PDM"){
+
+                                      value = parseInt(data[1]);
+                                      pdmid = "PDM"+""+data[1];
+                                      value++;
+                                      data[1]=value.toString();
+                                    }
+                                    Mydata.push(data);
+                                  })
+                                  .on("end", function(){
+                                       var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
+                                       csv.write(Mydata, {headers: true}).pipe(ws);
+
+                                       connection.query(sql2,[ddob],function(err,row22){
+                                         if(err){
+                                           console.log("ERROR IN registerpatientdep IN RUNNING SQL2 FOR PID = "+pid);
+                                           console.log(err);
+                                           obj.status = "CONNECTION ERROR";
+                                           console.log("RESPONSE="+JSON.stringify(obj));
+                                           console.log("END----------registerpatientdep----------"+now);
+                                           res.send(JSON.stringify(obj));
+                                           return err;
+                                         }else{
+
+                                           if(row22.length>0){
+
+                                             connection.query(sql3,[pid,pdmid,dname,row22[0].datee,dgender,dphoto,demail,dmobile],function(err,row3){
+                                               if(err){
+                                                 console.log("ERROR IN registerpatientdep IN RUNNING SQL3 FOR PID = "+pid);
+                                                 console.log(err);
+                                                 obj.status = "CONNECTION ERROR";
+                                                 console.log("RESPONSE="+JSON.stringify(obj));
+                                                 console.log("END----------registerpatientdep----------"+now);
+                                                 res.send(JSON.stringify(obj));
+                                                 return err;
+                                               }else{
+                                                 if(row3.affectedRows == 1){
+                                                   connection.commit(function(err){
+                                                     if(err){
+                                                       console.log("ERROR IN registerpatientdep IN COMMITING FOR PID = "+pid);
+                                                       console.log(err);
+                                                       obj.status = "CONNECTION ERROR";
+                                                       console.log("RESPONSE="+JSON.stringify(obj));
+                                                       console.log("END----------registerpatientdep----------"+now);
+                                                       res.send(JSON.stringify(obj));
+                                                       connection.rollback(function(){
+                                                         return err;
+                                                       })
+                                                     }else{
+                                                       obj.status = "SUCCESS";
+                                                       console.log("RESPONSE="+JSON.stringify(obj));
+                                                       console.log("END----------registerpatientdep----------"+now);
+                                                       res.send(JSON.stringify(obj));
+                                                     }
+                                                   })
+                                                 }else{
+                                                   console.log("ERROR IN registerpatientdep IN SQL2 0 ROWS RETUREND FOR PID = "+pid);
+                                                   console.log(err);
+                                                   obj.status = "CONNECTION ERROR";
+                                                   console.log("RESPONSE="+JSON.stringify(obj));
+                                                   console.log("END----------registerpatientdep----------"+now);
+                                                   res.send(JSON.stringify(obj));
+                                                 }
+                                               }
+                                             })
+
+                                           }else{
+                                             console.log("ERROR IN registerpatientdep IN SQL2 0 ROWS RETUREND FOR PID = "+pid);
+                                             console.log(err);
+                                             obj.status = "CONNECTION ERROR";
+                                             console.log("RESPONSE="+JSON.stringify(obj));
+                                             console.log("END----------registerpatientdep----------"+now);
+                                             res.send(JSON.stringify(obj));
+                                           }
+
+                                         }
+                                       })
+
+                                  });
+                              stream.pipe(csvStream);
+
+                            }else{
+                              console.log("ERROR IN registerpatientdep IN RUNING SQL1 0 ROWS AFFFECTED FOR PID = "+pid);
+                              obj.status = "CONNECTION ERROR";
+                              console.log("RESPONSE="+JSON.stringify(obj));
+                              console.log("END----------registerpatientdep----------"+now);
+                              res.send(JSON.stringify(obj));
+                              connection.rollback(function(){
+
+                              })
+                            }
+                          }
+                        })
+
+                      }else{
+                        console.log("ERROR IN registerpatientdep IN RUNING SQL0 0 ROWS AFFFECTED FOR PID = "+pid);
+                        obj.status = "CONNECTION ERROR";
+                        console.log("RESPONSE="+JSON.stringify(obj));
+                        console.log("END----------registerpatientdep----------"+now);
+                        res.send(JSON.stringify(obj));
+                        connection.rollback(function(){
+
+                        })
+                      }
+                    }
+                  })
+
+                }
+              })
+            }else{
+              console.log("ERROR IN registerpatientdep IN RUNNING SQL2 0 ROWS RETURNED FOR PID = "+pid);
+              obj.status = "CONNECTION ERROR";
+              console.log("RESPONSE="+JSON.stringify(obj));
+              console.log("END----------registerpatientdep----------"+now);
+              res.send(JSON.stringify(obj));
+            }
+
+
+          }
+        })
+
+
       }else{
         console.log("ERROR IN registerpatientdep WRONG VALUE OF FLAG");
         obj.status = "CONNECTION ERROR";
