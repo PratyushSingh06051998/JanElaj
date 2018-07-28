@@ -304,6 +304,8 @@ app.post("/registerpatientdep",function(req,res){
                      var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
                      csv.write(Mydata, {headers: true}).pipe(ws);
 
+                     console.log("aebuaebuaebvkrsbioewbv="+pdmid);
+
                      connection.query(sql2,[ddob],function(err,row2){
                        if(err){
                          console.log("ERROR IN registerpatientdep IN RUNNING SQL2 FOR PID = "+pid);
