@@ -291,10 +291,10 @@ app.post("/registerpatientdep",function(req,res){
 
                   var value=0;
 
-                  if(data[0] == "PDM"){
+                  if(data[0] == "PDMID"){
 
                     value = parseInt(data[1]);
-                    pdmid = "PDM"+""+data[1];
+                    pdmid = "PDMID"+""+data[1];
                     value++;
                     data[1]=value.toString();
                   }
@@ -360,7 +360,7 @@ app.post("/registerpatientdep",function(req,res){
                                  console.log("END----------registerpatientdep----------"+now);
                                  res.send(JSON.stringify(obj));
                                  connection.rollback(function(){
-                                  
+
                                  })
                                }
                              }
