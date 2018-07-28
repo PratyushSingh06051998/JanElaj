@@ -146,10 +146,11 @@ app.post("/registerpatientdep",function(req,res){
     pdid : ""
   }
 
-  var sql0 = "INSERT INTO patient_master (pm_patient_id,pm_patient_name,pm_dob,pm_gender,pm_contact_mobile,pm_patient_email,pm_patient_photo,pm_mothers_first_name) VALUES ((?),(?),(?),(?),(?),(?),(?),(?))";
+  var sql0 = "INSERT INTO patient_master (pm_patient_id,pm_patient_name,pm_dob,pm_gender,pm_contact_mobile,pm_patient_email,pm_patient_photo,pm_mothers_first_name,pm_dependent_flag) VALUES ((?),(?),(?),(?),(?),(?),(?),(?),(?))";
   var sql1 = "INSERT INTO patient_login_details_master (pldm_username,pldm_password,pldm_patient_id,pldm_mobile) VALUES ((?),(?),(?),(?))";
   var sql3 = "INSERT INTO patient_dependent_master (pdm_patient_id,pdm_dependent_id,pdm_dependent_name,pdm_dob,pdm_gender,pdm_dependent_photo,pdm_dependent_email,pdm_dependent_mobile,pdm_dependent_reg_date) VALUES ((?),(?),(?),(?),(?),(?),(?),(?),SYSDATE())";
   var sql2 = "SELECT STR_TO_DATE((?), '%d %m %Y') AS datee";
+  var sql4 = "UPDATE patient_master SET pm_dependent_flag = ? WHERE pm_patient_id = ?";
 
   con.getConnection(function(err,connection){
     if(err){
@@ -190,7 +191,7 @@ app.post("/registerpatientdep",function(req,res){
                     pemail = pid;
                   }
 
-                  connection.query(sql0,[pid,pname,row2[0].datee,pgender,pmobile,pemail,pphoto,pmothername],function(err,row0){
+                  connection.query(sql0,[pid,pname,row2[0].datee,pgender,pmobile,pemail,pphoto,pmothername,"N"],function(err,row0){
                     if(err){
                       console.log("ERROR IN registerpatientdep IN RUNING SQL0 FOR PID = "+pid);
                       console.log(err);
@@ -338,9 +339,10 @@ app.post("/registerpatientdep",function(req,res){
                                })
                               }else{
                                if(row3.affectedRows == 1){
-                                 connection.commit(function(err){
+
+                                 connection.query(sql4,["Y",pid],function(err,row5){
                                    if(err){
-                                     console.log("ERROR IN registerpatientdep IN COMMITING FOR PID = "+pid);
+                                     console.log("ERROR IN registerpatientdep IN RUNNING SQL4 FOR PID = "+pid);
                                      console.log(err);
                                      obj.status = "CONNECTION ERROR";
                                      console.log("RESPONSE="+JSON.stringify(obj));
@@ -350,15 +352,40 @@ app.post("/registerpatientdep",function(req,res){
                                        return err;
                                      })
                                    }else{
-                                     obj.status = "SUCCESS";
-                                     obj.pid = pid;
-                                     obj.pdmid = row3.insertId;
-                                     obj.pdid = pdmid;
-                                     console.log("RESPONSE="+JSON.stringify(obj));
-                                     console.log("END----------registerpatientdep----------"+now);
-                                     res.send(JSON.stringify(obj));
+                                     if(row5.affectedRows == 1){
+                                       connection.commit(function(err){
+                                         if(err){
+                                           console.log("ERROR IN registerpatientdep IN COMMITING FOR PID = "+pid);
+                                           console.log(err);
+                                           obj.status = "CONNECTION ERROR";
+                                           console.log("RESPONSE="+JSON.stringify(obj));
+                                           console.log("END----------registerpatientdep----------"+now);
+                                           res.send(JSON.stringify(obj));
+                                           connection.rollback(function(){
+                                             return err;
+                                           })
+                                         }else{
+                                           obj.status = "SUCCESS";
+                                           obj.pid = pid;
+                                           obj.pdmid = row3.insertId;
+                                           obj.pdid = pdmid;
+                                           console.log("RESPONSE="+JSON.stringify(obj));
+                                           console.log("END----------registerpatientdep----------"+now);
+                                           res.send(JSON.stringify(obj));
+                                         }
+                                       })
+                                     }else{
+                                       console.log("ERROR IN registerpatientdep IN RUNNING SQL4 0 AFFECTED FOR PID = "+pid);
+                                       obj.status = "CONNECTION ERROR";
+                                       console.log("RESPONSE="+JSON.stringify(obj));
+                                       console.log("END----------registerpatientdep----------"+now);
+                                       res.send(JSON.stringify(obj));
+                                       connection.rollback(function(){
+                                       })
+                                     }
                                    }
                                  })
+
                                }else{
                                  console.log("ERROR IN registerpatientdep IN SQL2 0 ROWS RETUREND FOR PID = "+pid);
                                  console.log(err);
@@ -424,7 +451,7 @@ app.post("/registerpatientdep",function(req,res){
                     pemail = pid;
                   }
 
-                  connection.query(sql0,[pid,pname,row2[0].datee,pgender,pmobile,pemail,pphoto,pmothername],function(err,row0){
+                  connection.query(sql0,[pid,pname,row2[0].datee,pgender,pmobile,pemail,pphoto,pmothername,"Y"],function(err,row0){
                     if(err){
                       console.log("ERROR IN registerpatientdep IN RUNING SQL0 FOR PID = "+pid);
                       console.log(err);
