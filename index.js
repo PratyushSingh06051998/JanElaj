@@ -314,7 +314,9 @@ app.post("/registerpatientdep",function(req,res){
                          console.log("RESPONSE="+JSON.stringify(obj));
                          console.log("END----------registerpatientdep----------"+now);
                          res.send(JSON.stringify(obj));
-                         return err;
+                         connection.rollback(function(){
+                           return err;
+                         })
                        }else{
 
                          if(row2.length>0){
@@ -327,8 +329,10 @@ app.post("/registerpatientdep",function(req,res){
                                console.log("RESPONSE="+JSON.stringify(obj));
                                console.log("END----------registerpatientdep----------"+now);
                                res.send(JSON.stringify(obj));
-                               return err;
-                             }else{
+                               connection.rollback(function(){
+                                 return err;
+                               })
+                              }else{
                                if(row3.affectedRows == 1){
                                  connection.commit(function(err){
                                    if(err){
@@ -355,6 +359,9 @@ app.post("/registerpatientdep",function(req,res){
                                  console.log("RESPONSE="+JSON.stringify(obj));
                                  console.log("END----------registerpatientdep----------"+now);
                                  res.send(JSON.stringify(obj));
+                                 connection.rollback(function(){
+                                  
+                                 })
                                }
                              }
                            })
@@ -366,6 +373,9 @@ app.post("/registerpatientdep",function(req,res){
                            console.log("RESPONSE="+JSON.stringify(obj));
                            console.log("END----------registerpatientdep----------"+now);
                            res.send(JSON.stringify(obj));
+                           connection.rollback(function(){
+
+                           })
                          }
 
                        }
@@ -462,7 +472,9 @@ app.post("/registerpatientdep",function(req,res){
                                            console.log("RESPONSE="+JSON.stringify(obj));
                                            console.log("END----------registerpatientdep----------"+now);
                                            res.send(JSON.stringify(obj));
-                                           return err;
+                                           connection.rollback(function(){
+                                             return err;
+                                           })
                                          }else{
 
                                            if(row22.length>0){
@@ -475,7 +487,9 @@ app.post("/registerpatientdep",function(req,res){
                                                  console.log("RESPONSE="+JSON.stringify(obj));
                                                  console.log("END----------registerpatientdep----------"+now);
                                                  res.send(JSON.stringify(obj));
-                                                 return err;
+                                                 connection.rollback(function(){
+                                                   return err;
+                                                 })
                                                }else{
                                                  if(row3.affectedRows == 1){
                                                    connection.commit(function(err){
@@ -503,6 +517,9 @@ app.post("/registerpatientdep",function(req,res){
                                                    console.log("RESPONSE="+JSON.stringify(obj));
                                                    console.log("END----------registerpatientdep----------"+now);
                                                    res.send(JSON.stringify(obj));
+                                                   connection.rollback(function(){
+
+                                                   })
                                                  }
                                                }
                                              })
@@ -514,6 +531,8 @@ app.post("/registerpatientdep",function(req,res){
                                              console.log("RESPONSE="+JSON.stringify(obj));
                                              console.log("END----------registerpatientdep----------"+now);
                                              res.send(JSON.stringify(obj));
+                                             connection.rollback(function(){
+                                             })
                                            }
 
                                          }
