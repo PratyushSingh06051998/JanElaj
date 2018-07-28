@@ -135,9 +135,9 @@ app.post("/registerpatientdep",function(req,res){
   console.log("dmobile="+dmobile);
   console.log("phonetype="+phonetype);
 
-  if(phonetype == 2){
-    pemail = pid;
-  }
+  // if(phonetype == 2){
+  //   pemail = pid;
+  // }
 
   var obj = {
     status : "SUCCESS",
@@ -187,7 +187,7 @@ app.post("/registerpatientdep",function(req,res){
                   return err;
                 }else{
 
-                  if(phonetype == 2){
+                  if(phonetype == 2 || pmobile == "0000000000"){
                     pemail = pid;
                   }
 
@@ -447,7 +447,7 @@ app.post("/registerpatientdep",function(req,res){
                   return err;
                 }else{
 
-                  if(phonetype == 2){
+                  if(phonetype == 2 || pmobile == "0000000000"){
                     pemail = pid;
                   }
 
