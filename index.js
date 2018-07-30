@@ -32,6 +32,68 @@ app.get("/q",function(req,res){
   res.send(date.format(now, 'YYYY/MM/DD HH:mm:ss'));
 })
 
+app.post("/getdiscountinfo",function(req,res){
+
+  var now = new Date();
+  console.log("START----------getdiscountinfo----------"+now);
+
+  var Object = req.body;
+
+  var dlmid = Object.dlmid;
+
+  var obj = {
+    status:"",
+    info : []
+  }
+
+  var sql = "SELECT dlm.dlm_currentloc_discount_flag, dldm.dldm_id, dltm.dltm_id, dcsm.dcsm_sm_service_id, dcsm.dcsm_normal_amount, dcsm.dcsm_discount_flag, dcsm.dcsm_discounted_amount, dcsm.dcsm_id, dltm.dltm_discount_offer_flag, dltm.dltm_id FROM doctor_location_master dlm, doctor_location_day_master dldm, doctor_location_time_master dltm, doctor_clinic_services_master dcsm WHERE dlm_id=dldm.dldm_dlm_id AND   dldm.dldm_id=dltm.dltm_dldm_id AND   dcsm_dlm_id=dlm.dlm_id AND   dlm_id = ? AND   dldm_day_number = upper(substr(dayname(curdate()), 1, 3));";
+
+  con.getConnection(function(err,connection){
+    if(err){
+      console.log("ERROR IN getdiscountinfo IN OPENING CONNECTION FOR DLMID ="+dlmid);
+      console.log(err);
+      obj.status = "CONNECTION ERROR";
+      console.log("RESPONSE = "+JSON.stringify(obj));
+      console.log("END----------getdiscountinfo----------"+now);
+      res.send(JSON.stringify(obj));
+    }else{
+
+      connection.query(sql,[dlmid],function(err,row){
+        if(err){
+          console.log("ERROR IN getdiscountinfo IN RUNNING SQL FOR DLMID ="+dlmid);
+          console.log(err);
+          obj.status = "CONNECTION ERROR";
+          console.log("RESPONSE = "+JSON.stringify(obj));
+          console.log("END----------getdiscountinfo----------"+now);
+          res.send(JSON.stringify(obj));
+        }else{
+          for(var i=0;i<row.length;i++){
+            var oo = {
+              curlocdflag : row[i].dlm_currentloc_discount_flag,
+              dldmid : row[i].dldm_id,
+              dltmid : row[i].dltm_id,
+              sid : row[i].dcsm_sm_service_id,
+              namt : row[i].dcsm_normal_amount,
+              dflag : row[i].dcsm_discount_flag,
+              damt : row[i].dcsm_discounted_amount,
+              dcsmid : row[i].dcsm_id,
+              dofferflag : row[i].dltm_discount_offer_flag,
+              dltmid : row[i].dltm_id
+            }
+            obj.info.push(oo);
+          }
+          obj.status = "SUCCESS";
+          console.log("RESPONSE = "+JSON.stringify(obj));
+          console.log("END----------getdiscountinfo----------"+now);
+          res.send(JSON.stringify(obj));
+        }
+      })
+
+    }
+  })
+
+})
+
 app.post("/patientdependent",function(req,res){
 
   var now = new Date();
