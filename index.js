@@ -88,6 +88,7 @@ app.post("/getdiscountinfo",function(req,res){
           res.send(JSON.stringify(obj));
         }
       })
+      connection.release();
 
     }
   })
