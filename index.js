@@ -50,6 +50,9 @@ app.post("/insertappointment",function(req,res){
   var pdlaid = "";
   var sent=0;
 
+  var obj = {
+    status:""
+  }
   var sql0 = "INSERT INTO patient_doctor_location_appointment (pdla_id,pdla_dlm_id,pdla_pm_patient_id,pdla_appointment_datetime,pdla_dltm_dltm_id,pdla_cancel_flag,pdla_appointment_issue_date,pdla_spot_appointment_flag,pdla_dependent_flag) VALUES ((?),(?),(?),SYSDATE(),(?),(?),SYSDATE(),(?),(?))";
   var sql1 = "INSERT INTO patient_doctor_location_appointment_details (pdlad_id,pdlad_pdla_id,pdlad_dcsm_sm_service_id,pdlad_dcsm_normal_rate,pdlad_dcsm_discount_flag,pdlad_dcsm_discounted_amount,pdlad_bp_upper,pdlad_bp_lower,pdlad_haemoglobin,pdlad_sugar,pdlad_tempreture,pdlad_oxygenlevel,pdlad_chargeable_rate,pdlad_height,pdlad_weight,pdlad_bmi,pdlad_respiratory_level,pdlad_blood_group,pdlad_pulse,pdlad_bodyfat) VALUES ((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?))";
 
