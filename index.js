@@ -7297,6 +7297,9 @@ app.post("/oneviewinfo",function(req,res){
 
 app.post("/quicksethelp",function(req,res){
 
+  var now = new Date();
+  console.log("START----------quicksethelp----------"+now);
+
   var Object = req.body;
   var locid = Object.locid;
 
@@ -7309,18 +7312,33 @@ app.post("/quicksethelp",function(req,res){
   var sql  = "SELECT dm.dm_overall_discount,dlm.dlm_currentloc_discount_flag FROM doctor_master AS dm INNER JOIN doctor_location_master AS dlm ON dm.dm_doctor_id = dlm.dlm_dm_doctor_id WHERE dlm.dlm_lm_location_id = ?"
   con.getConnection(function(err,connection){
     if(err){
-
+      console.log("ERROR IN OPENING CONNECTION IN QUICKSETHELP FOR LOCID = "+locid);
+      console.log(err);
+      obj.status = "CONNECTION ERROR";
+      console.log("RESPONSE"+JSON.stringify(obj));
+      console.log("END----------quicksethelp----------"+now);
+      return err;
     }else{
 
       connection.query(sql,[locid],function(err,row){
         if(err){
-
+          console.log("ERROR IN RUNNING SQL IN QUICKSETHELP FOR LOCID = "+locid);
+          console.log(err);
+          obj.status = "CONNECTION ERROR";
+          console.log("RESPONSE"+JSON.stringify(obj));
+          console.log("END----------quicksethelp----------"+now);
+          return err;
         }else{
           if(row.length>0){
             obj.status = "SUCCESS";
             obj.allflag = row[0].dm_overall_discount;
             obj.curflag = row[0].dlm_currentloc_discount_flag;
             res.send(JSON.stringify(obj));
+          }else{
+            console.log("ERROR IN RUNNING SQL 0 ROWS RETURNED IN QUICKSETHELP FOR LOCID = "+locid);
+            obj.status = "CONNECTION ERROR";
+            console.log("RESPONSE"+JSON.stringify(obj));
+            console.log("END----------quicksethelp----------"+now);
           }
         }
       })
