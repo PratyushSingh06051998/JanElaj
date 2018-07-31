@@ -7362,6 +7362,8 @@ app.post("/quicksethelp",function(req,res){
           if(row.length>0){
             obj.status = "SUCCESS";
             obj.allflag = row[0].dlm_currentloc_discount_flag;
+            console.log("RESPONSE"+JSON.stringify(obj));
+            console.log("END----------quicksethelp----------"+now);
             res.send(JSON.stringify(obj));
           }else{
             console.log("ERROR IN RUNNING SQL 0 ROWS RETURNED IN QUICKSETHELP FOR LOCID = "+locid);
