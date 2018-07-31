@@ -7371,6 +7371,7 @@ app.post("/quicksethelp",function(req,res){
           }
         }
       })
+      connection.release();
 
     }
   })
