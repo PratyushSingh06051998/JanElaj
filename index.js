@@ -6851,7 +6851,7 @@ app.post("/updatemanagediscount",function(req,res){
     status : "SUCCESS"
   }
 
-  var sql0 = "UPDATE doctor_location_master SET dlm_currentloc_discount_flag = ? WHERE dlm_lm_location_id = ?"
+  var sql0 = "UPDATE doctor_location_master SET dlm_currentloc_discount_flag = ? WHERE dlm_id = ?"
   var sql = 'UPDATE doctor_location_time_master SET dltm_discount_offer_flag = ? WHERE dltm_id = ?';
 
   con.getConnection(function(err, connection) {
