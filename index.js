@@ -7335,11 +7335,11 @@ app.post("/quicksethelp",function(req,res){
 
   var obj = {
     status : "",
-    allflag : "",
-    curflag : ""
+    allflag : ""
   }
 
-  var sql  = "SELECT dm.dm_overall_discount,dlm.dlm_currentloc_discount_flag FROM doctor_master AS dm INNER JOIN doctor_location_master AS dlm ON dm.dm_doctor_id = dlm.dlm_dm_doctor_id WHERE dlm.dlm_lm_location_id = ?"
+  // var sql  = "SELECT dm.dm_overall_discount,dlm.dlm_currentloc_discount_flag FROM doctor_master AS dm INNER JOIN doctor_location_master AS dlm ON dm.dm_doctor_id = dlm.dlm_dm_doctor_id WHERE dlm.dlm_lm_location_id = ?";
+  var sql = "SELECT dlm_currentloc_discount_flag FROM doctor_location_master WHERE dlm_lm_location_id = ?";
   con.getConnection(function(err,connection){
     if(err){
       console.log("ERROR IN OPENING CONNECTION IN QUICKSETHELP FOR LOCID = "+locid);
@@ -7361,8 +7361,7 @@ app.post("/quicksethelp",function(req,res){
         }else{
           if(row.length>0){
             obj.status = "SUCCESS";
-            obj.allflag = row[0].dm_overall_discount;
-            obj.curflag = row[0].dlm_currentloc_discount_flag;
+            obj.allflag = row[0].dlm_currentloc_discount_flag;
             res.send(JSON.stringify(obj));
           }else{
             console.log("ERROR IN RUNNING SQL 0 ROWS RETURNED IN QUICKSETHELP FOR LOCID = "+locid);
