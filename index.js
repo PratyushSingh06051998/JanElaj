@@ -6850,7 +6850,10 @@ app.post("/updatemanagediscount",function(req,res){
   var flag = "N";
 
   for(var i=0;i<arr.length;i++){
+    console.log("heye there here i am"+flag);
     if(arr[i].flag == "Y"){
+      console.log("heye there here i am 222" +flag);
+
       flag = "Y";
     }
   }
