@@ -163,6 +163,8 @@ app.post("/insertappointment",function(req,res){
                                                return err;
                                              }else{
                                                obj.status = "SUCCESS";
+                                               console.log("RESPONSE = "+JSON.stringify(obj));
+                                               console.log("END----------insertappointment----------"+now);
                                                res.send(JSON.stringify(obj));
                                              }
                                            })
@@ -7293,6 +7295,41 @@ app.post("/oneviewinfo",function(req,res){
 
 })
 
+app.post("/quicksethelp",function(req,res){
+
+  var Object = req.body;
+  var locid = Object.locid;
+
+  var obj = {
+    status : "",
+    allflag : "",
+    curflag : ""
+  }
+
+  var sql  = "SELECT dm.dm_overall_discount,dlm.dlm_currentloc_discount_flag FROM doctor_master AS dm INNER JOIN doctor_location_master AS dlm ON dm.dm_doctor_id = dlm.dlm_dm_doctor_id WHERE dlm.dlm_lm_location_id = ?"
+  con.getConnection(function(err,connection){
+    if(err){
+
+    }else{
+
+      connection.query(sql,[locid],function(err,row){
+        if(err){
+
+        }else{
+          if(row.length>0){
+            obj.status = "SUCCESS";
+            obj.allflag = row[0].dm_overall_discount;
+            obj.curflag = row[0].dlm_currentloc_discount_flag;
+            res.send(JSON.stringify(obj));
+          }
+        }
+      })
+
+    }
+  })
+
+})
+
 app.post("/alllocdis",function(req,res){
 
   var Object = req.body;
@@ -7436,13 +7473,8 @@ app.post("/currentlocdis",function(req,res){
     status : "SUCCESS"
   }
 
-  // var sql = "UPDATE doctor_location_time_master AS dltm,doctor_location_master AS dlm INNER JOIN doctor_location_master ON dlm.dlm_id = dldm.dldm_dlm_id INNER JOIN doctor_location_day_master AS dldm ON dldm.dldm_id = dltm.dltm_dldm_id  SET dlm.dlm_currentloc_discount_flag = "Y",dltm.dltm_discount_offer_flag = "Y" WHERE dlm.dlm_lm_location_id = "LOC10172"";
-
-  // var sql = "UPDATE doctor_location_time_master AS dltm INNER JOIN doctor_location_day_master AS dldm ON dldm.dldm_id = dltm.dltm_dldm_id INNER JOIN doctor_location_master AS  ON dlm.dlm_id = dldm.dldm_dlm_id   SET dlm.dlm_currentloc_discount_flag = "Y",dltm.dltm_discount_offer_flag = "Y" WHERE dlm.dlm_lm_location_id = "LOC10172"";
-
   var sql0 = "UPDATE doctor_location_master SET dlm_currentloc_discount_flag = ? WHERE dlm_lm_location_id = ?";
   var sql1 = "UPDATE doctor_location_time_master AS dltm INNER JOIN doctor_location_day_master AS dldm ON dldm.dldm_id = dltm.dltm_dldm_id INNER JOIN doctor_location_master AS dlm ON dlm.dlm_id = dldm.dldm_dlm_id SET dltm.dltm_discount_offer_flag = ? WHERE dlm.dlm_lm_location_id = ?";
-  // var sql1 = "UPDATE doctor_location_time_master AS dltm INNER JOIN doctor_location_day_master AS dldm ON dltm.dltm_dldm_id = dldm.dldm_id INNER JOIN doctor_location_master AS dlm ON dldm.dldm_dlm_id = dlm.dlm_id SET dltm.dltm_discount_offer_flag = ? WHERE dlm.dlm_dm_doctor_id = ?"
 
   con.getConnection(function(err,connection){
     if(err){
