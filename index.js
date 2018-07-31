@@ -51,7 +51,7 @@ app.post("/insertappointment",function(req,res){
   var sent=0;
 
   var sql0 = "INSERT INTO patient_doctor_location_appointment (pdla_id,pdla_dlm_id,pdla_pm_patient_id,pdla_appointment_datetime,pdla_dltm_dltm_id,pdla_cancel_flag,pdla_appointment_issue_date,pdla_spot_appointment_flag,pdla_dependent_flag) VALUES ((?),(?),(?),SYSDATE(),(?),(?),SYSDATE(),(?),(?))";
-  var sql1 = "INSERT INTO patient_doctor_location_appointment_details (pdlad_id,pdlad_pdla_id,pdlad_dcsm_sm_service_id,pdlad_dcsm_normal_rate,pdlad_dcsm_discount_flag,pdlad_dcsm_discounted_amount,pdlad_bp_upper,pdlad_bp_lower,pdlad_haemoglobin,pdlad_sugar,pdlad_tempreture,pdlad_oxygenlevel,pdlad_chargeable_rate,pdlad_height,pdlad_weight,pdlad_bmi,pdlad_respiratory_level,pdlad_blood_group) VALUES ((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?))";
+  var sql1 = "INSERT INTO patient_doctor_location_appointment_details (pdlad_id,pdlad_pdla_id,pdlad_dcsm_sm_service_id,pdlad_dcsm_normal_rate,pdlad_dcsm_discount_flag,pdlad_dcsm_discounted_amount,pdlad_bp_upper,pdlad_bp_lower,pdlad_haemoglobin,pdlad_sugar,pdlad_tempreture,pdlad_oxygenlevel,pdlad_chargeable_rate,pdlad_height,pdlad_weight,pdlad_bmi,pdlad_respiratory_level,pdlad_blood_group,pdlad_pulse,pdlad_bodyfat) VALUES ((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?))";
 
   con.getConnection(function(err,connection){
     if(err){
@@ -129,7 +129,7 @@ app.post("/insertappointment",function(req,res){
                                     var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
                                     csv.write(Mydata, {headers: true}).pipe(ws);
 
-                                    connection.query(sql1,[pdladid,pdlaid,arr[i].pdlad_dcsm_sm_service_id,arr[i].pdlad_dcsm_normal_rate,arr[i].pdlad_dcsm_discount_flag,arr[i].pdlad_dcsm_discounted_amount,arr[i].pdlad_bp_upper,arr[i].pdlad_bp_lower,arr[i].pdlad_haemoglobin,arr[i].pdlad_sugar,arr[i].pdlad_tempreture,arr[i].pdlad_oxygenlevel,arr[i].pdlad_chargeable_rate,arr[i].pdlad_height,arr[i].pdlad_weight,arr[i].pdlad_bmi,arr[i].pdlad_respiratory_level,arr[i].pdlad_blood_group],function(err,row1){
+                                    connection.query(sql1,[pdladid,pdlaid,arr[i].pdlad_dcsm_sm_service_id,arr[i].pdlad_dcsm_normal_rate,arr[i].pdlad_dcsm_discount_flag,arr[i].pdlad_dcsm_discounted_amount,arr[i].pdlad_bp_upper,arr[i].pdlad_bp_lower,arr[i].pdlad_haemoglobin,arr[i].pdlad_sugar,arr[i].pdlad_tempreture,arr[i].pdlad_oxygenlevel,arr[i].pdlad_chargeable_rate,arr[i].pdlad_height,arr[i].pdlad_weight,arr[i].pdlad_bmi,arr[i].pdlad_respiratory_level,arr[i].pdlad_blood_group,arr[i].pdlad_pulse,arr[i].pdlad_bodyfat],function(err,row1){
                                       if(err){
                                         console.log("ERROR IN insertappointment IN RUNNING SQL1 FOR DLMID = "+dlmid);
                                         console.log(err);
