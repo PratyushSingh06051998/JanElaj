@@ -32,6 +32,171 @@ app.get("/q",function(req,res){
   res.send(date.format(now, 'YYYY/MM/DD HH:mm:ss'));
 })
 
+app.post("/insertappointment",function(req,res){
+
+  var now = new Date();
+  console.log("START----------insertappointment----------"+now);
+
+  var Object = req.body;
+
+  var dlmid = Object.dlmid;
+  var pid = Object.pid;
+  var dltmid = Object.tid;
+  var dflag = Object.dflag;
+  var arr = [];
+  arr = Object.values;
+  console.log("values = "+JSON.stringify(Object));
+
+  var pdlaid = "";
+  var sent=0;
+
+  var sql0 = "INSERT INTO patient_doctor_location_appointment (pdla_id,pdla_dlm_id,pdla_pm_patient_id,pdla_appointment_datetime,pdla_dltm_dltm_id,pdla_cancel_flag,pdla_appointment_issue_date,pdla_spot_appointment_flag,pdla_dependent_flag) VALUES ((?),(?),(?),SYSDATE(),(?),(?),SYSDATE(),(?),(?))";
+  var sql1 = "INSERT INTO patient_doctor_location_appointment_details (pdlad_id,pdlad_pdla_id,pdlad_dcsm_sm_service_id,pdlad_dcsm_normal_rate,pdlad_dcsm_discount_flag,pdlad_dcsm_discounted_amount,pdlad_bp_upper,pdlad_bp_lower,pdlad_haemoglobin,pdlad_sugar,pdlad_tempreture,pdlad_oxygenlevel,pdlad_chargeable_rate,pdlad_height,pdlad_weight,pdlad_bmi,pdlad_respiratory_level,pdlad_blood_group) VALUES ((?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?),(?))";
+
+  con.getConnection(function(err,connection){
+    if(err){
+      console.log("ERROR IN insertappointment IN OPENING CONNECTION FOR DLMID = "+dlmid);
+      console.log(err);
+      obj.status = "CONNECTION ERROR";
+      console.log("RESPONSE = "+JSON.stringify(obj));
+      console.log("END----------insertappointment----------"+now);
+      res.send(JSON.stringify(obj));
+      return err;
+    }else{
+      connection.beginTransaction(function(err){
+        if(err){
+          console.log("ERROR IN insertappointment IN BEGINING TRANSACTION FOR DLMID = "+dlmid);
+          console.log(err);
+          obj.status = "CONNECTION ERROR";
+          console.log("RESPONSE = "+JSON.stringify(obj));
+          console.log("END----------insertappointment----------"+now);
+          res.send(JSON.stringify(obj));
+          return err;
+        }else{
+
+          var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
+          var Mydata = [];
+          var csvStream = csv.parse().on("data", function(data){
+
+                var value=0;
+
+                if(data[0] == "PDLAID"){
+
+                  value = parseInt(data[1]);
+                  pdlaid = "PDLAID"+""+data[1];
+                  value++;
+                  data[1]=value.toString();
+                }
+                Mydata.push(data);
+              })
+              .on("end", function(){
+                   var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
+                   csv.write(Mydata, {headers: true}).pipe(ws);
+
+                   connection.query(sql0,[pdlaid,dlmid,pid,dltmid,"Y",dflag],function(err,row0){
+                     if(err){
+                       console.log("ERROR IN insertappointment IN RUNNING SQL0 FOR DLMID = "+dlmid);
+                       console.log(err);
+                       obj.status = "CONNECTION ERROR";
+                       console.log("RESPONSE = "+JSON.stringify(obj));
+                       console.log("END----------insertappointment----------"+now);
+                       res.send(JSON.stringify(obj));
+                       return err;
+                     }else{
+                       if(row0.affectedRows == 1){
+
+                         var count=0;
+
+                         for(var i = 0;i<arr.length;i++){
+
+                           var pdladid = "";
+                           var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
+                           var Mydata = [];
+                           var csvStream = csv.parse().on("data", function(data){
+
+                                 var value=0;
+
+                                 if(data[0] == "PDLADID"){
+
+                                   value = parseInt(data[1]);
+                                   pdladid = "PDLADID"+""+data[1];
+                                   value++;
+                                   data[1]=value.toString();
+                                 }
+                                 Mydata.push(data);
+                               })
+                               .on("end", function(){
+                                    var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
+                                    csv.write(Mydata, {headers: true}).pipe(ws);
+
+                                    connection.query(sql1,[pdladid,pdlaid,arr[i].pdlad_dcsm_sm_service_id,arr[i].pdlad_dcsm_normal_rate,arr[i].pdlad_dcsm_discount_flag,arr[i].pdlad_dcsm_discounted_amount,arr[i].pdlad_bp_upper,arr[i].pdlad_bp_lower,arr[i].pdlad_haemoglobin,arr[i].pdlad_sugar,arr[i].pdlad_tempreture,arr[i].pdlad_oxygenlevel,arr[i].pdlad_chargeable_rate,arr[i].pdlad_height,arr[i].pdlad_weight,arr[i].pdlad_bmi,arr[i].pdlad_respiratory_level,arr[i].pdlad_blood_group],function(err,row1){
+                                      if(err){
+                                        console.log("ERROR IN insertappointment IN RUNNING SQL1 FOR DLMID = "+dlmid);
+                                        console.log(err);
+                                        obj.status = "CONNECTION ERROR";
+                                        console.log("RESPONSE = "+JSON.stringify(obj));
+                                        console.log("END----------insertappointment----------"+now);
+                                        if(sent == 0){
+                                          res.send(JSON.stringify(obj));
+                                          sent=1;
+                                        }
+                                        return err;
+                                      }else{
+                                        if(row1.affectedRows == 1){
+                                          count++;
+                                          if(count==arr.length && sent == 0){
+                                            connection.commit(function(err){
+                                              if(err){
+                                                console.log("ERROR IN insertappointment IN COMMITING FOR DLMID = "+dlmid);
+                                                console.log(err);
+                                                obj.status = "CONNECTION ERROR";
+                                                console.log("RESPONSE = "+JSON.stringify(obj));
+                                                console.log("END----------insertappointment----------"+now);
+                                                res.send(JSON.stringify(obj));
+                                                return err;
+                                              }else{
+                                                obj.status = "SUCCESS";
+                                                res.send(JSON.stringify(obj));
+                                              }
+                                            })
+                                          }
+
+                                        }else{
+                                          console.log("ERROR IN insertappointment IN RUNNING SQL0 0 ROWS AFFECTED FOR DLMID = "+dlmid);
+                                          obj.status = "CONNECTION ERROR";
+                                          console.log("RESPONSE = "+JSON.stringify(obj));
+                                          console.log("END----------insertappointment----------"+now);
+                                          if(sent == 0){
+                                            res.send(JSON.stringify(obj));
+                                            sent=1;
+                                          }
+                                        }
+                                      }
+                                    })
+
+                               });
+                           stream.pipe(csvStream);
+
+                         }
+
+                       }else{
+
+                       }
+                     }
+                   })
+
+
+              });
+          stream.pipe(csvStream);
+
+
+        }
+      })
+    }
+  })
+
+})
+
 app.post("/getdiscountinfo",function(req,res){
 
   var now = new Date();
@@ -56,6 +221,7 @@ app.post("/getdiscountinfo",function(req,res){
       console.log("RESPONSE = "+JSON.stringify(obj));
       console.log("END----------getdiscountinfo----------"+now);
       res.send(JSON.stringify(obj));
+      return err;
     }else{
 
       connection.query(sql,[dlmid],function(err,row){
@@ -66,6 +232,7 @@ app.post("/getdiscountinfo",function(req,res){
           console.log("RESPONSE = "+JSON.stringify(obj));
           console.log("END----------getdiscountinfo----------"+now);
           res.send(JSON.stringify(obj));
+          return err;
         }else{
           for(var i=0;i<row.length;i++){
             var oo = {
