@@ -7328,6 +7328,40 @@ app.post("/oneviewinfo",function(req,res){
 
 })
 
+app.post("/getspeciality",function(req,res){
+
+  var obj = {
+    status : "",
+    sparr : []
+  }
+
+  var sql = "SELECT * FROM doctor_speciality_master";
+
+  con.getConnection(function(err,connection){
+    if(err){
+      console.log(err);
+    }else{
+      connection.query(sql,function(err,row){
+        if(err){
+          console.log(err);
+        }else{
+          for(var i=0;i<row.length;i++){
+            var oo = {
+              id : row[i].dsm_speciality_id,
+              name : row[i].dsm_specialityname
+            }
+            obj.sparr.push(oo);
+          }
+          obj.status = "SUCCESS";
+          res.send(JSON.stringify(obj));
+        }
+      })
+      connection.release();
+    }
+  })
+
+})
+
 app.post("/quicksethelp",function(req,res){
 
   var now = new Date();
