@@ -136,7 +136,7 @@ app.post("/insertappointment",function(req,res){
                                    pdladidnum++;
                                    console.log("So it is the pdladid "+pdladid);
 
-                                   connection.query(sql1,[pdladid,pdlaid,arr[i].pdlad_dcsm_sm_service_id,arr[i].pdlad_dcsm_normat_rate,arr[i].pdlad_dcsm_discount_flag,arr[i].pdlad_dcsm_discounted_amount,arr[i].pdlad_bp_upper,arr[i].pdlad_bp_lower,arr[i].pdlad_haemoglobin,arr[i].pdlad_sugar,arr[i].pdlad_tempreture,arr[i].pdlad_oxygenlevel,arr[i].pdlad_chargeablerate,arr[i].pdlad_height,arr[i].pdlad_weight,arr[i].pdlad_bmi,arr[i].pdlad_respiratorylevel,arr[i].pdlad_blood_group,arr[i].pdlad_pulse,arr[i].pdlad_bodyfat],function(err,row1){
+                                   connection.query(sql1,[pdladid,pdlaid,arr[i].pdlad_dcsm_sm_service_id,arr[i].pdlad_dcsm_normat_rate,arr[i].pdlad_dcsm_discount_flag,arr[i].pdlad_dcsm_discounted_amount,arr[i].pdlad_bp_upper,arr[i].pdlad_bp_lower,arr[i].pdlad_haemoglobin,arr[i].pdlad_sugar,arr[i].pdlad_temperature,arr[i].pdlad_oxygenlevel,arr[i].pdlad_chargeablerate,arr[i].pdlad_height,arr[i].pdlad_weight,arr[i].pdlad_bmi,arr[i].pdlad_respiratorylevel,arr[i].pdlad_blood_group,arr[i].pdlad_pulse,arr[i].pdlad_bodyfat],function(err,row1){
                                      if(err){
                                        console.log("ERROR IN insertappointment IN RUNNING SQL1 FOR DLMID = "+dlmid);
                                        console.log(err);
