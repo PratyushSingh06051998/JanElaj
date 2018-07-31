@@ -189,7 +189,11 @@ app.post("/insertappointment",function(req,res){
                          stream.pipe(csvStream);
 
                        }else{
-
+                         console.log("ERROR IN insertappointment IN RUNNING SQL0 0 ROWS AFFECTED FOR DLMID = "+dlmid);
+                         obj.status = "CONNECTION ERROR";
+                         console.log("RESPONSE = "+JSON.stringify(obj));
+                         console.log("END----------insertappointment----------"+now);
+                         res.send(JSON.stringify(obj));
                        }
                      }
                    })
@@ -201,6 +205,7 @@ app.post("/insertappointment",function(req,res){
 
         }
       })
+      connection.release();
     }
   })
 
