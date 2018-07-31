@@ -109,81 +109,84 @@ app.post("/insertappointment",function(req,res){
                        if(row0.affectedRows == 1){
 
                          var count=0;
+                         var pdladidnum=0;
+                         var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
+                         var Mydata = [];
+                         var csvStream = csv.parse().on("data", function(data){
 
-                         for(var i = 0;i<arr.length;i++){
+                               var value=0;
 
-                           var pdladid = "";
-                           var stream = fs.createReadStream(__dirname + '/../../janelaajsetup');
-                           var Mydata = [];
-                           var csvStream = csv.parse().on("data", function(data){
+                               if(data[0] == "PDLADID"){
 
-                                 var value=0;
+                                 value = parseInt(data[1]);
+                                 // pdladid = "PDLADID"+""+data[1];
+                                 pdladidnum = value;
+                                 value=value+arr.length;
+                                 data[1]=value.toString();
+                               }
+                               Mydata.push(data);
+                             })
+                             .on("end", function(){
+                                  var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
+                                  csv.write(Mydata, {headers: true}).pipe(ws);
 
-                                 if(data[0] == "PDLADID"){
+                                 for(var i = 0;i<arr.length;i++){
 
-                                   value = parseInt(data[1]);
-                                   pdladid = "PDLADID"+""+data[1];
-                                   value++;
-                                   data[1]=value.toString();
+                                   var pdladid = "PDLADID"+""+pdladidnum;
+                                   pdladidnum++;
+                                   console.log("So it is the pdladid "+pdladid);
+
+                                   connection.query(sql1,[pdladid,pdlaid,arr[i].pdlad_dcsm_sm_service_id,arr[i].pdlad_dcsm_normal_rate,arr[i].pdlad_dcsm_discount_flag,arr[i].pdlad_dcsm_discounted_amount,arr[i].pdlad_bp_upper,arr[i].pdlad_bp_lower,arr[i].pdlad_haemoglobin,arr[i].pdlad_sugar,arr[i].pdlad_tempreture,arr[i].pdlad_oxygenlevel,arr[i].pdlad_chargeable_rate,arr[i].pdlad_height,arr[i].pdlad_weight,arr[i].pdlad_bmi,arr[i].pdlad_respiratory_level,arr[i].pdlad_blood_group,arr[i].pdlad_pulse,arr[i].pdlad_bodyfat],function(err,row1){
+                                     if(err){
+                                       console.log("ERROR IN insertappointment IN RUNNING SQL1 FOR DLMID = "+dlmid);
+                                       console.log(err);
+                                       obj.status = "CONNECTION ERROR";
+                                       console.log("RESPONSE = "+JSON.stringify(obj));
+                                       console.log("END----------insertappointment----------"+now);
+                                       if(sent == 0){
+                                         res.send(JSON.stringify(obj));
+                                         sent=1;
+                                       }
+                                       return err;
+                                     }else{
+                                       if(row1.affectedRows == 1){
+                                         count++;
+                                         if(count==arr.length && sent == 0){
+                                           connection.commit(function(err){
+                                             if(err){
+                                               console.log("ERROR IN insertappointment IN COMMITING FOR DLMID = "+dlmid);
+                                               console.log(err);
+                                               obj.status = "CONNECTION ERROR";
+                                               console.log("RESPONSE = "+JSON.stringify(obj));
+                                               console.log("END----------insertappointment----------"+now);
+                                               res.send(JSON.stringify(obj));
+                                               return err;
+                                             }else{
+                                               obj.status = "SUCCESS";
+                                               res.send(JSON.stringify(obj));
+                                             }
+                                           })
+                                         }
+
+                                       }else{
+                                         console.log("ERROR IN insertappointment IN RUNNING SQL0 0 ROWS AFFECTED FOR DLMID = "+dlmid);
+                                         obj.status = "CONNECTION ERROR";
+                                         console.log("RESPONSE = "+JSON.stringify(obj));
+                                         console.log("END----------insertappointment----------"+now);
+                                         if(sent == 0){
+                                           res.send(JSON.stringify(obj));
+                                           sent=1;
+                                         }
+                                       }
+                                     }
+                                   })
+
                                  }
-                                 Mydata.push(data);
-                               })
-                               .on("end", function(){
-                                    var ws = fs.createWriteStream(__dirname + '/../../janelaajsetup');
-                                    csv.write(Mydata, {headers: true}).pipe(ws);
 
-                                    console.log("when the query is about to run     "+i);
-                                    console.log("when the query is about to run     "+arr[i].pdlad_dcsm_sm_service_id);
 
-                                    connection.query(sql1,[pdladid,pdlaid,arr[i].pdlad_dcsm_sm_service_id,arr[i].pdlad_dcsm_normal_rate,arr[i].pdlad_dcsm_discount_flag,arr[i].pdlad_dcsm_discounted_amount,arr[i].pdlad_bp_upper,arr[i].pdlad_bp_lower,arr[i].pdlad_haemoglobin,arr[i].pdlad_sugar,arr[i].pdlad_tempreture,arr[i].pdlad_oxygenlevel,arr[i].pdlad_chargeable_rate,arr[i].pdlad_height,arr[i].pdlad_weight,arr[i].pdlad_bmi,arr[i].pdlad_respiratory_level,arr[i].pdlad_blood_group,arr[i].pdlad_pulse,arr[i].pdlad_bodyfat],function(err,row1){
-                                      if(err){
-                                        console.log("ERROR IN insertappointment IN RUNNING SQL1 FOR DLMID = "+dlmid);
-                                        console.log(err);
-                                        obj.status = "CONNECTION ERROR";
-                                        console.log("RESPONSE = "+JSON.stringify(obj));
-                                        console.log("END----------insertappointment----------"+now);
-                                        if(sent == 0){
-                                          res.send(JSON.stringify(obj));
-                                          sent=1;
-                                        }
-                                        return err;
-                                      }else{
-                                        if(row1.affectedRows == 1){
-                                          count++;
-                                          if(count==arr.length && sent == 0){
-                                            connection.commit(function(err){
-                                              if(err){
-                                                console.log("ERROR IN insertappointment IN COMMITING FOR DLMID = "+dlmid);
-                                                console.log(err);
-                                                obj.status = "CONNECTION ERROR";
-                                                console.log("RESPONSE = "+JSON.stringify(obj));
-                                                console.log("END----------insertappointment----------"+now);
-                                                res.send(JSON.stringify(obj));
-                                                return err;
-                                              }else{
-                                                obj.status = "SUCCESS";
-                                                res.send(JSON.stringify(obj));
-                                              }
-                                            })
-                                          }
 
-                                        }else{
-                                          console.log("ERROR IN insertappointment IN RUNNING SQL0 0 ROWS AFFECTED FOR DLMID = "+dlmid);
-                                          obj.status = "CONNECTION ERROR";
-                                          console.log("RESPONSE = "+JSON.stringify(obj));
-                                          console.log("END----------insertappointment----------"+now);
-                                          if(sent == 0){
-                                            res.send(JSON.stringify(obj));
-                                            sent=1;
-                                          }
-                                        }
-                                      }
-                                    })
-
-                               });
-                           stream.pipe(csvStream);
-
-                         }
+                             });
+                         stream.pipe(csvStream);
 
                        }else{
 
