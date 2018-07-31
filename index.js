@@ -6847,6 +6847,14 @@ app.post("/updatemanagediscount",function(req,res){
   var count =0;
   console.log(arr);
 
+  var flag = "N";
+
+  for(var i=0;i<arr.length;arr++){
+    if(arr[i].flag == "Y"){
+      flag = "Y";
+    }
+  }
+
   var obj = {
     status : "SUCCESS"
   }
@@ -6874,7 +6882,7 @@ app.post("/updatemanagediscount",function(req,res){
             return err;
           }else{
 
-            connection.query(sql0,["Y",locid],function(err,row0){
+            connection.query(sql0,[flag,locid],function(err,row0){
               if(err){
                 console.log("ERROR IN updatemanagediscount IN RUNNING SQL0 CONNECTION");
                 console.log("ERROR CODE :"+err);
