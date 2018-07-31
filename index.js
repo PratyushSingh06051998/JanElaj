@@ -6849,7 +6849,7 @@ app.post("/updatemanagediscount",function(req,res){
 
   var flag = "N";
 
-  for(var i=0;i<arr.length;arr++){
+  for(var i=0;i<arr.length;i++){
     if(arr[i].flag == "Y"){
       flag = "Y";
     }
