@@ -7295,7 +7295,7 @@ app.post("/oneviewinfo",function(req,res){
 
                     if(count2 == resultt.length){
                       MainObj.status = "SUCCESS";
-                      console.log(MainObj);
+                      console.log(JSON.stringify(MainObj));
                       res.send(JSON.stringify(MainObj));
                     }
 
