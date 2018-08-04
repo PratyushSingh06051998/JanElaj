@@ -221,6 +221,7 @@ app.post("/getdiscountinfo",function(req,res){
   var Object = req.body;
 
   var dlmid = Object.dlmid;
+  console.log("valuse = "+JSON.stringify(Object));
 
   var obj = {
     status:"",
